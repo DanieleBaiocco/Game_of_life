@@ -1,66 +1,64 @@
 package it.unicam.cs.pa.jlife105718;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.function.BiFunction;
 
-
-public class Campo2d implements Campo {
+public class Campo2d<Posizione> implements Campo {
     private int ascissa;
     private int ordinata;
-    private List<Cellula> cellule;
-    public Campo2d(int ascissa, int ordinata) {
-        this.cellule= new ArrayList<>();
+    BiFunction<Integer, Integer,Posizione> transition;
+    private Map<Posizione, Cellula > mappaPosizioneCellula;
+    public Campo2d(int ascissa, int ordinata, BiFunction<Integer, Integer, Posizione> transition) {
         this.ascissa=ascissa;
         this.ordinata=ordinata;
-        initializeCellule(this.ascissa,this.ordinata);
+        this.transition=transition;
+        this.mappaPosizioneCellula= new HashMap<>();
+        initializeMap(this.ascissa,this.ordinata, transition);
     }
 
-    private void initializeCellule(int asc, int ord) {
+    private void initializeMap(int asc, int ord, BiFunction<Integer, Integer, Posizione> transition) {
         for(int i=0; i<ord;i++) {
             for (int j = 0; j < asc; j++){
-                Cellula cellula = new Cellula(Stato.MORTO,new Coordinate2d(j,i));
-                cellule.add(cellula);
+                Cellula cellula = new Cellula(Stato.MORTO);
+                Posizione posizione=transition.apply(j,i);
+                this.mappaPosizioneCellula.put(posizione,cellula);
             }
         }
     }
     public boolean findCellula(int CoordinateX, int CoordinateY){
-        for(Cellula cellula : cellule){
-            if(cellula.getCoordinate().getx()==CoordinateX & cellula.getCoordinate().gety()==CoordinateY)
-                return true;
-        }
-        return false;
+       return this.mappaPosizioneCellula.containsKey(this.transition.apply(CoordinateX,CoordinateY));
     }
+
     public Cellula searchCellula(int CoordinateX, int CoordinateY){
-        for(Cellula cellula : cellule){
-            if(cellula.getCoordinate().getx()==CoordinateX & cellula.getCoordinate().gety()==CoordinateY)
-                return cellula;
-        }
-        return null;
-    }
-    public List<Cellula> intornoCellula(Cellula cellula){
-        List<Cellula> listaIntorno = new ArrayList<>();
-        for (int i = getY(cellula)-1;i<=getY(cellula)+1;i++){
-            for(int j= getX(cellula)-1; j<=getX(cellula)+1;j++){
-                listaIntorno.add(searchCellula(j,i));
-            }
-        }
-        return listaIntorno;
-
+       return this.mappaPosizioneCellula.get(this.transition.apply(CoordinateX,CoordinateY));
     }
 
-     private int getX(Cellula cellula){
-       return cellula.getCoordinate().getx();
-     }
-     private int getY(Cellula cellula){
-        return cellula.getCoordinate().gety();
-     }
-
-
-    public List<Cellula> getCellule() {
-        return cellule;
+    public Map<Posizione, Cellula> getMappaPosizioneCellula() {
+        return mappaPosizioneCellula;
     }
 
-    public void setCellule(List<Cellula> cellule) {
-        this.cellule = cellule;
+    public void setMappaPosizioneCellula(Map<Posizione, Cellula> mappaPosizioneCellula) {
+        this.mappaPosizioneCellula = mappaPosizioneCellula;
+    }
+
+    public Map<Posizione,Cellula> getIntorno(Cellula cellula){
+        if(this.mappaPosizioneCellula.containsValue(cellula)) {
+            return null;
+        }return null;
+        };
+
+    public int getAscissa() {
+        return ascissa;
+    }
+
+    public void setAscissa(int ascissa) {
+        this.ascissa = ascissa;
+    }
+
+    public int getOrdinata() {return ordinata;}
+
+    public void setOrdinata(int ordinata) {
+        this.ordinata = ordinata;
     }
 }

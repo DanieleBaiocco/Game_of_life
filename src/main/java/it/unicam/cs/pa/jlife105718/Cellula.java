@@ -5,22 +5,12 @@ package it.unicam.cs.pa.jlife105718;
 
 public class Cellula {
     private Stato stato;
-    private Coordinate coordinate;
-    public Cellula(Stato stato, Coordinate coordinate){
+    public Cellula(Stato stato){
         this.stato=stato;
-        this.coordinate=coordinate;
     }
 
     public Stato getStato() {
         return stato;
-    }
-
-    public Coordinate getCoordinate() {
-        return coordinate;
-    }
-
-    public void setCoordinate(Coordinate coordinate) {
-        this.coordinate = coordinate;
     }
 
     private void setStato(Stato stato) {

@@ -5,7 +5,7 @@ package it.unicam.cs.pa.jlife105718;
 
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
-
+/*
 public class CellulaTest {
     @Test
     public void testChangeStato() {
@@ -18,3 +18,4 @@ public class CellulaTest {
     }
 }
 
+*/
