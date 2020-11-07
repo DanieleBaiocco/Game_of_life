@@ -22,6 +22,11 @@ public class Cellula {
             setStato(Stato.MORTO);
         else setStato(Stato.VIVO);
     }
+    public boolean isAlive(){
+        if(this.getStato()==Stato.VIVO)
+            return true;
+        else return false;
+    }
 
 
 }

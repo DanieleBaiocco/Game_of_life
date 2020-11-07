@@ -6,8 +6,8 @@ import java.util.ArrayList;
 import java.util.Map;
 import java.util.function.BiFunction;
 
-import static org.junit.jupiter.api.Assertions.*;
-public class Campo2dTest {
+import static org.junit.jupiter.api.Assertions.*;/*
+public class Campo2DTest {
     @Test
     public void initializeMapTest() {
         int ascissa = 2;
@@ -20,7 +20,7 @@ public class Campo2dTest {
             arr.add(y);
             return new PosizioneNumerica(arr,2);
         });
-        Campo2d<Posizione> campo2d= new Campo2d<>(ascissa,ordinata,bi);
+        Campo2D<Posizione> campo2d= new Campo2D<>(ascissa,ordinata,bi);
         Map<Posizione,Cellula> mappa = campo2d.getMappaPosizioneCellula();
         for(int i=0; i<campo2d.getOrdinata();i++) {
             for (int j = 0; j < campo2d.getAscissa(); j++){
