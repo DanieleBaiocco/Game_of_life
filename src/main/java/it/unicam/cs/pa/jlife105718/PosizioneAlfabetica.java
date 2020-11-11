@@ -2,33 +2,26 @@ package it.unicam.cs.pa.jlife105718;
 
 import java.util.ArrayList;
 import java.util.List;
-
+import java.util.stream.Collectors;
 
 public class PosizioneAlfabetica implements Posizione{
-        private List<String> params = new ArrayList<>();
-    private int dim;
-
-    public PosizioneAlfabetica(List<Integer> params, int dim)  {
-        this.dim = dim;
-        changeToChar(params);
+    private List<String> params = new ArrayList<>();
+    public PosizioneAlfabetica(List<Integer> params)  {
+        this.params = params.stream().map(this::changeToPos).collect(Collectors.toList());
     }
 
-    private void changeToChar(List<Integer> params)  {
-        for(int i=0; i<this.dim; i++){
-            int parametroI = params.get(i);
-            if(0<=parametroI&&parametroI<=25) {
-                String s = Character.toString(parametroI + 65);
-                this.params.add(s);
-            }else if(25<parametroI&&parametroI<=255){
+        public String changeToPos(int x)  {
+            if(0<=x&&x<=25) {
+                return Character.toString(x + 65);
+            }else if(25<x&&x<=255){
                 String s ="";
-                int risultato = (int)((parametroI+65)/65-1);
+                int risultato =(x+65)/65-1;
                 String str = Character.toString( risultato+65);
-                String str2= str.concat(Character.toString(parametroI%26 + 65));
-                this.params.add(str2);
+                return str.concat(Character.toString(x%26 + 65));
             } //else if(parametroI>255) {
                // throw new ASCIIIntegersEndedException();
           //  }
-        }
+        return "";
     }
 
     @Override

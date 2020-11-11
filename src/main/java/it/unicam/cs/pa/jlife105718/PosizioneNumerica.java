@@ -2,16 +2,16 @@ package it.unicam.cs.pa.jlife105718;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 public class PosizioneNumerica implements Posizione {
    private List<Integer> params;
-   private int dim;
-    public PosizioneNumerica(List<Integer> params, int dim){
-        this.params=params;
-        this.dim=dim;
+
+    public PosizioneNumerica(List<Integer> params){
+        this.params = params.stream().map(this::changeToPos).collect(Collectors.toList());
     }
 
-
+/*
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -25,10 +25,16 @@ public class PosizioneNumerica implements Posizione {
     public int hashCode() {
         return Objects.hash(params, dim);
     }
-
+*/
     @Override
     public Integer getCoordinateI(int i) {
-        if(i>=this.dim)
-            throw new IllegalArgumentException();
-        return this.params.get(i);}
+        return this.params.get(i);
+    }
+
+    @Override
+    public Integer changeToPos(int x) {
+    return x;
+    }
+
+
 }

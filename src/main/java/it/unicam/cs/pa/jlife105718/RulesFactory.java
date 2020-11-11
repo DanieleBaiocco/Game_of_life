@@ -6,15 +6,15 @@ public class RulesFactory {
     static private RulesFactory instance;
     private final Regole<Cellula> basicRules;
     private final Regole<Cellula> alternativeRules;
-    private final Field<Posizione> field;
-    static public RulesFactory getRulesFactory(Field<Posizione> field) {
+    private final Campo<Posizione> campo;
+    static public RulesFactory getRulesFactory(Campo<Posizione> campo) {
         if(instance == null) {
-            return new RulesFactory(field);
+            return new RulesFactory(campo);
         }
         return instance;
     }
-    private RulesFactory(Field<Posizione> field){
-        this.field=field;
+    private RulesFactory(Campo<Posizione> campo){
+        this.campo = campo;
         basicRules= basicRulesCreation();
         alternativeRules=alternativeRulesCreation();
         }
@@ -25,7 +25,7 @@ public class RulesFactory {
 
     private Regole<Cellula> basicRulesCreation() {
         return  x -> {
-            Map<Posizione, Cellula> vicini= field.getIntorno(x);
+            Map<Posizione, Cellula> vicini= campo.getIntorno(x);
             if(x.isAlive()) {
                 long count = vicini.values().
                         stream().
@@ -52,9 +52,6 @@ public class RulesFactory {
         return basicRules;
     }
 
-    public Regole<Cellula> getAlternativeRules() {
-        return alternativeRules;
-    }
 }
 
 
