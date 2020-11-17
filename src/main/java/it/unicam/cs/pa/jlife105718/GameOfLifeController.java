@@ -1,20 +1,44 @@
 package it.unicam.cs.pa.jlife105718;
 
 
-public class GameOfLifeController {
-private Campo<Posizione> campo;
-public GameOfLifeController(Campo<Posizione> campo){
+import com.google.common.collect.Table;
+
+public class GameOfLifeController implements Controller{
+private final Campo<Posizione> campo;
+private final Regole<Cellula> rule;
+static private GameOfLifeController instance;
+
+private GameOfLifeController(Campo<Posizione> campo, Regole<Cellula> rule){
     this.campo = campo;
+    this.rule = rule;
 }
 /*
 public Controller (File jsonFile){
     this.field =deserialize(jsonFile);
 }*/
+
 public void NextGen(){
     this.campo.getMappaPosizioneCellula().values()
-            .forEach(w->RulesFactory.getRulesFactory(campo).getBasicRules().step(w));
+            .forEach(w->getRule().step(w));
      }
 
+   static public GameOfLifeController boardCreation(Campo<Posizione> campo, Regole<Cellula> rule) {
+        if(instance == null) {
+            return new GameOfLifeController(campo,rule);
+    } return instance;
+}
+
+    public void coloratedecolorateacellula() {
+
+    }
+
+    public void loadBoardFromFile() {
+
+    }
+
+    public Regole<Cellula> getRule(){
+        return this.rule;
+    }
 }
 
 
