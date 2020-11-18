@@ -1,16 +1,17 @@
 package it.unicam.cs.pa.jlife105718;
 
 import java.util.Map;
+import java.util.Set;
 
-public class Campo3D<Posizione> implements Campo<Posizione>{
+public class Campo3D<T extends Posizione> implements Campo<Posizione>{
 
     @Override
-    public Map getIntorno(Cellula cellula) {
+    public Set<Cellula>  getIntorno(Cellula cellula) {
         return null;
     }
 
     @Override
-    public Map getMappaPosizioneCellula() {
+    public T getPosizioneFromCellula(Cellula cellula) {
         return null;
     }
 }

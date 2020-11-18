@@ -10,7 +10,7 @@ public class TransitionFactory {
 
     static public TransitionFactory getInstance(){
         if(instance == null) {
-            return new TransitionFactory();
+            instance =new TransitionFactory();
         }
         return instance;
     }

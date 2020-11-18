@@ -1,18 +1,15 @@
 package it.unicam.cs.pa.jlife105718;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.function.Function;
 
-public class Campo2D<Posizione> implements Campo<Posizione> {
+public class Campo2D<T extends Posizione> implements Campo<Posizione> {
     private final int a;
     private final int b;
-    private Map<Posizione, Cellula> mappaPosizioneCellula;
-    private final Function<List<Integer>, Posizione> transition;
+    private Map<T, Cellula> mappaPosizioneCellula;
+    private final Function<List<Integer>, ? extends T> transition;
 
-    public Campo2D(int a, int b, Function<List<Integer>,Posizione> transition) {
+    public Campo2D(int a, int b, Function<List<Integer>,? extends T> transition) {
         this.a = a;
         this.b = b;
         this.transition=transition;
@@ -21,7 +18,7 @@ public class Campo2D<Posizione> implements Campo<Posizione> {
 
     }
 
-    protected void initializeMap(int asc, int ord, Function<List<Integer>, Posizione> transition) {
+    protected void initializeMap(int asc, int ord, Function<List<Integer>, ? extends T> transition) {
         for(int i=0; i<ord;i++) {
             for (int j = 0; j < asc; j++){
                 initializeMapKeysAndValues(j,i);
@@ -30,7 +27,7 @@ public class Campo2D<Posizione> implements Campo<Posizione> {
     }
     private void initializeMapKeysAndValues(int j, int i){
         Cellula cellula = new Cellula(Stato.MORTO);
-        Posizione posizione=transition.apply(getArrayList(j,i));
+        T posizione=transition.apply(getArrayList(j,i));
         this.mappaPosizioneCellula.put(posizione,cellula);
     }
 
@@ -42,13 +39,6 @@ public class Campo2D<Posizione> implements Campo<Posizione> {
         return arr;
     }
 
-    public boolean findCellula(Posizione posizione){
-        return this.mappaPosizioneCellula.containsKey(posizione);
-    }
-
-    public Cellula searchCellula(Posizione posizione){
-        return this.mappaPosizioneCellula.get(posizione);
-    }
 
     public Integer getA(){
         return this.a;
@@ -57,13 +47,23 @@ public class Campo2D<Posizione> implements Campo<Posizione> {
         return this.b;
     }
 
-    @Override
-    public Map getIntorno(Cellula cellula) {
-        return null;
+    public T getPosizioneFromCellula (Cellula cellula){
+        return mappaPosizioneCellula.entrySet()
+                .stream()
+                .filter(entry -> cellula.equals(entry.getValue()))
+                .map(Map.Entry::getKey)
+                .findFirst().get();
     }
 
     @Override
-    public Map getMappaPosizioneCellula() {
-        return this.mappaPosizioneCellula;
+    public Set<Cellula> getIntorno(Cellula cellula) {
+        T pos =getPosizioneFromCellula(cellula);
+        int firstCoordinate = pos.getCoordinateI(0);
+        int secondCoordinate = pos.getCoordinateI(1);
+
+
+        return null;
     }
+
+
 }

@@ -18,18 +18,28 @@ public Controller (File jsonFile){
 }*/
 
 public void NextGen(){
-    this.campo.getMappaPosizioneCellula().values()
-            .forEach(w->getRule().step(w));
-     }
+
+        this.campo.getMappaPosizioneCellula().values()
+                .forEach(w -> {
+                            try {
+                                getRule().step(w);
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                );
+}
 
    static public GameOfLifeController boardCreation(Campo<Posizione> campo, Regole<Cellula> rule) {
         if(instance == null) {
-            return new GameOfLifeController(campo,rule);
+            instance = new GameOfLifeController(campo,rule);
     } return instance;
 }
 
-    public void coloratedecolorateacellula() {
-
+    public void colorateDecolorateACellula(Posizione pos) {
+     if(this.campo.findCellula(pos)){
+         this.campo.searchCellula(pos).changeStato();
+     } else throw new IllegalArgumentException();
     }
 
     public void loadBoardFromFile() {

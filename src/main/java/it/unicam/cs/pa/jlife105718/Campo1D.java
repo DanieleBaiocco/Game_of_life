@@ -1,12 +1,9 @@
 package it.unicam.cs.pa.jlife105718;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.function.Function;
 
-public class Campo1D<Posizione> implements Campo<Posizione> {
+public class Campo1D<T extends Posizione> implements Campo<Posizione> {
     private final int a;
     private Map<Posizione, Cellula> mappaPosizioneCellula;
     private final Function<List<Integer>, Posizione> transition;
@@ -35,23 +32,17 @@ public class Campo1D<Posizione> implements Campo<Posizione> {
         return arr;
     }
 
-    public boolean findCellula(Posizione posizione){
-        return this.mappaPosizioneCellula.containsKey(posizione);
-    }
-
-    public Cellula searchCellula(Posizione posizione){
-        return this.mappaPosizioneCellula.get(posizione);
-    }
-
     @Override
-    public Map getIntorno(Cellula cellula) {
+    public Posizione getPosizioneFromCellula(Cellula cellula) {
         return null;
     }
 
     @Override
-    public Map getMappaPosizioneCellula() {
-        return this.mappaPosizioneCellula;
+    public Set<Cellula> getIntorno(Cellula cellula) {
+        return null;
     }
+
+
 
     public Integer getA(){
         return this.a;

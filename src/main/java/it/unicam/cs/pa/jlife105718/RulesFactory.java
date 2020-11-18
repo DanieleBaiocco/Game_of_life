@@ -9,7 +9,7 @@ public class RulesFactory {
     private final Campo<Posizione> campo;
     static public RulesFactory getRulesFactory(Campo<Posizione> campo) {
         if(instance == null) {
-            return new RulesFactory(campo);
+            instance= new RulesFactory(campo);
         }
         return instance;
     }
@@ -23,7 +23,7 @@ public class RulesFactory {
         return null;
     }
 
-    private Regole<Cellula> basicRulesCreation() {
+    private  Regole<Cellula> basicRulesCreation() {
         return  x -> {
             Map<Posizione, Cellula> vicini= campo.getIntorno(x);
             if(x.isAlive()) {
@@ -33,6 +33,7 @@ public class RulesFactory {
                         filter(Cellula::isAlive)
                         .count();
                 if(count<2||count>3){
+                    wait();
                     x.changeStato();
                     return x;}
             } else if(!x.isAlive()){
@@ -41,6 +42,7 @@ public class RulesFactory {
                         sequential().
                         filter(Cellula::isAlive)
                         .count() ==3){
+                    wait();
                     x.changeStato();
                     return x;
                 }
