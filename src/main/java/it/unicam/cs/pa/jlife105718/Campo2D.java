@@ -2,6 +2,8 @@ package it.unicam.cs.pa.jlife105718;
 
 import java.util.*;
 import java.util.function.Function;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 public class Campo2D<T extends Posizione> implements Campo<Posizione> {
     private final int a;
@@ -60,10 +62,28 @@ public class Campo2D<T extends Posizione> implements Campo<Posizione> {
         T pos =getPosizioneFromCellula(cellula);
         int firstCoordinate = pos.getCoordinateI(0);
         int secondCoordinate = pos.getCoordinateI(1);
-
-
-        return null;
+        return this.mappaPosizioneCellula.keySet()
+                .stream()
+                .filter(p->!p.equals(pos))
+                .filter(isInTheIntorno(this::listaIntegerDaPosizine,firstCoordinate,secondCoordinate))
+                .map(p->mappaPosizioneCellula.get(p))
+                .collect(Collectors.toSet());
     }
+private Predicate<? super T> isInTheIntorno(Function<T,List<Integer>> function, int first, int second){
+return po->{
+    int firstofx = po.getCoordinateI(0);
+    int secondofx = po.getCoordinateI(1);
+    boolean secondCondition = (secondofx==second-1 || secondofx==second || secondofx== second+1);
+    return (firstofx==first-1 && secondCondition)||
+            (firstofx==first && secondCondition) ||
+            (firstofx==first+1 && secondCondition);
+};
 
-
+}
+private List<Integer> listaIntegerDaPosizine(T position){
+        List<Integer> arr = new ArrayList<>();
+        arr.add(position.getCoordinateI(0));
+        arr.add(position.getCoordinateI(1));
+        return arr;
+   }
 }
