@@ -47,6 +47,11 @@ public class Campo1D<T extends Posizione> implements Campo<Posizione> {
         return null;
     }
 
+    @Override
+    public Function<List<Integer>, ? extends Posizione> getTransition() {
+        return this.transition;
+    }
+
 
     public Integer getA(){
         return this.a;

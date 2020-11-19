@@ -11,10 +11,6 @@ public class Campo2D<T extends Posizione> implements Campo<Posizione> {
     private Map<T, Cellula> mappaPosizioneCellula;
     private final Function<List<Integer>, ? extends T> transition;
 
-    public Function<List<Integer>, ? extends T> getTransition() {
-        return transition;
-    }
-
     public Campo2D(int a, int b, Function<List<Integer>,? extends T> transition) {
         this.a = a;
         this.b = b;
@@ -77,6 +73,11 @@ public class Campo2D<T extends Posizione> implements Campo<Posizione> {
                 .filter(isInTheIntorno(this::listaIntegerDaPosizine,firstCoordinate,secondCoordinate))
                 .map(p->mappaPosizioneCellula.get(p))
                 .collect(Collectors.toSet());
+    }
+
+    @Override
+    public Function<List<Integer>, ? extends Posizione> getTransition() {
+        return this.transition;
     }
 
 

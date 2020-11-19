@@ -5,8 +5,8 @@ import java.util.function.Function;
 
 public class TransitionFactory {
     static private TransitionFactory instance;
-    private  final Function<List<Integer>,Posizione> transitionToCharacter;
-    private  final Function<List<Integer>,Posizione> transitionToInteger;
+    private  final Function<List<Integer>,PosizioneAlfabetica> transitionToCharacter;
+    private  final Function<List<Integer>,PosizioneNumerica> transitionToInteger;
 
     static public TransitionFactory getInstance(){
         if(instance == null) {
@@ -19,11 +19,11 @@ private TransitionFactory(){
         transitionToInteger= PosizioneNumerica::new;
     }
 
-    public Function<List<Integer>, Posizione> getTransitionToChar() {
+    public Function<List<Integer>, PosizioneAlfabetica> getTransitionToChar() {
         return transitionToCharacter;
     }
 
-    public Function<List<Integer>, Posizione> getTransitionToInteger() {
+    public Function<List<Integer>, PosizioneNumerica> getTransitionToInteger() {
         return transitionToInteger;
     }
 

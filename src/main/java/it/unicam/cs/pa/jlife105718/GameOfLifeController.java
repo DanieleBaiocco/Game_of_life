@@ -8,9 +8,10 @@ import java.util.List;
 public class GameOfLifeController implements Controller{
 private final Campo<?> campo;
 private final Regole<Cellula> rule;
+static private GameOfLifeController controller;
 
 
-public GameOfLifeController(Campo<?> campo, Regole<Cellula> rule){
+private GameOfLifeController(Campo<?> campo, Regole<Cellula> rule){
     this.campo = campo;
     this.rule = rule;
 }
@@ -18,6 +19,12 @@ public GameOfLifeController(Campo<?> campo, Regole<Cellula> rule){
 public Controller (File jsonFile){
     this.field =deserialize(jsonFile);
 }*/
+static public GameOfLifeController getInstance(Campo<?> campo, Regole<Cellula> rule){
+    if(controller==null){
+       controller= new GameOfLifeController(campo,rule);
+    }
+    return controller;
+}
 
 public void NextGen(){
 
@@ -43,6 +50,11 @@ public void NextGen(){
 
     public void loadBoardFromFile() {
 
+    }
+
+    @Override
+    public Campo<?> getCampo() {
+        return this.campo;
     }
 
     public Regole<Cellula> getRule(){
