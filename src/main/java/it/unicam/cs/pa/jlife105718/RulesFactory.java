@@ -1,6 +1,7 @@
 package it.unicam.cs.pa.jlife105718;
 
 import java.util.Map;
+import java.util.Set;
 
 public class RulesFactory {
     static private RulesFactory instance;
@@ -25,9 +26,9 @@ public class RulesFactory {
 
     private  Regole<Cellula> basicRulesCreation() {
         return  x -> {
-            Map<Posizione, Cellula> vicini= campo.getIntorno(x);
+            Set<Cellula> vicini= campo.getIntorno(x);
             if(x.isAlive()) {
-                long count = vicini.values().
+                long count = vicini.
                         stream().
                         sequential().
                         filter(Cellula::isAlive)
@@ -37,7 +38,7 @@ public class RulesFactory {
                     x.changeStato();
                     return x;}
             } else if(!x.isAlive()){
-                if ( vicini.values().
+                if ( vicini.
                         stream().
                         sequential().
                         filter(Cellula::isAlive)

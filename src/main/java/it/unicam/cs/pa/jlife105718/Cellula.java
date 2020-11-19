@@ -3,10 +3,15 @@
  */
 package it.unicam.cs.pa.jlife105718;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Cellula {
+    private List<PropertyListener> listeners;
     private Stato stato;
     public Cellula(Stato stato){
         this.stato=stato;
+        listeners= new ArrayList<>();
     }
 
     public Stato getStato() {
@@ -21,12 +26,17 @@ public class Cellula {
         if(stato == Stato.VIVO)
             setStato(Stato.MORTO);
         else setStato(Stato.VIVO);
+        publishPropertyEvent("cellula.state",getStato());
     }
     public boolean isAlive(){
         if(this.getStato()==Stato.VIVO)
             return true;
         else return false;
     }
-
-
+    public void addPropertyListener (PropertyListener lis){
+        listeners.add(lis);
+    }
+    private void publishPropertyEvent(String name, Stato state){
+        this.listeners.forEach(prop->prop.onPropertyEvent(this,name,state));
+    }
 }

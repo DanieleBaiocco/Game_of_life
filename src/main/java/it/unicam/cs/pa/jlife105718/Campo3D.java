@@ -11,6 +11,11 @@ public class Campo3D<T extends Posizione> implements Campo<Posizione>{
     }
 
     @Override
+    public <T> Map<T, Cellula> getMappaPosizioneCellula() {
+        return null;
+    }
+
+    @Override
     public T getPosizioneFromCellula(Cellula cellula) {
         return null;
     }

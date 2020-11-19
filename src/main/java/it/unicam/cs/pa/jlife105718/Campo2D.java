@@ -11,6 +11,10 @@ public class Campo2D<T extends Posizione> implements Campo<Posizione> {
     private Map<T, Cellula> mappaPosizioneCellula;
     private final Function<List<Integer>, ? extends T> transition;
 
+    public Function<List<Integer>, ? extends T> getTransition() {
+        return transition;
+    }
+
     public Campo2D(int a, int b, Function<List<Integer>,? extends T> transition) {
         this.a = a;
         this.b = b;
@@ -48,13 +52,18 @@ public class Campo2D<T extends Posizione> implements Campo<Posizione> {
     public Integer getB() {
         return this.b;
     }
-
+    @Override
     public T getPosizioneFromCellula (Cellula cellula){
         return mappaPosizioneCellula.entrySet()
                 .stream()
                 .filter(entry -> cellula.equals(entry.getValue()))
                 .map(Map.Entry::getKey)
                 .findFirst().get();
+    }
+
+    @Override
+    public   Map<T, Cellula> getMappaPosizioneCellula() {
+        return this.mappaPosizioneCellula;
     }
 
     @Override
@@ -69,8 +78,10 @@ public class Campo2D<T extends Posizione> implements Campo<Posizione> {
                 .map(p->mappaPosizioneCellula.get(p))
                 .collect(Collectors.toSet());
     }
-private Predicate<? super T> isInTheIntorno(Function<T,List<Integer>> function, int first, int second){
-return po->{
+
+
+    private Predicate<? super T> isInTheIntorno(Function<T,List<Integer>> function, int first, int second){
+    return po->{
     int firstofx = po.getCoordinateI(0);
     int secondofx = po.getCoordinateI(1);
     boolean secondCondition = (secondofx==second-1 || secondofx==second || secondofx== second+1);

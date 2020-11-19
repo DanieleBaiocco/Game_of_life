@@ -3,12 +3,14 @@ package it.unicam.cs.pa.jlife105718;
 
 import com.google.common.collect.Table;
 
-public class GameOfLifeController implements Controller{
-private final Campo<Posizione> campo;
-private final Regole<Cellula> rule;
-static private GameOfLifeController instance;
+import java.util.List;
 
-private GameOfLifeController(Campo<Posizione> campo, Regole<Cellula> rule){
+public class GameOfLifeController implements Controller{
+private final Campo<?> campo;
+private final Regole<Cellula> rule;
+
+
+public GameOfLifeController(Campo<?> campo, Regole<Cellula> rule){
     this.campo = campo;
     this.rule = rule;
 }
@@ -30,15 +32,12 @@ public void NextGen(){
                 );
 }
 
-   static public GameOfLifeController boardCreation(Campo<Posizione> campo, Regole<Cellula> rule) {
-        if(instance == null) {
-            instance = new GameOfLifeController(campo,rule);
-    } return instance;
-}
 
-    public void colorateDecolorateACellula(Posizione pos) {
-     if(this.campo.findCellula(pos)){
-         this.campo.searchCellula(pos).changeStato();
+    @Override
+    public void colorateDecolorateACellula(List<Integer> posInInt) {
+    Posizione pos =this.campo.getTransition().apply(posInInt);
+     if(this.campo.getMappaPosizioneCellula().containsKey(pos)){
+          this.campo.getMappaPosizioneCellula().get(pos).changeStato();
      } else throw new IllegalArgumentException();
     }
 

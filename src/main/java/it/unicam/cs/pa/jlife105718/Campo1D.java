@@ -42,6 +42,10 @@ public class Campo1D<T extends Posizione> implements Campo<Posizione> {
         return null;
     }
 
+    @Override
+    public <T> Map<T, Cellula> getMappaPosizioneCellula() {
+        return null;
+    }
 
 
     public Integer getA(){
