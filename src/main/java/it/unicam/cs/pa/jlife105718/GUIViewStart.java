@@ -9,9 +9,9 @@ public class GUIViewStart extends Application{
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-        Parent root = FXMLLoader.load(getClass().getResource("/GameOfLifeGrid.fxml"));
+        Parent root = FXMLLoader.load(getClass().getResource("/GameOfLifeFirstScene.fxml"));
         primaryStage.setTitle("Game Of Life");
-        primaryStage.setScene(new Scene(root, 1050, 500));
+        primaryStage.setScene(new Scene(root, 500, 500));
         primaryStage.show();
     }
 }

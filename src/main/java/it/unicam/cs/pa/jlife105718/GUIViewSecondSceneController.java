@@ -2,13 +2,15 @@ package it.unicam.cs.pa.jlife105718;
 
 import javafx.css.Rule;
 import javafx.fxml.FXML;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 
 import java.util.ArrayList;
 
-public class GUIViewController implements PropertyListener{
+public class GUIViewSecondSceneController implements PropertyListener{
 
 @FXML GridPane gridPane;
 @FXML Pane zerozero;
