@@ -7,6 +7,9 @@ import java.util.function.Function;
 
 public class Campo3D<T extends Posizione> implements Campo<Posizione>{
 
+    public Campo3D(Integer integer, Integer integer1, Integer integer2, Function<List<Integer>, T> transizioneScelta) {
+    }
+
     @Override
     public Set<Cellula>  getIntorno(Cellula cellula) {
         return null;

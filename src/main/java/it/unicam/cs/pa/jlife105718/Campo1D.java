@@ -6,15 +6,15 @@ import java.util.function.Function;
 public class Campo1D<T extends Posizione> implements Campo<Posizione> {
     private final int a;
     private Map<Posizione, Cellula> mappaPosizioneCellula;
-    private final Function<List<Integer>, Posizione> transition;
-    public Campo1D(int a, Function<List<Integer>, Posizione> transition) {
+    private final Function<List<Integer>, ? extends T> transition;
+    public Campo1D(int a, Function<List<Integer>, ? extends T> transition) {
         this.a = a;
         this.transition=transition;
         this.mappaPosizioneCellula= new HashMap<>();
         initializeMap(this.a, transition);
     }
 
-    private void initializeMap(int firstInt, Function<List<Integer>, Posizione> transition) {
+    private void initializeMap(int firstInt, Function<List<Integer>, ? extends T> transition) {
             for (int j = 0; j < firstInt; j++){
                 initializeMapKeysAndValues(j);
             }
