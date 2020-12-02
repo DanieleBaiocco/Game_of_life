@@ -3,19 +3,34 @@
  */
 package it.unicam.cs.pa.jlife105718;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
-/*
+
 public class CellulaTest {
-    @Test
-    public void testChangeStato() {
-        Cellula cellula1 = new Cellula(Stato.MORTO,new Coordinate2d(0,0));
-        Cellula cellula2 = new Cellula(Stato.VIVO,new Coordinate2d(1,0));
-        cellula1.changeStato();
-        cellula2.changeStato();
-        assertTrue(Stato.VIVO==cellula1.getStato());
-        assertTrue((Stato.MORTO==cellula2.getStato()));
+    private Cellula cellula;
+
+    @BeforeEach
+    void createCellula(){
+        cellula = new Cellula(Stato.MORTO);
     }
+
+    @Test
+    void testChangeStato() {
+        cellula.changeStato();
+        assertTrue(cellula.getStato()==Stato.VIVO);
+        cellula.changeStato();
+        assertTrue(cellula.getStato()==Stato.MORTO);
+    }
+
+    @Test
+    void testIsAlive(){
+        cellula.changeStato();
+        assertTrue(cellula.isAlive());
+        cellula.changeStato();
+        assertFalse(cellula.isAlive());
+    }
+
+
 }
 
-*/

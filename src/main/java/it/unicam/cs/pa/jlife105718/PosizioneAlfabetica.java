@@ -4,12 +4,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class PosizioneAlfabetica implements Posizione{
+public class PosizioneAlfabetica implements IPosizione {
     private List<String> params = new ArrayList<>();
     public PosizioneAlfabetica(List<Integer> params)  {
         this.params = params.stream().map(this::changeToPos).collect(Collectors.toList());
     }
-
+        @Override
         public String changeToPos(int x)  {
             if(0<=x&&x<=25) {
                 return Character.toString(x + 65);
@@ -26,7 +26,8 @@ public class PosizioneAlfabetica implements Posizione{
 
     @Override
     public Integer getCoordinateI(int i) {
-        return null;
+        String charI = this.params.get(i);
+        return charI.charAt(0)-65;
     }
 
 }

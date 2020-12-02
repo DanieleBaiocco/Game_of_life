@@ -1,32 +1,23 @@
 package it.unicam.cs.pa.jlife105718;
 
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 import java.util.function.Function;
 
-public class Campo3D<T extends Posizione> implements Campo<Posizione>{
+public class Campo3D<T extends IPosizione> extends Campo<T>{
 
-    public Campo3D(Integer integer, Integer integer1, Integer integer2, Function<List<Integer>, T> transizioneScelta) {
+    public Campo3D( Function<List<Integer>, T> transizioneScelta) {
+        super(transizioneScelta);
     }
 
     @Override
+    public void addAEntry(List<Integer> position, int dim) {
+        super.addAEntry(position,3);
+    }
+
     public Set<Cellula>  getIntorno(Cellula cellula) {
+        //implementazione omessa
         return null;
     }
 
-    @Override
-    public <T> Map<T, Cellula> getMappaPosizioneCellula() {
-        return null;
-    }
-
-    @Override
-    public Function<List<Integer>, ? extends Posizione> getTransition() {
-        return null;
-    }
-
-    @Override
-    public T getPosizioneFromCellula(Cellula cellula) {
-        return null;
-    }
 }

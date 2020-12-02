@@ -1,21 +1,20 @@
 package it.unicam.cs.pa.jlife105718;
 
-import java.util.Map;
 import java.util.Set;
 
 public class RulesFactory {
     static private RulesFactory instance;
     private final Regole<Cellula> basicRules;
     private final Regole<Cellula> alternativeRules;
-    private final Campo<Posizione> campo;
-    static public RulesFactory getRulesFactory(Campo<Posizione> campo) {
+    private final ICampo<?> ICampo;
+    static public RulesFactory getRulesFactory(ICampo<?> ICampo) {
         if(instance == null) {
-            instance= new RulesFactory(campo);
+            instance= new RulesFactory(ICampo);
         }
         return instance;
     }
-    private RulesFactory(Campo<Posizione> campo){
-        this.campo = campo;
+    private RulesFactory(ICampo<?> ICampo){
+        this.ICampo = ICampo;
         basicRules= basicRulesCreation();
         alternativeRules=alternativeRulesCreation();
         }
@@ -26,7 +25,7 @@ public class RulesFactory {
 
     private  Regole<Cellula> basicRulesCreation() {
         return  x -> {
-            Set<Cellula> vicini= campo.getIntorno(x);
+            Set<Cellula> vicini= ICampo.getIntorno(x);
             if(x.isAlive()) {
                 long count = vicini.
                         stream().
@@ -54,6 +53,10 @@ public class RulesFactory {
     public Regole<Cellula> getBasicRules() {
         return basicRules;
     }
+    public Regole<Cellula> getAlternativeRules() {
+        return alternativeRules;
+    }
+
 
 }
 

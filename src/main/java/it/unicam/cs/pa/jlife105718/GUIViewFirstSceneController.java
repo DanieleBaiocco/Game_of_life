@@ -1,13 +1,23 @@
 package it.unicam.cs.pa.jlife105718;
 
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
 
+import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.ResourceBundle;
 
 public class GUIViewFirstSceneController implements Initializable {
@@ -28,12 +38,11 @@ public class GUIViewFirstSceneController implements Initializable {
 @FXML private TextField secondTextField;
 @FXML private TextField thirdTextField;
 @FXML private Button button1;
-@FXML private Pane pane2;
 private ToggleGroup dimensionChoosedToggleGroup;
 private ToggleGroup ruleChoosedToggleGroup;
 private ToggleGroup positionChoosedToggleGroup;
-private ToggleGroup labelsToggleGroup;
 private int dimension;
+private VBox vBox;
 
 
     @Override
@@ -54,7 +63,7 @@ private int dimension;
         this.doubleNumbersRadioButton.setToggleGroup(positionChoosedToggleGroup);
         this.alphabetRadioButton.setToggleGroup(positionChoosedToggleGroup);
         //init labels and textfields
-        this.pane2 = new Pane();
+        this.vBox = new VBox();
         this.firstLabel.setText("");
         this.secondLabel.setText("");
         this.thirdLabel.setText("");
@@ -62,15 +71,18 @@ private int dimension;
         this.secondTextField.setVisible(false);
         this.thirdTextField.setVisible(false);
         this.button1.setDisable(true);
-        this.pane2.getChildren().add(firstTextField);
-        this.pane2.getChildren().add(secondTextField);
-        this.pane2.getChildren().add(thirdTextField);
+        this.vBox.getChildren().add(firstTextField);
+        this.vBox.getChildren().add(secondTextField);
+        this.vBox.getChildren().add(thirdTextField);
+        vBox.setVisible(false);
         this.dimension=0;
+
 
     }
 
 
    @FXML public void loadLabelsAndTexts(MouseEvent mouseEvent) {
+
         if(oneDRadioButton.isSelected()) {
             firstLabel.setText("Inserisci la prima dimensione");
             firstTextField.setVisible(true);
@@ -92,22 +104,46 @@ private int dimension;
            thirdTextField.setVisible(true);
            this.dimension=3;
        }
+       vBox.setVisible(true);
        oneDRadioButton.setDisable(true);
        twoDRadioButton.setDisable(true);
        threeDRadioButton.setDisable(true);
 }
 
    @FXML
-   public void loadGrid(MouseEvent mouseEvent) {
+   public void loadGrid(MouseEvent mouseEvent) throws IOException {
+        FXMLLoader loader = new FXMLLoader();
+        loader.setLocation(getClass().getResource("/GameOfLifeSecondScene.fxml"));
+        AnchorPane gridViewParent = loader.load();
 
+
+        GUIViewSecondSceneController secondController = loader.getController();
+        RadioButton dimensionRadioButton = (RadioButton) dimensionChoosedToggleGroup.getSelectedToggle();
+        Integer dimension = Integer.parseInt(dimensionRadioButton.getText());
+        RadioButton positionRadioButton =  (RadioButton)positionChoosedToggleGroup.getSelectedToggle();
+        String position = positionRadioButton.getText();
+        RadioButton ruleRadioButton = (RadioButton) ruleChoosedToggleGroup.getSelectedToggle();
+        String rule = ruleRadioButton.getText();
+        secondController.initializeGRASPController(position,dimension,rule);
+        GridPane grid = secondController.initGrid();
+        gridViewParent.getChildren().add(grid);
+        grid.setLayoutX(280);
+        grid.setLayoutY(155);
+
+        Scene gridViewScene =  new Scene (gridViewParent);
+    Stage window = (Stage) ((Node) mouseEvent.getSource()).getScene().getWindow();
+    window.setScene(gridViewScene);
+    window.show();
     }
+
+
     //controllo da fare ogni qual volta si seleziona un qualcosa per vedere se si può effettivamente continuare
     //oppure no perchè mancano ancora delle info
     private boolean nextIsPossible(){
         return positionChoosedToggleGroup.getToggles().stream().anyMatch(Toggle::isSelected)
                 && ruleChoosedToggleGroup.getToggles().stream().anyMatch(Toggle::isSelected)
                 && dimensionChoosedToggleGroup.getToggles().stream().anyMatch(Toggle::isSelected)
-                && pane2.getChildren().stream().filter(x->!(x.isDisable()))
+                && vBox.getChildren().stream().filter(x->!(x.isDisable()))
                 .filter(x-> {
                     TextField text = (TextField) x;
                     return text.getText().isEmpty() ;
@@ -117,7 +153,7 @@ private int dimension;
 
 
     @FXML public void checkOnNextButton(MouseEvent mouseEvent) {
-        if(nextIsPossible())
+      //  if(nextIsPossible())
             this.button1.setDisable(false);
     }
 }

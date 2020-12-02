@@ -1,59 +1,22 @@
 package it.unicam.cs.pa.jlife105718;
 
-import java.util.*;
+import java.util.List;
+import java.util.Set;
 import java.util.function.Function;
 
-public class Campo1D<T extends Posizione> implements Campo<Posizione> {
-    private final int a;
-    private Map<Posizione, Cellula> mappaPosizioneCellula;
-    private final Function<List<Integer>, ? extends T> transition;
-    public Campo1D(int a, Function<List<Integer>, ? extends T> transition) {
-        this.a = a;
-        this.transition=transition;
-        this.mappaPosizioneCellula= new HashMap<>();
-        initializeMap(this.a, transition);
-    }
-
-    private void initializeMap(int firstInt, Function<List<Integer>, ? extends T> transition) {
-            for (int j = 0; j < firstInt; j++){
-                initializeMapKeysAndValues(j);
-            }
-        }
-
-    private void initializeMapKeysAndValues(int j){
-        Cellula cellula = new Cellula(Stato.MORTO);
-        Posizione posizione=transition.apply(getArrayList(j));
-        this.mappaPosizioneCellula.put(posizione,cellula);
-    }
-
-    private ArrayList<Integer> getArrayList(int j){
-        ArrayList<Integer> arr= new ArrayList<>();
-        arr.add(j);
-        return arr;
+public class Campo1D<T extends IPosizione> extends Campo<T>{
+    public Campo1D(Function<List<Integer>, ? extends T> transition) {
+        super(transition);
     }
 
     @Override
-    public Posizione getPosizioneFromCellula(Cellula cellula) {
-        return null;
+    public void addAEntry(List<Integer> position, int dim) {
+       super.addAEntry(position,1);
     }
 
     @Override
     public Set<Cellula> getIntorno(Cellula cellula) {
+        //implementazione omessa
         return null;
-    }
-
-    @Override
-    public <T> Map<T, Cellula> getMappaPosizioneCellula() {
-        return null;
-    }
-
-    @Override
-    public Function<List<Integer>, ? extends Posizione> getTransition() {
-        return this.transition;
-    }
-
-
-    public Integer getA(){
-        return this.a;
     }
 }

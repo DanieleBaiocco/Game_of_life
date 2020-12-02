@@ -1,17 +1,15 @@
 package it.unicam.cs.pa.jlife105718;
 
 
-import com.google.common.collect.Table;
-
 import java.util.List;
 
 public class GameOfLifeController implements Controller{
-private final Campo<?> campo;
+private final ICampo<?> campo;
 private final Regole<Cellula> rule;
 static private GameOfLifeController controller;
 
 
-private GameOfLifeController(Campo<?> campo, Regole<Cellula> rule){
+private GameOfLifeController(ICampo<?> campo, Regole<Cellula> rule){
     this.campo = campo;
     this.rule = rule;
 }
@@ -19,10 +17,11 @@ private GameOfLifeController(Campo<?> campo, Regole<Cellula> rule){
 public Controller (File jsonFile){
     this.field =deserialize(jsonFile);
 }*/
-static public GameOfLifeController getInstance(Campo<?> campo, Regole<Cellula> rule){
+static public GameOfLifeController getInstance(ICampo<?> ICampo, Regole<Cellula> rule){
     if(controller==null){
-       controller= new GameOfLifeController(campo,rule);
+       controller= new GameOfLifeController(ICampo,rule);
     }
+
     return controller;
 }
 
@@ -42,7 +41,7 @@ public void NextGen(){
 
     @Override
     public void colorateDecolorateACellula(List<Integer> posInInt) {
-    Posizione pos =this.campo.getTransition().apply(posInInt);
+    IPosizione pos =this.campo.getTransition().apply(posInInt);
      if(this.campo.getMappaPosizioneCellula().containsKey(pos)){
           this.campo.getMappaPosizioneCellula().get(pos).changeStato();
      } else throw new IllegalArgumentException();
@@ -53,7 +52,7 @@ public void NextGen(){
     }
 
     @Override
-    public Campo<?> getCampo() {
+    public ICampo<?> getCampo() {
         return this.campo;
     }
 
