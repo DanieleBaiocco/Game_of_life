@@ -6,12 +6,7 @@ import java.util.function.Function;
 
 public class Campo1D<T extends IPosizione> extends Campo<T>{
     public Campo1D(Function<List<Integer>, ? extends T> transition) {
-        super(transition);
-    }
-
-    @Override
-    public void addAEntry(List<Integer> position, int dim) {
-       super.addAEntry(position,1);
+        super(transition, 1);
     }
 
     @Override

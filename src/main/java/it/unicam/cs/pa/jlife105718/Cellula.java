@@ -5,17 +5,24 @@ package it.unicam.cs.pa.jlife105718;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class Cellula {
+    private int id;
     private List<PropertyListener> listeners;
     private Stato stato;
-    public Cellula(Stato stato){
+    public Cellula(Stato stato, int id){
         this.stato=stato;
         listeners= new ArrayList<>();
+        this.id = id;
     }
 
     public Stato getStato() {
-        return stato;
+        return this.stato;
+    }
+
+    public int getId(){
+        return this.id;
     }
 
     private void setStato(Stato stato) {
@@ -38,5 +45,18 @@ public class Cellula {
     }
     private void publishPropertyEvent(String name, Stato state){
         this.listeners.forEach(prop->prop.onPropertyEvent(this,name,state));
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Cellula cellula = (Cellula) o;
+        return this.id == cellula.id;
+    }
+
+    @Override
+    public int hashCode() {
+        return this.id;
     }
 }

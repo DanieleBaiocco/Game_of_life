@@ -12,7 +12,7 @@ public class CellulaTest {
 
     @BeforeEach
     void createCellula(){
-        cellula = new Cellula(Stato.MORTO);
+        cellula = new Cellula(Stato.MORTO,0);
     }
 
     @Test

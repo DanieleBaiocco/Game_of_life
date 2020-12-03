@@ -9,4 +9,5 @@ public interface IPosizione {
 
     Object changeToPos(int x);
 
+
 }

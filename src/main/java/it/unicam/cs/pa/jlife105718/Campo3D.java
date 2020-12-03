@@ -7,13 +7,10 @@ import java.util.function.Function;
 public class Campo3D<T extends IPosizione> extends Campo<T>{
 
     public Campo3D( Function<List<Integer>, T> transizioneScelta) {
-        super(transizioneScelta);
+        super(transizioneScelta,3);
     }
 
-    @Override
-    public void addAEntry(List<Integer> position, int dim) {
-        super.addAEntry(position,3);
-    }
+
 
     public Set<Cellula>  getIntorno(Cellula cellula) {
         //implementazione omessa

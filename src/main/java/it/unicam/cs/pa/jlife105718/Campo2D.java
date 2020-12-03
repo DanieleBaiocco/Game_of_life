@@ -8,12 +8,7 @@ import java.util.stream.Collectors;
 public class Campo2D<T extends IPosizione> extends Campo<T>{
 
     public Campo2D( Function<List<Integer>,? extends T> transition) {
-        super(transition);
-    }
-
-    @Override
-    public void addAEntry(List<Integer> position, int dim) {
-        super.addAEntry(position,2);
+        super(transition,2);
     }
 
     public Set<Cellula> getIntorno(Cellula cellula) {
@@ -38,4 +33,6 @@ public class Campo2D<T extends IPosizione> extends Campo<T>{
             (firstofx==first+1 && secondCondition);
     };
    }
+
+
 }
