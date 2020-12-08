@@ -5,7 +5,7 @@ import java.util.function.Function;
 
 public abstract class Campo<T extends IPosizione> implements ICampo<T>{
     private static int count =-1;
-    private int dim;
+    private final int dim;
     private final Map<T, Cellula> mappaPosizioneCellula;
     private final Function<List<Integer>, ? extends T> transition;
     public Campo( Function<List<Integer>,? extends T> transition, int dim) {
@@ -41,10 +41,10 @@ public abstract class Campo<T extends IPosizione> implements ICampo<T>{
 
     @Override
     public void addAEntry( int ... values) {
-        if(values.length == this.dim) {
+        if(values.length == this.dim && !isIntoMap(values)) {
             T pos  = getPosizioneFromInteger(values);
-        Cellula cell = new Cellula(Stato.MORTO,iterateAndReturnCount());
-        mappaPosizioneCellula.put(pos,cell);
+            Cellula cell = new Cellula(Stato.MORTO,iterateAndReturnCount());
+            mappaPosizioneCellula.put(pos,cell);
         }
         else throw new IllegalArgumentException();
     }
@@ -54,13 +54,23 @@ public abstract class Campo<T extends IPosizione> implements ICampo<T>{
         return count;
     }
 
+    //non so se mettere questo metodo
     @Override
     public boolean isIntoMap(int ... coordinate){
         T pos = getPosizioneFromInteger(coordinate);
         return this.mappaPosizioneCellula.containsKey(pos);
     }
 
+    //non so se mettere questo metodo
+    public Cellula getCellulaFromInteger(int ... values){
+        if(isIntoMap(values)){
+            T pos= getPosizioneFromInteger(values);
+            return this.mappaPosizioneCellula.get(pos);
+        }else
+            throw new IllegalArgumentException();
+    }
 
+    //non so se mettere questo metodo pubblico o privato
     private T getPosizioneFromInteger( int ... values){
         List<Integer> list = new ArrayList<>();
         for ( int x: values){

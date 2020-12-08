@@ -18,9 +18,9 @@ public class CellulaTest {
     @Test
     void testChangeStato() {
         cellula.changeStato();
-        assertTrue(cellula.getStato()==Stato.VIVO);
+        assertSame(cellula.getStato(), Stato.VIVO);
         cellula.changeStato();
-        assertTrue(cellula.getStato()==Stato.MORTO);
+        assertSame(cellula.getStato(), Stato.MORTO);
     }
 
     @Test

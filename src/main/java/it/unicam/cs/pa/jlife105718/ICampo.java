@@ -12,5 +12,6 @@ public interface ICampo<T extends IPosizione> {
     Function<List<Integer>, ? extends T> getTransition();
     void addAEntry(int ... values);
     boolean isIntoMap (int ... coordinate);
+    Cellula getCellulaFromInteger(int ... values);
 
 }
