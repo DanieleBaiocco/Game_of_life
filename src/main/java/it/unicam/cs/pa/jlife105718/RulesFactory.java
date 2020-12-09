@@ -24,6 +24,7 @@ public class RulesFactory {
     }
 
     private  Regole<Cellula> basicRulesCreation() {
+        synchronized (this.getBasicRules()){
         return  x -> {
             Set<Cellula> vicini= ICampo.getIntorno(x);
             if(x.isAlive()) {
@@ -33,7 +34,7 @@ public class RulesFactory {
                         filter(Cellula::isAlive)
                         .count();
                 if(count<2||count>3){
-                    wait();
+                    this.getBasicRules().wait();
                     x.changeStato();
                     return x;}
             } else if(!x.isAlive()){
@@ -41,13 +42,15 @@ public class RulesFactory {
                         stream().
                         sequential().
                         filter(Cellula::isAlive)
-                        .count() ==3){
-                    wait();
+                        .count() ==3)
+                {
+                    this.getBasicRules().wait();
                     x.changeStato();
                     return x;
                 }
             } return x;
         };
+    }
     }
 
     public Regole<Cellula> getBasicRules() {

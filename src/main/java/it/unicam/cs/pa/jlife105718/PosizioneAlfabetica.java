@@ -1,20 +1,20 @@
 package it.unicam.cs.pa.jlife105718;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.stream.Collectors;
 
 public class PosizioneAlfabetica implements IPosizione {
-    private List<String> params = new ArrayList<>();
+    private List<String> params;
     public PosizioneAlfabetica(List<Integer> params)  {
         this.params = params.stream().map(this::changeToPos).collect(Collectors.toList());
     }
+
+
         @Override
         public String changeToPos(int x)  {
-            if(0<=x&&x<=25) {
+            if(x>=0 && x<=25) {
                 return Character.toString(x + 65);
-            }else if(25<x&&x<=255){
+            }else if(25<x && x<=255){
                 String s ="";
                 int risultato =(x+65)/65-1;
                 String str = Character.toString( risultato+65);
@@ -25,13 +25,11 @@ public class PosizioneAlfabetica implements IPosizione {
         return "";
     }
 
-
     @Override
     public Integer getCoordinateI(int i) {
         String charI = this.params.get(i);
         return charI.charAt(0)-65;
     }
-
 
     @Override
     public int hashCode() {
@@ -62,7 +60,7 @@ public class PosizioneAlfabetica implements IPosizione {
         return count == params.size();
     }
 
-    private List<String> getParams() {
+    public List<String> getParams() {
         return this.params;
     }
 

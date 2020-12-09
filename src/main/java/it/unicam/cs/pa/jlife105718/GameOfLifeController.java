@@ -26,25 +26,24 @@ static public GameOfLifeController getInstance(ICampo<?> ICampo, Regole<Cellula>
 }
 
 public void NextGen(){
-
-        this.campo.getMappaPosizioneCellula().values()
-                .forEach(w -> {
-                            try {
-                                getRule().step(w);
-                            } catch (InterruptedException e) {
-                                e.printStackTrace();
-                            }
+synchronized (rule) {
+    this.campo.getMappaPosizioneCellula().values()
+            .forEach(w -> {
+                        try {
+                            rule.step(w);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
                         }
-                );
+                    }
+            );
+    rule.notifyAll();
+}
 }
 
 
     @Override
-    public void colorateDecolorateACellula(List<Integer> posInInt) {
-    IPosizione pos =this.campo.getTransition().apply(posInInt);
-     if(this.campo.getMappaPosizioneCellula().containsKey(pos)){
-          this.campo.getMappaPosizioneCellula().get(pos).changeStato();
-     } else throw new IllegalArgumentException();
+    public void colorateDecolorateACellula(int ... posInInt) {
+      campo.changeStateOfACellula(posInInt);
     }
 
     public void loadBoardFromFile() {

@@ -48,7 +48,7 @@ private ICampo<?> campoGenerato;
     private void createCampo3D(String pos) {
         switch (pos){
             case "PosizioneNumerica":
-                this.campoGenerato = new Campo3D<PosizioneNumerica>(TransitionFactory.getInstance().getTransitionToInteger());
+                this.campoGenerato = new Campo3D<PosizioneNumericaIntera>(TransitionFactory.getInstance().getTransitionToInteger());
                 break;
             case "PosizioneAlfabetica":
                 this.campoGenerato = new Campo3D<PosizioneAlfabetica>(TransitionFactory.getInstance().getTransitionToChar());
@@ -57,7 +57,7 @@ private ICampo<?> campoGenerato;
     private void createCampo1D(String pos) {
         switch (pos){
             case "PosizioneNumerica":
-              this.campoGenerato = new Campo1D<PosizioneNumerica>(TransitionFactory.getInstance().getTransitionToInteger());
+              this.campoGenerato = new Campo1D<PosizioneNumericaIntera>(TransitionFactory.getInstance().getTransitionToInteger());
               break;
             case "PosizioneAlfabetica":
                 this.campoGenerato = new Campo1D<PosizioneAlfabetica>(TransitionFactory.getInstance().getTransitionToChar());
@@ -67,7 +67,7 @@ private ICampo<?> campoGenerato;
     private void createCampo2D(String pos) {
         switch (pos){
             case "PosizioneNumerica":
-                this.campoGenerato = new Campo2D<PosizioneNumerica>(TransitionFactory.getInstance().getTransitionToInteger());
+                this.campoGenerato = new Campo2D<PosizioneNumericaIntera>(TransitionFactory.getInstance().getTransitionToInteger());
                 break;
             case "PosizioneAlfabetica":
                 this.campoGenerato = new Campo2D<PosizioneAlfabetica>(TransitionFactory.getInstance().getTransitionToChar());

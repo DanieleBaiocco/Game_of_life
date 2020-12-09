@@ -79,6 +79,9 @@ public abstract class Campo<T extends IPosizione> implements ICampo<T>{
         return transition.apply(list);
     }
 
-
-
+    @Override
+    public void changeStateOfACellula(int ... values) {
+            T pos = getPosizioneFromInteger(values);
+            getMappaPosizioneCellula().get(pos).changeStato();
+    }
 }

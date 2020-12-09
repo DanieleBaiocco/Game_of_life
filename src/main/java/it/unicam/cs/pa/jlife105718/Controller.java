@@ -4,7 +4,7 @@ import java.util.List;
 
 public interface Controller {
      void NextGen();
-     void colorateDecolorateACellula(List<Integer> posizioneInInt);
+     void colorateDecolorateACellula(int ... values);
      void loadBoardFromFile();
      ICampo<?> getCampo();
 }
