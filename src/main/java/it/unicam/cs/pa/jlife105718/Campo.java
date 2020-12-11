@@ -66,7 +66,7 @@ public abstract class Campo<T extends IPosizione> implements ICampo<T>{
         if(isIntoMap(values)){
             T pos= getPosizioneFromInteger(values);
             return this.mappaPosizioneCellula.get(pos);
-        }else
+       }else
             throw new IllegalArgumentException();
     }
 
@@ -82,6 +82,7 @@ public abstract class Campo<T extends IPosizione> implements ICampo<T>{
     @Override
     public void changeStateOfACellula(int ... values) {
             T pos = getPosizioneFromInteger(values);
-            getMappaPosizioneCellula().get(pos).changeStato();
+            Cellula c = getMappaPosizioneCellula().get(pos);
+            c.changeStato();
     }
 }

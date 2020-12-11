@@ -4,20 +4,16 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.Pane;
-import javafx.scene.layout.VBox;
+
 import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.ResourceBundle;
 
 public class GUIViewFirstSceneController implements Initializable {
@@ -42,7 +38,6 @@ private ToggleGroup dimensionChoosedToggleGroup;
 private ToggleGroup ruleChoosedToggleGroup;
 private ToggleGroup positionChoosedToggleGroup;
 private int dimension;
-private VBox vBox;
 
 
     @Override
@@ -63,7 +58,6 @@ private VBox vBox;
         this.doubleNumbersRadioButton.setToggleGroup(positionChoosedToggleGroup);
         this.alphabetRadioButton.setToggleGroup(positionChoosedToggleGroup);
         //init labels and textfields
-        this.vBox = new VBox();
         this.firstLabel.setText("");
         this.secondLabel.setText("");
         this.thirdLabel.setText("");
@@ -71,13 +65,7 @@ private VBox vBox;
         this.secondTextField.setVisible(false);
         this.thirdTextField.setVisible(false);
         this.button1.setDisable(true);
-        this.vBox.getChildren().add(firstTextField);
-        this.vBox.getChildren().add(secondTextField);
-        this.vBox.getChildren().add(thirdTextField);
-        vBox.setVisible(false);
         this.dimension=0;
-
-
     }
 
 
@@ -104,7 +92,6 @@ private VBox vBox;
            thirdTextField.setVisible(true);
            this.dimension=3;
        }
-       vBox.setVisible(true);
        oneDRadioButton.setDisable(true);
        twoDRadioButton.setDisable(true);
        threeDRadioButton.setDisable(true);
@@ -115,8 +102,6 @@ private VBox vBox;
         FXMLLoader loader = new FXMLLoader();
         loader.setLocation(getClass().getResource("/GameOfLifeSecondScene.fxml"));
         AnchorPane gridViewParent = loader.load();
-
-
         GUIViewSecondSceneController secondController = loader.getController();
         RadioButton dimensionRadioButton = (RadioButton) dimensionChoosedToggleGroup.getSelectedToggle();
         Integer dimension = Integer.parseInt(dimensionRadioButton.getText());
@@ -129,7 +114,6 @@ private VBox vBox;
         gridViewParent.getChildren().add(grid);
         grid.setLayoutX(280);
         grid.setLayoutY(155);
-
         Scene gridViewScene =  new Scene (gridViewParent);
     Stage window = (Stage) ((Node) mouseEvent.getSource()).getScene().getWindow();
     window.setScene(gridViewScene);
@@ -143,17 +127,15 @@ private VBox vBox;
         return positionChoosedToggleGroup.getToggles().stream().anyMatch(Toggle::isSelected)
                 && ruleChoosedToggleGroup.getToggles().stream().anyMatch(Toggle::isSelected)
                 && dimensionChoosedToggleGroup.getToggles().stream().anyMatch(Toggle::isSelected)
-                && vBox.getChildren().stream().filter(x->!(x.isDisable()))
-                .filter(x-> {
-                    TextField text = (TextField) x;
-                    return text.getText().isEmpty() ;
-                }).count()==this.dimension;
+                && (oneDRadioButton.isDisable() && (!firstTextField.isVisible () || !firstTextField.getText().isEmpty()))
+                && (oneDRadioButton.isDisable() && (!secondTextField.isVisible () || !secondTextField.getText().isEmpty()))
+                && (oneDRadioButton.isDisable() && (!thirdTextField.isVisible () || !thirdTextField.getText().isEmpty()));
     }
 
 
 
     @FXML public void checkOnNextButton(MouseEvent mouseEvent) {
-      //  if(nextIsPossible())
+       if(nextIsPossible())
             this.button1.setDisable(false);
     }
 }

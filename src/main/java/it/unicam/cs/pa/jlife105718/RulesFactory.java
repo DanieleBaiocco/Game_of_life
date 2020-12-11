@@ -6,15 +6,15 @@ public class RulesFactory {
     static private RulesFactory instance;
     private final Regole<Cellula> basicRules;
     private final Regole<Cellula> alternativeRules;
-    private final ICampo<?> ICampo;
-    static public RulesFactory getRulesFactory(ICampo<?> ICampo) {
+    private final ICampo<?> campo;
+    static public RulesFactory getRulesFactory(ICampo<?> campo) {
         if(instance == null) {
-            instance= new RulesFactory(ICampo);
+            instance= new RulesFactory(campo);
         }
         return instance;
     }
-    private RulesFactory(ICampo<?> ICampo){
-        this.ICampo = ICampo;
+    private RulesFactory(ICampo<?> campo){
+        this.campo = campo;
         basicRules= basicRulesCreation();
         alternativeRules=alternativeRulesCreation();
         }
@@ -24,33 +24,34 @@ public class RulesFactory {
     }
 
     private  Regole<Cellula> basicRulesCreation() {
-        synchronized (this.getBasicRules()){
-        return  x -> {
-            Set<Cellula> vicini= ICampo.getIntorno(x);
-            if(x.isAlive()) {
-                long count = vicini.
-                        stream().
-                        sequential().
-                        filter(Cellula::isAlive)
-                        .count();
-                if(count<2||count>3){
-                    this.getBasicRules().wait();
-                    x.changeStato();
-                    return x;}
-            } else if(!x.isAlive()){
-                if ( vicini.
-                        stream().
-                        sequential().
-                        filter(Cellula::isAlive)
-                        .count() ==3)
-                {
-                    this.getBasicRules().wait();
-                    x.changeStato();
-                    return x;
+        synchronized (campo) {
+            return x -> {
+                Set<Cellula> vicini = campo.getIntorno(x);
+                if (x.isAlive()) {
+                    long count = vicini.
+                            stream().
+                            sequential().
+                            filter(Cellula::isAlive)
+                            .count();
+                    if (count < 2 || count > 3) {
+                        x.changeStato();
+                        wait();
+                        return x;
+                    }
+                } else if (!x.isAlive()) {
+                    if (vicini.
+                            stream().
+                            sequential().
+                            filter(Cellula::isAlive)
+                            .count() == 3) {
+
+                        x.changeStato();
+                        return x;
+                    }
                 }
-            } return x;
-        };
-    }
+                return x;
+            };
+        }
     }
 
     public Regole<Cellula> getBasicRules() {
@@ -59,7 +60,6 @@ public class RulesFactory {
     public Regole<Cellula> getAlternativeRules() {
         return alternativeRules;
     }
-
 
 }
 

@@ -17,8 +17,7 @@ public class RulesFactoryTest {
                 campo.addAEntry(j,i);
             }
         }
-        controller.colorateDecolorateACellula(0,1);
-        controller.colorateDecolorateACellula(2,2);
+        controller.colorateDecolorateACellula(1,0);
         controller.colorateDecolorateACellula(3,2);
         controller.colorateDecolorateACellula(1,3);
         controller.colorateDecolorateACellula(4,4);
@@ -30,9 +29,7 @@ public class RulesFactoryTest {
     }
 
     @Test
-    void testNextGen(){
+    void testNextGen() throws InterruptedException {
         controller.NextGen();
-
-
     }
 }

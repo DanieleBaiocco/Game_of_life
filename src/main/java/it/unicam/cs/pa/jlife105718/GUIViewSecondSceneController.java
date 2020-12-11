@@ -42,7 +42,7 @@ private ICampo<?> campoGenerato;
              regolaScelta = RulesFactory.getRulesFactory(campoGenerato).getAlternativeRules();
              break;
      }
-   GRASPController = GameOfLifeController.getInstance(this.campoGenerato,this.regolaScelta);
+   //GRASPController = GameOfLifeController.getInstance(this.campoGenerato,this.regolaScelta);
    }
 
     private void createCampo3D(String pos) {
