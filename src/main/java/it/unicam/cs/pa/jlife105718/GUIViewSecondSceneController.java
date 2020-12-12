@@ -3,14 +3,17 @@ package it.unicam.cs.pa.jlife105718;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.Pane;
 
 import java.util.List;
 import java.util.function.Function;
 
 public class GUIViewSecondSceneController implements PropertyListener {
+
 @FXML private Label firstLabel;
 @FXML private Label secondLabel;
 @FXML private Label thirdLabel;
+@FXML private GridPane grid;
 private Function<List<Integer>, ? extends IPosizione> function;
 private GameOfLifeController GRASPController;
 
@@ -18,41 +21,40 @@ private GameOfLifeController GRASPController;
         GRASPController = GameOfLifeController.getInstance(campo,rule);
     }
 
-     public GridPane initGrid(){
-        GridPane grid = new GridPane();
-        GRASPController.getCampo().addAEntry(0,0);
-        switch (GRASPController.getCampo().getDim()){
+     public void initGrid(List<Integer> list){
+        switch (list.size()){
             case 1:
-                grid=initGrid1D();
+                initGrid1D(list.get(0));
                 break;
             case 2:
-                grid=initGrid2D();
+                initGrid2D(list.get(0),list.get(1));
                 break;
             case 3:
-                grid=initGrid3D();
+                initGrid3D(list.get(0),list.get(1),list.get(2));
                 break;
-            default:
-                grid= new GridPane();
         }
-       return grid;
     }
 
-    private GridPane initGrid1D() {
-        return null;
+    private void initGrid1D(int x1) {
     }
 
-    private GridPane initGrid2D() {
+    private void initGrid2D(int x1, int x2) {
+        firstLabel.setText("SESSO");
+        for(int i=0; i<x1; i++){
+            for(int j=0; j<x2; j++){
+                Pane pane = new Pane();
+                pane.setPrefSize(100,100);
+                this.grid.add(pane,j,i);
+                GRASPController.addAEntry(j,i);
+                System.out.println("COlonna secondo GRASPController "+j +" Riga secondo GRASP "+i);
 
-        return null;
+
+            }
+        }
     }
 
-    private GridPane initGrid3D() {
-        return null;
+    private void initGrid3D(int x1, int x2, int x3) {
     }
-
-
-/* GridPane griglia = new GridPane();
-         griglia.setGridLinesVisible(true);*/
 
     @Override
     public void onPropertyEvent(Cellula source, String name, Stato state) {

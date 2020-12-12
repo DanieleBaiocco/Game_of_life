@@ -7,4 +7,5 @@ public interface Controller {
      void colorateDecolorateACellula(int ... values);
      void loadBoardFromFile();
      ICampo<?> getCampo();
+      void addAEntry( int ... values);
 }

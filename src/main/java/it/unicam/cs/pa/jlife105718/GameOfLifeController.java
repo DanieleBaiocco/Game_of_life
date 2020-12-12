@@ -75,9 +75,15 @@ int i =0;
 
     }
 
+
     @Override
     public ICampo<?> getCampo() {
         return this.campo;
+    }
+
+    @Override
+    public void addAEntry(int... values) {
+    this.campo.addAEntry(values);
     }
 
     public Regole<Cellula> getRule(){

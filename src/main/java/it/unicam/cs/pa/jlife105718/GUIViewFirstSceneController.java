@@ -144,10 +144,15 @@ private Regole<Cellula> rule;
         AnchorPane gridViewParent = loader.load();
         GUIViewSecondSceneController secondController = loader.getController();
         secondController.initializeGRASPController(this.campo,this.rule);
-        GridPane grid = secondController.initGrid();
-        gridViewParent.getChildren().add(grid);
-        grid.setLayoutX(280);
-        grid.setLayoutY(155);
+        List<Integer> list = new ArrayList<>();
+        list.add(Integer.parseInt(firstTextField.getText()));
+        if(twoDRadioButton.isSelected())
+            list.add(Integer.parseInt(secondTextField.getText()));
+        else if (threeDRadioButton.isSelected()){
+            list.add(Integer.parseInt(secondTextField.getText()));
+            list.add(Integer.parseInt(thirdTextField.getText()));
+        }
+        secondController.initGrid(list);
         Scene gridViewScene =  new Scene (gridViewParent);
         Stage window = (Stage) ((Node) mouseEvent.getSource()).getScene().getWindow();
         window.setScene(gridViewScene);

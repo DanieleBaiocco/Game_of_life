@@ -10,7 +10,7 @@ public interface ICampo<T extends IPosizione> {
     T getPosizioneFromCellula(Cellula cellula);
     Map<T,Cellula> getMappaPosizioneCellula();
     Function<List<Integer>, ? extends T> getTransition();
-    void addAEntry(int ... values);
+    void addAEntry(int ... values) ;
     boolean isIntoMap (int ... coordinate);
     Cellula getCellulaFromInteger(int ... values);
     void changeStateOfACellula(int ... values);
