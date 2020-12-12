@@ -1,7 +1,6 @@
 package it.unicam.cs.pa.jlife105718;
 
 import java.util.List;
-import java.util.Objects;
 import java.util.stream.Collectors;
 
 public class PosizioneNumericaIntera implements IPosizione {
@@ -16,7 +15,7 @@ public class PosizioneNumericaIntera implements IPosizione {
     }
 
     @Override
-    public Integer changeToPos(int x) {
+     public Integer changeToPos(int x) {
     return x;
     }
 

@@ -5,9 +5,7 @@ import java.util.List;
 
 public interface IPosizione {
 
-    Integer getCoordinateI(int i);
+    Integer getCoordinateI(int i) ;
 
     Object changeToPos(int x);
-
-
 }

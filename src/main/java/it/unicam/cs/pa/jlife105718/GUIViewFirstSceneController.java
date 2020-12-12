@@ -1,5 +1,6 @@
 package it.unicam.cs.pa.jlife105718;
 
+import javafx.css.Rule;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -10,11 +11,16 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.ResourceBundle;
+import java.util.function.Function;
+import java.util.stream.Stream;
 
 public class GUIViewFirstSceneController implements Initializable {
     @FXML private AnchorPane mainAnchorPane;
@@ -34,10 +40,14 @@ public class GUIViewFirstSceneController implements Initializable {
 @FXML private TextField secondTextField;
 @FXML private TextField thirdTextField;
 @FXML private Button button1;
+@FXML private Label firstRedLabel;
+@FXML private Label redLabel;
 private ToggleGroup dimensionChoosedToggleGroup;
 private ToggleGroup ruleChoosedToggleGroup;
 private ToggleGroup positionChoosedToggleGroup;
-private int dimension;
+private Function<List<Integer>, ? extends IPosizione> function;
+private Campo<? extends IPosizione> campo;
+private Regole<Cellula> rule;
 
 
     @Override
@@ -58,66 +68,90 @@ private int dimension;
         this.doubleNumbersRadioButton.setToggleGroup(positionChoosedToggleGroup);
         this.alphabetRadioButton.setToggleGroup(positionChoosedToggleGroup);
         //init labels and textfields
+
         this.firstLabel.setText("");
         this.secondLabel.setText("");
         this.thirdLabel.setText("");
+
         this.firstTextField.setVisible(false);
         this.secondTextField.setVisible(false);
         this.thirdTextField.setVisible(false);
         this.button1.setDisable(true);
-        this.dimension=0;
+        //redlabels
+        firstRedLabel.setText("");
+        redLabel.setText("");
     }
 
 
    @FXML public void loadLabelsAndTexts(MouseEvent mouseEvent) {
+     if (positionChoosedToggleGroup.getToggles().stream().anyMatch(Toggle::isSelected)
+     && dimensionChoosedToggleGroup.getToggles().stream().anyMatch(Toggle::isSelected)
+     && ruleChoosedToggleGroup.getToggles().stream().anyMatch(Toggle::isSelected)) {
+         if (integerNumbersRadioButton.isSelected()) {
+             this.function = TransitionFactory.getInstance().getTransitionToInteger();
+         } else if (doubleNumbersRadioButton.isSelected()) {
+             this.function = TransitionFactory.getInstance().getTransitionToDouble();
+         } else {
+             this.function = TransitionFactory.getInstance().getTransitionToChar();
+         }
 
-        if(oneDRadioButton.isSelected()) {
-            firstLabel.setText("Inserisci la prima dimensione");
-            firstTextField.setVisible(true);
-            this.dimension=1;
-        }
-       if(twoDRadioButton.isSelected()) {
-           firstLabel.setText("Inserisci la prima dimensione");
-           firstTextField.setVisible(true);
-           secondLabel.setText("Inserisci la seconda dimensione");
-           secondTextField.setVisible(true);
-           this.dimension=2;
-       }
-       if(threeDRadioButton.isSelected()){
-           firstLabel.setText("Inserisci la prima dimensione");
-           firstTextField.setVisible(true);
-           secondLabel.setText("Inserisci la seconda dimensione");
-           secondTextField.setVisible(true);
-           thirdLabel.setText("Inserisci la terza dimensione");
-           thirdTextField.setVisible(true);
-           this.dimension=3;
-       }
-       oneDRadioButton.setDisable(true);
-       twoDRadioButton.setDisable(true);
-       threeDRadioButton.setDisable(true);
+         if(oneDRadioButton.isSelected()) {
+             this.campo = new Campo1D<>(this.function);
+             firstLabel.setText("Inserisci la prima dimensione");
+             firstTextField.setVisible(true);
+         }else if(twoDRadioButton.isSelected()) {
+             this.campo = new Campo2D<>(this.function);
+             firstLabel.setText("Inserisci la prima dimensione");
+             firstTextField.setVisible(true);
+             secondLabel.setText("Inserisci la seconda dimensione");
+             secondTextField.setVisible(true);
+         }else {
+             this.campo = new Campo3D<>(this.function);
+             firstLabel.setText("Inserisci la prima dimensione");
+             firstTextField.setVisible(true);
+             secondLabel.setText("Inserisci la seconda dimensione");
+             secondTextField.setVisible(true);
+             thirdLabel.setText("Inserisci la terza dimensione");
+             thirdTextField.setVisible(true);
+         }
+         if (standardRuleRadioButton.isSelected()) {
+             this.rule = RulesFactory.getRulesFactory(this.campo).getBasicRules();
+         } else if (alternativeRuleRadioButton.isSelected()) {
+             this.rule = RulesFactory.getRulesFactory(this.campo).getAlternativeRules();
+         } else {
+             this.rule = RulesFactory.getRulesFactory(this.campo).getAlternativeRules();
+         }
+         if(!redLabel.getText().equals(""))
+             redLabel.setText("");
+         oneDRadioButton.setDisable(true);
+         twoDRadioButton.setDisable(true);
+         threeDRadioButton.setDisable(true);
+         integerNumbersRadioButton.setDisable(true);
+         doubleNumbersRadioButton.setDisable(true);
+         alphabetRadioButton.setDisable(true);
+         standardRuleRadioButton.setDisable(true);
+         alternativeRuleRadioButton.setDisable(true);
+         alternativeRule2RadioButton.setDisable(true);
+     }  else{
+         redLabel.setText("Completa la scelta");
+     }
 }
 
    @FXML
-   public void loadGrid(MouseEvent mouseEvent) throws IOException {
+   public void loadGrid(MouseEvent mouseEvent)  throws IOException{
         FXMLLoader loader = new FXMLLoader();
         loader.setLocation(getClass().getResource("/GameOfLifeSecondScene.fxml"));
         AnchorPane gridViewParent = loader.load();
         GUIViewSecondSceneController secondController = loader.getController();
-        RadioButton dimensionRadioButton = (RadioButton) dimensionChoosedToggleGroup.getSelectedToggle();
-        Integer dimension = Integer.parseInt(dimensionRadioButton.getText());
-        RadioButton positionRadioButton =  (RadioButton)positionChoosedToggleGroup.getSelectedToggle();
-        String position = positionRadioButton.getText();
-        RadioButton ruleRadioButton = (RadioButton) ruleChoosedToggleGroup.getSelectedToggle();
-        String rule = ruleRadioButton.getText();
-        secondController.initializeGRASPController(position,dimension,rule);
+        secondController.initializeGRASPController(this.campo,this.rule);
         GridPane grid = secondController.initGrid();
         gridViewParent.getChildren().add(grid);
         grid.setLayoutX(280);
         grid.setLayoutY(155);
         Scene gridViewScene =  new Scene (gridViewParent);
-    Stage window = (Stage) ((Node) mouseEvent.getSource()).getScene().getWindow();
-    window.setScene(gridViewScene);
-    window.show();
+        Stage window = (Stage) ((Node) mouseEvent.getSource()).getScene().getWindow();
+        window.setScene(gridViewScene);
+        window.show();
     }
 
 
@@ -129,13 +163,38 @@ private int dimension;
                 && dimensionChoosedToggleGroup.getToggles().stream().anyMatch(Toggle::isSelected)
                 && (oneDRadioButton.isDisable() && (!firstTextField.isVisible () || !firstTextField.getText().isEmpty()))
                 && (oneDRadioButton.isDisable() && (!secondTextField.isVisible () || !secondTextField.getText().isEmpty()))
-                && (oneDRadioButton.isDisable() && (!thirdTextField.isVisible () || !thirdTextField.getText().isEmpty()));
+                && (oneDRadioButton.isDisable() && (!thirdTextField.isVisible () || !thirdTextField.getText().isEmpty()))
+                && firstRedLabel.getText().equals("");
     }
 
 
 
-    @FXML public void checkOnNextButton(MouseEvent mouseEvent) {
-       if(nextIsPossible())
-            this.button1.setDisable(false);
+    @FXML public void checkOnNextButton() {
+        if (nextIsPossible()) {
+          this.button1.setDisable(false);
+        }
+
+    }
+
+    @FXML public void checkMaxCoordinate(){
+        if(oneDRadioButton.isSelected()){
+            int x = 0;
+            try {
+                x = Integer.parseInt(firstTextField.getText());
+                firstRedLabel.setText("");
+                if(alphabetRadioButton.isSelected()) {
+                    List<Integer> list = new ArrayList<>();
+                    list.add(x);
+                    function.apply(list);
+                }
+            }catch (NumberFormatException e){
+                firstRedLabel.setText("Inserire un NUMERO");
+            }catch (IllegalArgumentException e) {
+                firstRedLabel.setText("Il numero deve essere ACCETTABILE");
+            }
+
+        }
+        //FAI IN MODO DI REFACTORARE IL CODICE PER NON AVERLO RIPETUTO PER GLI ALTRI DUE CASI
+
     }
 }

@@ -11,9 +11,9 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane fx:id="mainAnchorPane" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" onMouseClicked="#checkOnNextButton" prefHeight="261.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.unicam.cs.pa.jlife105718.GUIViewFirstSceneController">
+<AnchorPane fx:id="mainAnchorPane" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" onMouseClicked="#checkOnNextButton" prefHeight="482.0" prefWidth="673.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.unicam.cs.pa.jlife105718.GUIViewFirstSceneController">
    <children>
-      <SplitPane dividerPositions="0.1884422110552764" orientation="VERTICAL" prefHeight="400.0" prefWidth="600.0">
+      <SplitPane dividerPositions="0.1884422110552764" orientation="VERTICAL" prefHeight="482.0" prefWidth="673.0">
         <items>
           <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0">
                <children>
@@ -42,6 +42,7 @@
                               <RadioButton fx:id="twoDRadioButton" mnemonicParsing="false" text="2" />
                               <RadioButton fx:id="threeDRadioButton" mnemonicParsing="false" text="3" />
                               <Button mnemonicParsing="false" onMouseClicked="#loadLabelsAndTexts" text="Confirm" />
+                              <Label fx:id="redLabel" prefHeight="16.0" prefWidth="144.0" text="Label" textFill="#e40606" />
                            </children>
                         </VBox>
                         <VBox onMouseClicked="#checkOnNextButton" prefHeight="147.0" prefWidth="192.0" spacing="8.0">
@@ -54,7 +55,7 @@
                                     <SepiaTone level="0.0" />
                                  </effect>
                               </Label>
-                              <RadioButton fx:id="integerNumbersRadioButton" mnemonicParsing="false" text="Numeri Interi" />
+                              <RadioButton fx:id="integerNumbersRadioButton" mnemonicParsing="false" text="Numeri interi" />
                               <RadioButton fx:id="doubleNumbersRadioButton" mnemonicParsing="false" text="Numeri decimali" />
                               <RadioButton fx:id="alphabetRadioButton" mnemonicParsing="false" text="Letterali" />
                            </children>
@@ -76,25 +77,26 @@
                         </VBox>
                      </children>
                   </HBox>
-                  <AnchorPane layoutX="1.0" layoutY="118.0" onMouseClicked="#checkOnNextButton" prefHeight="202.0" prefWidth="600.0">
+                  <AnchorPane layoutX="1.0" layoutY="117.0" onMouseClicked="#checkOnNextButton" prefHeight="202.0" prefWidth="600.0">
                      <children>
-                        <AnchorPane layoutY="31.0" onMouseClicked="#checkOnNextButton" prefHeight="169.0" prefWidth="175.0">
+                        <AnchorPane layoutY="40.0" onMouseClicked="#checkOnNextButton" prefHeight="169.0" prefWidth="175.0">
                            <children>
-                              <Label fx:id="thirdLabel" layoutX="74.0" layoutY="113.0" text="Label" />
-                              <Label fx:id="secondLabel" layoutX="74.0" layoutY="61.0" text="Label" />
-                              <Label fx:id="firstLabel" layoutX="74.0" layoutY="14.0" text="Label" />
+                              <Label fx:id="thirdLabel" layoutX="14.0" layoutY="126.0" prefHeight="16.0" prefWidth="144.0" text="Label" />
+                              <Label fx:id="secondLabel" layoutX="14.0" layoutY="69.0" prefHeight="16.0" prefWidth="144.0" text="Label" />
+                              <Label fx:id="firstLabel" layoutX="14.0" layoutY="21.0" prefHeight="16.0" prefWidth="144.0" text="Label" />
                            </children>
                         </AnchorPane>
-                        <Button fx:id="button1" layoutX="498.0" layoutY="161.0" mnemonicParsing="false" onMouseClicked="#loadGrid" prefHeight="25.0" prefWidth="69.0" text="Next" />
-                        <VBox layoutX="186.0" layoutY="42.0" prefHeight="160.0" prefWidth="100.0" spacing="30.0">
+                        <VBox layoutX="186.0" layoutY="46.0" prefHeight="156.0" prefWidth="100.0" spacing="30.0">
                            <children>
-                              <TextField fx:id="thirdTextField" />
-                              <TextField fx:id="secondTextField" prefHeight="17.0" prefWidth="149.0" />
-                              <TextField fx:id="firstTextField" prefHeight="25.0" prefWidth="149.0" />
+                              <TextField fx:id="firstTextField" onKeyTyped="#checkMaxCoordinate" prefHeight="16.0" prefWidth="100.0" />
+                              <TextField fx:id="secondTextField" onKeyTyped="#checkMaxCoordinate" prefHeight="17.0" prefWidth="149.0" />
+                              <TextField fx:id="thirdTextField" onKeyTyped="#checkMaxCoordinate" />
                            </children>
                         </VBox>
+                        <Label fx:id="firstRedLabel" layoutX="305.0" layoutY="14.0" prefHeight="16.0" prefWidth="300.0" text="Label" textFill="#dd0505" />
                      </children>
                   </AnchorPane>
+                  <Button fx:id="button1" layoutX="571.0" layoutY="313.0" mnemonicParsing="false" onMouseClicked="#loadGrid" prefHeight="25.0" prefWidth="69.0" text="Next" />
                </children>
             </AnchorPane>
         </items>

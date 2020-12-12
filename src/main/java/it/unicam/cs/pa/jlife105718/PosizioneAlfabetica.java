@@ -1,29 +1,34 @@
 package it.unicam.cs.pa.jlife105718;
 
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class PosizioneAlfabetica implements IPosizione {
+public class PosizioneAlfabetica implements IPosizione{
     private List<String> params;
-    public PosizioneAlfabetica(List<Integer> params)  {
+    public PosizioneAlfabetica(List<Integer> params) {
         this.params = params.stream().map(this::changeToPos).collect(Collectors.toList());
+    }
+
+    public PosizioneAlfabetica(){
+        this.params = new ArrayList<>();
     }
 
 
         @Override
-        public String changeToPos(int x)  {
-            if(x>=0 && x<=25) {
+         public String changeToPos(int x) {
+            if (x<=25) {
                 return Character.toString(x + 65);
-            }else if(25<x && x<=255){
+            }else if(x<=255){
                 String s ="";
                 int risultato =(x+65)/65-1;
                 String str = Character.toString( risultato+65);
                 return str.concat(Character.toString(x%26 + 65));
-            } //else if(parametroI>255) {
-               // throw new ASCIIIntegersEndedException();
-          //  }
-        return "";
-    }
+            } else {
+                throw new IllegalArgumentException();
+           }
+        }
 
     @Override
     public Integer getCoordinateI(int i) {

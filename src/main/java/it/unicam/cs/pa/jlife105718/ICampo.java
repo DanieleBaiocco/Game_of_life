@@ -14,5 +14,6 @@ public interface ICampo<T extends IPosizione> {
     boolean isIntoMap (int ... coordinate);
     Cellula getCellulaFromInteger(int ... values);
     void changeStateOfACellula(int ... values);
+    int getDim();
 
 }

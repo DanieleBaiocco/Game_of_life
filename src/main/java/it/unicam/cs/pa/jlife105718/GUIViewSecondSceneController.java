@@ -5,88 +5,54 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
 
 import java.util.List;
+import java.util.function.Function;
 
 public class GUIViewSecondSceneController implements PropertyListener {
 @FXML private Label firstLabel;
 @FXML private Label secondLabel;
 @FXML private Label thirdLabel;
-private List<Integer> listaDiParametri;
-private int dimensioneScelta;
+private Function<List<Integer>, ? extends IPosizione> function;
 private GameOfLifeController GRASPController;
-private Regole<Cellula> regolaScelta;
-private ICampo<?> campoGenerato;
-    public void initializeGRASPController(String pos,  Integer dim, String rule){
-  dimensioneScelta = dim;
-   firstLabel.setText(Integer.toString(dim));
-   secondLabel.setText(pos);
-   thirdLabel.setText(rule);
-   switch (dimensioneScelta) {
-       case 1:
-            createCampo1D(pos);
-           break;
-       case 2:
-           createCampo2D(pos);
-           break;
-       case 3 :
-           createCampo3D(pos);
-           break;
-       default:
-           campoGenerato = null;
-     }
-     switch (rule) {
-         case "BasicRule":
-             regolaScelta = RulesFactory.getRulesFactory(campoGenerato).getBasicRules();
-             break;
-         case "AlternativeRule":
-         case "AlternativeRule2":
-             regolaScelta = RulesFactory.getRulesFactory(campoGenerato).getAlternativeRules();
-             break;
-     }
-   //GRASPController = GameOfLifeController.getInstance(this.campoGenerato,this.regolaScelta);
-   }
 
-    private void createCampo3D(String pos) {
-        switch (pos){
-            case "PosizioneNumerica":
-                this.campoGenerato = new Campo3D<PosizioneNumericaIntera>(TransitionFactory.getInstance().getTransitionToInteger());
-                break;
-            case "PosizioneAlfabetica":
-                this.campoGenerato = new Campo3D<PosizioneAlfabetica>(TransitionFactory.getInstance().getTransitionToChar());
-    }}
-
-    private void createCampo1D(String pos) {
-        switch (pos){
-            case "PosizioneNumerica":
-              this.campoGenerato = new Campo1D<PosizioneNumericaIntera>(TransitionFactory.getInstance().getTransitionToInteger());
-              break;
-            case "PosizioneAlfabetica":
-                this.campoGenerato = new Campo1D<PosizioneAlfabetica>(TransitionFactory.getInstance().getTransitionToChar());
-        }
-    }
-
-    private void createCampo2D(String pos) {
-        switch (pos){
-            case "PosizioneNumerica":
-                this.campoGenerato = new Campo2D<PosizioneNumericaIntera>(TransitionFactory.getInstance().getTransitionToInteger());
-                break;
-            case "PosizioneAlfabetica":
-                this.campoGenerato = new Campo2D<PosizioneAlfabetica>(TransitionFactory.getInstance().getTransitionToChar());
-                break;
-    }
-
+    public void initializeGRASPController(Campo<? extends IPosizione> campo, Regole<Cellula> rule){
+        GRASPController = GameOfLifeController.getInstance(campo,rule);
     }
 
      public GridPane initGrid(){
-         GridPane griglia = new GridPane();
-         griglia.setGridLinesVisible(true);
-         for (int i = 0; i < 100; i++) {
-             Label label = new Label("sorry");
-             griglia.addRow(i, label);
+        GridPane grid = new GridPane();
+        GRASPController.getCampo().addAEntry(0,0);
+        switch (GRASPController.getCampo().getDim()){
+            case 1:
+                grid=initGrid1D();
+                break;
+            case 2:
+                grid=initGrid2D();
+                break;
+            case 3:
+                grid=initGrid3D();
+                break;
+            default:
+                grid= new GridPane();
+        }
+       return grid;
+    }
 
-         }return griglia;
-             }
+    private GridPane initGrid1D() {
+        return null;
+    }
+
+    private GridPane initGrid2D() {
+
+        return null;
+    }
+
+    private GridPane initGrid3D() {
+        return null;
+    }
 
 
+/* GridPane griglia = new GridPane();
+         griglia.setGridLinesVisible(true);*/
 
     @Override
     public void onPropertyEvent(Cellula source, String name, Stato state) {

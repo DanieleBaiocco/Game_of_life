@@ -21,7 +21,7 @@ public class PosizioneVirgolaMobile implements IPosizione{
     }
 
     @Override
-    public Double changeToPos(int x) {
+     public Double changeToPos(int x) {
         return (double) x;
     }
 }

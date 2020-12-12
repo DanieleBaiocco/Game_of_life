@@ -13,7 +13,9 @@ public abstract class Campo<T extends IPosizione> implements ICampo<T>{
         this.mappaPosizioneCellula= new HashMap<>();
         this.dim = dim;
     }
-
+public int getDim(){
+        return this.dim;
+}
     @Override
     public abstract Set<Cellula> getIntorno(Cellula cellula);
 
