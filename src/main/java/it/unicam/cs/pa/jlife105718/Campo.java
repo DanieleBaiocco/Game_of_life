@@ -81,6 +81,12 @@ public int getDim(){
         return transition.apply(list);
     }
 
+@Override
+    public Integer getIntegerFromCellula(Cellula cellula, int i){
+        T pos = getPosizioneFromCellula(cellula);
+        return pos.getCoordinateI(i);
+    }
+
     @Override
     public void changeStateOfACellula(int ... values) {
             T pos = getPosizioneFromInteger(values);

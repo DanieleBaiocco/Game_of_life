@@ -15,5 +15,6 @@ public interface ICampo<T extends IPosizione> {
     Cellula getCellulaFromInteger(int ... values);
     void changeStateOfACellula(int ... values);
     int getDim();
+    Integer getIntegerFromCellula(Cellula cellula,int i);
 
 }

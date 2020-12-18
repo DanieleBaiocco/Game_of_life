@@ -86,6 +86,11 @@ int i =0;
     this.campo.addAEntry(values);
     }
 
+    @Override
+    public Cellula getCellulaFromInteger(int... values) {
+        return campo.getCellulaFromInteger(values);
+    }
+
     public Regole<Cellula> getRule(){
         return this.rule;
     }

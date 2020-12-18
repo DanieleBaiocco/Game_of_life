@@ -8,4 +8,6 @@ public interface Controller {
      void loadBoardFromFile();
      ICampo<?> getCampo();
       void addAEntry( int ... values);
+      Cellula getCellulaFromInteger(int ... values);
+
 }
