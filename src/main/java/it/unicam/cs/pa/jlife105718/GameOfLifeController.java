@@ -34,31 +34,9 @@ static public GameOfLifeController getInstance(ICampo<?> campo, Regole<Cellula> 
     return controller;
 }
 
-public  void NextGen()  throws InterruptedException{
-int i =0;
+public  void NextGen() {
 //CLONE
-    synchronized (campo) {
-        ExecutorService executor = Executors.newSingleThreadExecutor();
-            executor.execute(() -> {
-               this.campo.getMappaPosizioneCellula().values()
-                        .stream()
-                        .map(w -> {
-                            try {
-                                return rule.step(w);
-                            } catch (InterruptedException e) {
-                                e.printStackTrace();
-                            }
-                            return w;
-                        })
-                       .count();
-
-            });
-            executor.shutdown();
-        while (!executor.isTerminated())
-            i=i+1;
-        campo.notifyAll();
-        System.out.println(i);
-    }
+ this.campo.getMappaPosizioneCellula().values().stream().forEach(rule::step);
 }
 
 
