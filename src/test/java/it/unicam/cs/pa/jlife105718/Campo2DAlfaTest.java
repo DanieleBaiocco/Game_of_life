@@ -1,10 +1,10 @@
 package it.unicam.cs.pa.jlife105718;
 
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
 
@@ -104,5 +104,18 @@ public class Campo2DAlfaTest {
         campoAlfa.changeStateOfACellula(2,6);
         assertSame(campoAlfa.getCellulaFromInteger(2,6).getStato(), Stato.VIVO);
         assertNotSame(campoAlfa.getCellulaFromInteger(2, 4).getStato(), Stato.VIVO);
+    }
+
+    @Test
+    void cloneTest() throws CloneNotSupportedException {
+        campoAlfa.addAEntry(0,0);
+        campoAlfa.addAEntry(0,1);
+        Campo2D<PosizioneAlfabetica> campoCopy = (Campo2D<PosizioneAlfabetica>) campoAlfa.clone();
+        campoAlfa.addAEntry(0,2);
+        assertThrows(IllegalArgumentException.class, ()->
+                 campoCopy.getCellulaFromInteger(0,2));
+        assertEquals(campoAlfa.getCellulaFromInteger(0,0).getId(),campoCopy.getCellulaFromInteger(0,0).getId());
+        HashMap<PosizioneAlfabetica,Cellula> map = (HashMap<PosizioneAlfabetica, Cellula>) campoCopy.getMappaPosizioneCellula();
+        map.values().forEach(x->System.out.println(x.getId()));
     }
 }

@@ -5,7 +5,6 @@ package it.unicam.cs.pa.jlife105718;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 public class Cellula {
     private int id;
@@ -17,6 +16,7 @@ public class Cellula {
         this.id = id;
     }
 
+
     public Stato getStato() {
         return this.stato;
     }
@@ -25,7 +25,7 @@ public class Cellula {
         return this.id;
     }
 
-    private void setStato(Stato stato) {
+    public void setStato(Stato stato) {
         this.stato = stato;
     }
 

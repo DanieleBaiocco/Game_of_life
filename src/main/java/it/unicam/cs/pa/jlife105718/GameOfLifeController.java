@@ -1,58 +1,41 @@
 package it.unicam.cs.pa.jlife105718;
 
 
-import javafx.scene.control.Cell;
-
-import java.sql.Time;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
-import java.util.stream.Collectors;
-
-public class GameOfLifeController implements Controller{
+public class GameOfLifeController implements Controller, PropertyListener{
 private final ICampo<?> campo;
-private final Regole<Cellula> rule;
+private final CurrentRulesEnum rule;
 static private GameOfLifeController controller;
-private List<Cellula> list;
 
-private GameOfLifeController(ICampo<?> campo, Regole<Cellula> rule){
+private GameOfLifeController(ICampo<?> campo, CurrentRulesEnum  rule){
     this.campo = campo;
     this.rule = rule;
-    this.list = new ArrayList<>();
 }
 /*
 public Controller (File jsonFile){
     this.field =deserialize(jsonFile);
 }*/
-static public GameOfLifeController getInstance(ICampo<?> campo, Regole<Cellula> rule){
+static public GameOfLifeController getInstance(ICampo<?> campo, CurrentRulesEnum rule){
     if(controller==null){
        controller= new GameOfLifeController(campo,rule);
     }
-
     return controller;
 }
 
-public  void NextGen() {
-//CLONE
- this.campo.getMappaPosizioneCellula().values().stream().forEach(rule::step);
+public  void nextGen() throws CloneNotSupportedException {
+    RulesFactory rulesFactory = new RulesFactory();
+    Campo<?> campoCopy = (Campo<?>) this.campo.clone();
+    campoCopy.getMappaPosizioneCellula().values().forEach(x->x.addPropertyListener(this));
+    campoCopy.getMappaPosizioneCellula().values()
+            .stream()
+            .forEach(x->rulesFactory.getRule(rule,campoCopy).step(x));
 }
-
-
-    public void setList(List<Cellula> list) {
-        this.list = list;
-    }
 
     @Override
     public void colorateDecolorateACellula(int ... posInInt) {
       campo.changeStateOfACellula(posInInt);
     }
 
-    public void loadBoardFromFile() {
-
-    }
-
+    public void loadBoardFromFile() { }
 
     @Override
     public ICampo<?> getCampo() {
@@ -69,11 +52,18 @@ public  void NextGen() {
         return campo.getCellulaFromInteger(values);
     }
 
-    public Regole<Cellula> getRule(){
+    public CurrentRulesEnum getRule(){
         return this.rule;
     }
 
-
+    @Override
+    public void onPropertyEvent(Cellula source, String name, Stato state) {
+    //forse serve un metodo per ritornare la cellula passata all'interno del campo
+       if(state==Stato.VIVO)
+           source.setStato(Stato.MORTO);
+       else source.setStato(Stato.VIVO);
+       this.campo.changeCellula(source);
+    }
 }
 
 

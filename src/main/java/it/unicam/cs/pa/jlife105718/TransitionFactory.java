@@ -15,6 +15,7 @@ public class TransitionFactory {
         }
         return instance;
     }
+
 private TransitionFactory(){
         transitionToCharacter = PosizioneAlfabetica::new;
         transitionToInteger= PosizioneNumericaIntera::new;

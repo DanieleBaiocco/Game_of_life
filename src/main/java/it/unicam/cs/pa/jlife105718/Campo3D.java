@@ -6,7 +6,7 @@ import java.util.function.Function;
 
 public class Campo3D<T extends IPosizione> extends Campo<T>{
 
-    public Campo3D( Function<List<Integer>, T> transizioneScelta) {
+    public Campo3D( Function<List<Integer>,? extends T> transizioneScelta) {
         super(transizioneScelta,3);
     }
 

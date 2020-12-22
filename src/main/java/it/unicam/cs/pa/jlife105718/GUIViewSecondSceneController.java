@@ -1,10 +1,7 @@
 package it.unicam.cs.pa.jlife105718;
 
-import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.geometry.Bounds;
-import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.input.MouseEvent;
@@ -16,9 +13,6 @@ import javafx.scene.layout.Pane;
 import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
-import java.util.Timer;
-import java.util.TimerTask;
-import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -34,14 +28,14 @@ public class GUIViewSecondSceneController implements PropertyListener, Initializ
 @FXML private Button startButton;
 @FXML private Button stopButton;
 @FXML private Button finishButton;
-   private ScheduledExecutorService executor;
+private ScheduledExecutorService executor;
 private boolean exit = false;
 private GridPane gridPane ;
 private Function<List<Integer>, ? extends IPosizione> function;
 private GameOfLifeController GRASPController;
 
 
-    public void initializeGRASPController(Campo<? extends IPosizione> campo, Regole<Cellula> rule){
+    public void initializeGRASPController(Campo<? extends IPosizione> campo,CurrentRulesEnum rule){
         GRASPController = GameOfLifeController.getInstance(campo,rule);
     }
 
@@ -80,8 +74,13 @@ private GameOfLifeController GRASPController;
     public void startSimulation(MouseEvent mouseEvent){
         Runnable startGen = new Runnable() {
             public void run() {
-                if (!exit)
-                    GRASPController.NextGen();
+                if (!exit) {
+                    try {
+                        GRASPController.nextGen();
+                    } catch (CloneNotSupportedException e) {
+                        e.printStackTrace();
+                    }
+                }
                 else System.out.println("Sto aspettando");
             }
         };

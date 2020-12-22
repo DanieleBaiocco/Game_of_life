@@ -1,19 +1,13 @@
 package it.unicam.cs.pa.jlife105718;
 
-import javafx.css.Rule;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.geometry.Pos;
 import javafx.scene.Node;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.GridPane;
-
-import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -22,7 +16,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.function.Function;
-import java.util.stream.Stream;
 
 public class GUIViewFirstSceneController implements Initializable {
     @FXML private AnchorPane mainAnchorPane;
@@ -49,7 +42,7 @@ private ToggleGroup ruleChoosedToggleGroup;
 private ToggleGroup positionChoosedToggleGroup;
 private Function<List<Integer>, ? extends IPosizione> function;
 private Campo<? extends IPosizione> campo;
-private Regole<Cellula> rule;
+private CurrentRulesEnum rule;
 
 
     @Override
@@ -96,7 +89,6 @@ private Regole<Cellula> rule;
          } else {
              this.function = TransitionFactory.getInstance().getTransitionToChar();
          }
-
          if(oneDRadioButton.isSelected()) {
              this.campo = new Campo1D<>(this.function);
              firstLabel.setText("Inserisci la prima dimensione");
@@ -117,11 +109,11 @@ private Regole<Cellula> rule;
              thirdTextField.setVisible(true);
          }
          if (standardRuleRadioButton.isSelected()) {
-             this.rule = RulesFactory.getRulesFactory(this.campo).getBasicRules();
+             this.rule = CurrentRulesEnum.BasicRules;
          } else if (alternativeRuleRadioButton.isSelected()) {
-             this.rule = RulesFactory.getRulesFactory(this.campo).getAlternativeRules();
+             this.rule = CurrentRulesEnum.AlternativeRules;
          } else {
-             this.rule = RulesFactory.getRulesFactory(this.campo).getAlternativeRules();
+             this.rule = CurrentRulesEnum.AlternativeRules;
          }
          if(!redLabel.getText().equals(""))
              redLabel.setText("");
