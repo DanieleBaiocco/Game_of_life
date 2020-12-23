@@ -1,7 +1,5 @@
 package it.unicam.cs.pa.jlife105718;
 
-import java.util.List;
-
 
 public interface IPosizione {
 

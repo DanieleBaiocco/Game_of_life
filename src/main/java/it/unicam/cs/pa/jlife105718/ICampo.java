@@ -5,12 +5,12 @@ import java.util.Map;
 import java.util.Set;
 import java.util.function.Function;
 
-public interface ICampo<T extends IPosizione> extends Cloneable {
+public interface ICampo<T extends IPosizione> {
     Set<Cellula> getIntorno(Cellula cellula);
     T getPosizioneFromCellula(Cellula cellula);
     Map<T,Cellula> getMappaPosizioneCellula();
     Function<List<Integer>, ? extends T> getTransition();
-    Object clone() throws CloneNotSupportedException;
+    ICampo<T> deepCopyOfThis();
     void addAEntry(int ... values) ;
     boolean isIntoMap (int ... coordinate);
     Cellula getCellulaFromInteger(int ... values);

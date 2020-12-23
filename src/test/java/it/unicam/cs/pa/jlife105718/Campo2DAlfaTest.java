@@ -110,7 +110,7 @@ public class Campo2DAlfaTest {
     void cloneTest() throws CloneNotSupportedException {
         campoAlfa.addAEntry(0,0);
         campoAlfa.addAEntry(0,1);
-        Campo2D<PosizioneAlfabetica> campoCopy = (Campo2D<PosizioneAlfabetica>) campoAlfa.clone();
+        Campo2D<PosizioneAlfabetica> campoCopy = (Campo2D<PosizioneAlfabetica>) campoAlfa.deepCopyOfThis();
         campoAlfa.addAEntry(0,2);
         assertThrows(IllegalArgumentException.class, ()->
                  campoCopy.getCellulaFromInteger(0,2));

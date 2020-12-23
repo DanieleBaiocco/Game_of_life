@@ -1,7 +1,7 @@
 package it.unicam.cs.pa.jlife105718;
 
 public interface Controller {
-     void nextGen() throws CloneNotSupportedException;
+     <T extends IPosizione> void nextGen();
      void colorateDecolorateACellula(int ... values);
      void loadBoardFromFile();
      ICampo<?> getCampo();

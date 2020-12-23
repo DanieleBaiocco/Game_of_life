@@ -3,17 +3,11 @@ package it.unicam.cs.pa.jlife105718;
 import java.util.Set;
 
 public class BasicRules implements Regole<Cellula>{
-    private final ICampo<?> campo;
-
-    public BasicRules(ICampo<?> campo) {
-        this.campo= campo;
-    }
 
     @Override
-    public Cellula step(Cellula cellula) {
-        Set<Cellula> vicini = campo.getIntorno(cellula);
+    public Cellula step(Cellula cellula, Set<Cellula> intorno) {
         if (cellula.isAlive()) {
-            long count = vicini.
+            long count = intorno.
                     stream().
                     sequential().
                     filter(Cellula::isAlive)
@@ -23,7 +17,7 @@ public class BasicRules implements Regole<Cellula>{
                 return cellula;
             }
         } else if (!cellula.isAlive()) {
-            if (vicini.
+            if (intorno.
                     stream().
                     sequential().
                     filter(Cellula::isAlive)

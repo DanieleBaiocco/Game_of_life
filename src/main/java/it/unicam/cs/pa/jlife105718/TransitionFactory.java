@@ -3,7 +3,7 @@ package it.unicam.cs.pa.jlife105718;
 import java.util.List;
 import java.util.function.Function;
 
-public class TransitionFactory {
+public class TransitionFactory  {
     static private TransitionFactory instance;
     private  final Function<List<Integer>,PosizioneAlfabetica> transitionToCharacter;
     private  final Function<List<Integer>, PosizioneNumericaIntera> transitionToInteger;

@@ -2,14 +2,14 @@ package it.unicam.cs.pa.jlife105718;
 
 public class RulesFactory {
 
-    public Regole<Cellula> getRule(CurrentRulesEnum rule, Campo<?> campo){
+    public Regole<Cellula> getRule(CurrentRulesEnum rule){
         Regole<Cellula> ruleToReturn = null;
         switch (rule){
             case BasicRules:
-                ruleToReturn = new BasicRules(campo);
+                ruleToReturn = new BasicRules();
                 break;
             case AlternativeRules:
-                ruleToReturn= new AlternativeRules(campo);
+                ruleToReturn= new AlternativeRules();
                 break;
         }
         return ruleToReturn;

@@ -10,10 +10,13 @@ public class Campo3D<T extends IPosizione> extends Campo<T>{
         super(transizioneScelta,3);
     }
 
-
-
     public Set<Cellula>  getIntorno(Cellula cellula) {
         //implementazione omessa
+        return null;
+    }
+
+    @Override
+    public ICampo<T> deepCopyOfThis() {
         return null;
     }
 

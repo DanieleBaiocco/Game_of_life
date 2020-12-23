@@ -1,6 +1,9 @@
 package it.unicam.cs.pa.jlife105718;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
@@ -22,6 +25,20 @@ public class Campo2D<T extends IPosizione> extends Campo<T>{
                 .map(p->getMappaPosizioneCellula().get(p))
                 .collect(Collectors.toSet());
     }
+
+    @Override
+    public ICampo<T> deepCopyOfThis() {
+        Campo2D<T> campo2D = new Campo2D<>(getTransition());
+        Map<T, Cellula> copy = new HashMap<T, Cellula>();
+        for (Map.Entry<T, Cellula> entry : getMappaPosizioneCellula().entrySet())
+        {
+            copy.put(entry.getKey(),
+                    new Cellula(entry.getValue().getStato(),entry.getValue().getId()));
+        }
+        campo2D.setMappaPosizioneCellula(copy);
+        return campo2D;
+    }
+
 
     private Predicate<? super T> isInTheIntorno( int first, int second){
     return po->{

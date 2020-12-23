@@ -1,6 +1,5 @@
 package it.unicam.cs.pa.jlife105718;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -26,7 +25,7 @@ public class PosizioneAlfabetica implements IPosizione{
                 String str = Character.toString( risultato+65);
                 return str.concat(Character.toString(x%26 + 65));
             } else {
-                throw new IllegalArgumentException();
+                throw new IllegalArgumentException("Il numero inserito "+x+" è troppo grande (>255");
            }
         }
 

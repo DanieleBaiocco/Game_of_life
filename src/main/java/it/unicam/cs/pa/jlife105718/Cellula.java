@@ -16,6 +16,9 @@ public class Cellula {
         this.id = id;
     }
 
+    public void setListeners(List<PropertyListener> listeners) {
+        this.listeners = listeners;
+    }
 
     public Stato getStato() {
         return this.stato;

@@ -93,7 +93,20 @@
                               <TextField fx:id="thirdTextField" onKeyTyped="#checkMaxCoordinate" />
                            </children>
                         </VBox>
-                        <Label fx:id="firstRedLabel" layoutX="305.0" layoutY="14.0" prefHeight="16.0" prefWidth="300.0" text="Label" textFill="#dd0505" />
+                        <Label fx:id="firstRedLabel" layoutX="184.0" layoutY="24.0" prefHeight="16.0" prefWidth="183.0" text="Label" textFill="#dd0505">
+                           <font>
+                              <Font size="10.0" />
+                           </font></Label>
+                        <Label fx:id="secondRedLabel" layoutX="184.0" layoutY="79.0" prefHeight="16.0" prefWidth="183.0" text="Label" textFill="#dd0505">
+                           <font>
+                              <Font size="10.0" />
+                           </font>
+                        </Label>
+                        <Label fx:id="thirdRedLabel" layoutX="184.0" layoutY="138.0" prefHeight="16.0" prefWidth="183.0" text="Label" textFill="#dd0505">
+                           <font>
+                              <Font size="10.0" />
+                           </font>
+                        </Label>
                      </children>
                   </AnchorPane>
                   <Button fx:id="button1" layoutX="571.0" layoutY="313.0" mnemonicParsing="false" onMouseClicked="#loadGrid" prefHeight="25.0" prefWidth="69.0" text="Next" />

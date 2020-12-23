@@ -75,24 +75,20 @@ private GameOfLifeController GRASPController;
         Runnable startGen = new Runnable() {
             public void run() {
                 if (!exit) {
-                    try {
                         GRASPController.nextGen();
-                    } catch (CloneNotSupportedException e) {
-                        e.printStackTrace();
-                    }
-                }
-                else System.out.println("Sto aspettando");
+                }else
+                System.out.println("Sto aspettando");
             }
         };
         this.executor = Executors.newScheduledThreadPool(1);
-        this.executor.scheduleAtFixedRate(startGen, 0, 3, TimeUnit.SECONDS);
+        this.executor.scheduleAtFixedRate(startGen, 0, 1, TimeUnit.SECONDS);
     }
 
     private void initGrid1D(int x1) {
     }
 
     private void initGrid2D(int x1, int x2) {
-        firstLabel.setText("SESSO");
+        firstLabel.setText("");
         for(int i=0; i<x1; i++){
             for(int j=0; j<x2; j++){
                 Pane pane = new Pane();
@@ -103,7 +99,7 @@ private GameOfLifeController GRASPController;
                     GRASPController.colorateDecolorateACellula(GridPane.getColumnIndex(pane),GridPane.getRowIndex(pane));
                 });
                 GRASPController.addAEntry(j,i);
-                GRASPController.getCellulaFromInteger(j,i).addPropertyListener(this);
+                GRASPController.getCampo().getCellulaFromInteger(j,i).addPropertyListener(this);
             }
         }
     }
@@ -118,8 +114,6 @@ private GameOfLifeController GRASPController;
     public void onPropertyEvent(Cellula source, String name, Stato state) {
         int x = GRASPController.getCampo().getIntegerFromCellula(source,0);
         int y = GRASPController.getCampo().getIntegerFromCellula(source,1);
-        System.out.println("Posizione colonna :"+x);
-        System.out.println("Posizione riga :"+y);
         Pane pane = getPaneFromIntegers(x,y);
 
       //metodo che fa la ricerca del gridpane corrispondente alla cellula

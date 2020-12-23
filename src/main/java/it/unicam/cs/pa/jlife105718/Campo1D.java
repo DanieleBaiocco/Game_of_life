@@ -14,4 +14,11 @@ public class Campo1D<T extends IPosizione> extends Campo<T>{
         //implementazione omessa
         return null;
     }
+
+    @Override
+    public ICampo<T> deepCopyOfThis() {
+        return null;
+    }
+
+
 }

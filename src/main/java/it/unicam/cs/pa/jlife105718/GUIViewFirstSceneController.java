@@ -35,14 +35,18 @@ public class GUIViewFirstSceneController implements Initializable {
 @FXML private TextField secondTextField;
 @FXML private TextField thirdTextField;
 @FXML private Button button1;
-@FXML private Label firstRedLabel;
 @FXML private Label redLabel;
+@FXML private Label firstRedLabel;
+@FXML private Label secondRedLabel;
+@FXML private Label thirdRedLabel;
+
 private ToggleGroup dimensionChoosedToggleGroup;
 private ToggleGroup ruleChoosedToggleGroup;
 private ToggleGroup positionChoosedToggleGroup;
 private Function<List<Integer>, ? extends IPosizione> function;
 private Campo<? extends IPosizione> campo;
 private CurrentRulesEnum rule;
+
 
 
     @Override
@@ -74,6 +78,8 @@ private CurrentRulesEnum rule;
         this.button1.setDisable(true);
         //redlabels
         firstRedLabel.setText("");
+        secondRedLabel.setText("");
+        thirdRedLabel.setText("");
         redLabel.setText("");
     }
 
@@ -175,25 +181,68 @@ private CurrentRulesEnum rule;
 
     }
 
-    @FXML public void checkMaxCoordinate(){
-        if(oneDRadioButton.isSelected()){
+
+    //le eccezioni lanciate dovrebbero esser dgenerate dalla view
+    @FXML public void checkMaxCoordinate() {
+        if (oneDRadioButton.isSelected()) {
             int x = 0;
             try {
                 x = Integer.parseInt(firstTextField.getText());
                 firstRedLabel.setText("");
-                if(alphabetRadioButton.isSelected()) {
+                if (alphabetRadioButton.isSelected()) {
                     List<Integer> list = new ArrayList<>();
                     list.add(x);
                     function.apply(list);
                 }
-            }catch (NumberFormatException e){
+            } catch (NumberFormatException e) {
                 firstRedLabel.setText("Inserire un NUMERO");
-            }catch (IllegalArgumentException e) {
-                firstRedLabel.setText("Il numero deve essere ACCETTABILE");
+            } catch (IllegalArgumentException e) {
+                firstRedLabel.setText(e.getMessage());
+            }
+
+        } else if (twoDRadioButton.isSelected()) {
+            int x = 0;
+            int y=0;
+            try {
+                x = Integer.parseInt(firstTextField.getText());
+                y = Integer.parseInt(secondTextField.getText());
+                firstRedLabel.setText("");
+                if (alphabetRadioButton.isSelected()) {
+                    List<Integer> list = new ArrayList<>();
+                    list.add(x);
+                    list.add(y);
+                    function.apply(list);
+                }
+            } catch (NumberFormatException e) {
+                firstRedLabel.setText("Inserire un NUMERO");
+            } catch (IllegalArgumentException e) {
+                firstRedLabel.setText(e.getMessage());
+            }
+
+        } else {
+            int x = 0;
+            int y=0;
+            int z=0;
+            try {
+                x = Integer.parseInt(firstTextField.getText());
+                y = Integer.parseInt(secondTextField.getText());
+                z = Integer.parseInt(thirdTextField.getText());
+                firstRedLabel.setText("");
+                if (alphabetRadioButton.isSelected()) {
+                    List<Integer> list = new ArrayList<>();
+                    list.add(x);
+                    list.add(y);
+                    list.add(z);
+                    function.apply(list);
+                }
+            } catch (NumberFormatException e) {
+                firstRedLabel.setText("Inserire un NUMERO");
+            } catch (IllegalArgumentException e) {
+                firstRedLabel.setText(e.getMessage());
             }
 
         }
         //FAI IN MODO DI REFACTORARE IL CODICE PER NON AVERLO RIPETUTO PER GLI ALTRI DUE CASI
-
     }
+
 }

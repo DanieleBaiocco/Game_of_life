@@ -1,7 +1,7 @@
 package it.unicam.cs.pa.jlife105718;
 
 
-public class GameOfLifeController implements Controller, PropertyListener{
+public class  GameOfLifeController implements Controller, PropertyListener{
 private final ICampo<?> campo;
 private final CurrentRulesEnum rule;
 static private GameOfLifeController controller;
@@ -21,13 +21,12 @@ static public GameOfLifeController getInstance(ICampo<?> campo, CurrentRulesEnum
     return controller;
 }
 
-public  void nextGen() throws CloneNotSupportedException {
+public void nextGen() {
     RulesFactory rulesFactory = new RulesFactory();
-    Campo<?> campoCopy = (Campo<?>) this.campo.clone();
+    ICampo<?> campoCopy =  this.campo.deepCopyOfThis();
     campoCopy.getMappaPosizioneCellula().values().forEach(x->x.addPropertyListener(this));
     campoCopy.getMappaPosizioneCellula().values()
-            .stream()
-            .forEach(x->rulesFactory.getRule(rule,campoCopy).step(x));
+            .forEach(x->rulesFactory.getRule(rule).step(x, campoCopy.getIntorno(x)));
 }
 
     @Override
