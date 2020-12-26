@@ -16,8 +16,8 @@ public class Campo1D<T extends IPosizione> extends Campo<T>{
     }
 
     @Override
-    public ICampo<T> deepCopyOfThis() {
-        return null;
+    protected ICampo<T> getInstance(Function<List<Integer>, ? extends T> function) {
+        return new Campo1D<>(function);
     }
 
 

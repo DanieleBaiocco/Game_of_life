@@ -16,7 +16,6 @@ import java.util.ResourceBundle;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
-import java.util.function.Function;
 
 public class GUIViewSecondSceneController implements PropertyListener, Initializable {
 
@@ -31,9 +30,7 @@ public class GUIViewSecondSceneController implements PropertyListener, Initializ
 private ScheduledExecutorService executor;
 private boolean exit = false;
 private GridPane gridPane ;
-private Function<List<Integer>, ? extends IPosizione> function;
-private GameOfLifeController GRASPController;
-
+private Controller GRASPController;
 
     public void initializeGRASPController(Campo<? extends IPosizione> campo,CurrentRulesEnum rule){
         GRASPController = GameOfLifeController.getInstance(campo,rule);

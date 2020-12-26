@@ -18,5 +18,6 @@ public interface ICampo<T extends IPosizione> {
     int getDim();
     Integer getIntegerFromCellula(Cellula cellula,int i);
     void changeCellula(Cellula cellula);
+    void setMappaPosizioneCellula(Map<T,Cellula> map);
 
 }

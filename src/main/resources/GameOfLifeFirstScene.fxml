@@ -107,6 +107,7 @@
                               <Font size="10.0" />
                            </font>
                         </Label>
+                        <Button fx:id="loadFromFileButton" layoutX="493.0" layoutY="33.0" mnemonicParsing="false" onMouseClicked="#loadConfigFromFile" text="Button" />
                      </children>
                   </AnchorPane>
                   <Button fx:id="button1" layoutX="571.0" layoutY="313.0" mnemonicParsing="false" onMouseClicked="#loadGrid" prefHeight="25.0" prefWidth="69.0" text="Next" />

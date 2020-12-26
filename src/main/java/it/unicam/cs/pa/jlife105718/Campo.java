@@ -16,13 +16,24 @@ public abstract class Campo<T extends IPosizione> implements ICampo<T> {
 
 
     @Override
+    public ICampo<T> deepCopyOfThis() {
+        ICampo<T> campo = getInstance(getTransition());
+        Map<T, Cellula> copy = new HashMap<T, Cellula>();
+        for (Map.Entry<T, Cellula> entry : getMappaPosizioneCellula().entrySet())
+        {
+            copy.put(entry.getKey(),
+                    new Cellula(entry.getValue().getStato(),entry.getValue().getId()));
+        }
+        campo.setMappaPosizioneCellula(copy);
+        return campo;
+    }
+
+    protected abstract ICampo<T> getInstance(Function<List<Integer>, ? extends T> function);
+
+    @Override
     public void changeCellula(Cellula cellula){
         T pos = getPosizioneFromCellula(cellula);
         this.getMappaPosizioneCellula().get(pos).changeStato();
-    }
-
-    public void setMappaPosizioneCellula(Map<T, Cellula> mappaPosizioneCellula) {
-        this.mappaPosizioneCellula = mappaPosizioneCellula;
     }
 
     public int getDim(){
@@ -48,6 +59,9 @@ public abstract class Campo<T extends IPosizione> implements ICampo<T> {
         return this.mappaPosizioneCellula;
     }
 
+    public void setMappaPosizioneCellula(Map<T,Cellula> mappaPosizioneCellula){
+        this.mappaPosizioneCellula= mappaPosizioneCellula;
+    }
     @Override
     public Function<List<Integer>, ? extends T> getTransition() {
         return this.transition;

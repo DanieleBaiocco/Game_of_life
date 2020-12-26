@@ -5,11 +5,17 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
+import java.awt.*;
+import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -39,18 +45,21 @@ public class GUIViewFirstSceneController implements Initializable {
 @FXML private Label firstRedLabel;
 @FXML private Label secondRedLabel;
 @FXML private Label thirdRedLabel;
-
+@FXML private Button loadFromFileButton;
+private  final FileChooser fileChooser = new FileChooser();
+private Desktop desktop ;
 private ToggleGroup dimensionChoosedToggleGroup;
 private ToggleGroup ruleChoosedToggleGroup;
 private ToggleGroup positionChoosedToggleGroup;
 private Function<List<Integer>, ? extends IPosizione> function;
-private Campo<? extends IPosizione> campo;
+private Campo<?> campo;
 private CurrentRulesEnum rule;
 
 
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        desktop = Desktop.getDesktop();
         //init the dimension radiobutton
         dimensionChoosedToggleGroup= new ToggleGroup();
         this.oneDRadioButton.setToggleGroup(dimensionChoosedToggleGroup);
@@ -83,6 +92,13 @@ private CurrentRulesEnum rule;
         redLabel.setText("");
     }
 
+    @FXML public void loadConfigFromFile(MouseEvent mouseEvent) throws IOException {
+        Stage window = (Stage) ((Node) mouseEvent.getSource()).getScene().getWindow();
+        File file = fileChooser.showOpenDialog(window);
+        String[] fileSplitted = file.getName().split("\\.");
+        System.out.println( fileSplitted[fileSplitted.length-1]);
+        Controller.createControllerFromFile(file);
+    }
 
    @FXML public void loadLabelsAndTexts(MouseEvent mouseEvent) {
      if (positionChoosedToggleGroup.getToggles().stream().anyMatch(Toggle::isSelected)
