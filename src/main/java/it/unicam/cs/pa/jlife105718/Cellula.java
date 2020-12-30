@@ -46,6 +46,7 @@ public class Cellula {
     public void addPropertyListener (PropertyListener lis){
         listeners.add(lis);
     }
+
     private void publishPropertyEvent(String name, Stato state){
         this.listeners.forEach(prop->prop.onPropertyEvent(this,name,state));
     }

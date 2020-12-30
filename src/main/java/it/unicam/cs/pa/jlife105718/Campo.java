@@ -5,19 +5,18 @@ import java.util.function.Function;
 
 public abstract class Campo<T extends IPosizione> implements ICampo<T> {
     private static int count =-1;
-    private  int dim;
+    private int[] values;
     private  Map<T, Cellula> mappaPosizioneCellula;
     private Function<List<Integer>, ? extends T> transition;
-    public Campo( Function<List<Integer>,? extends T> transition, int dim) {
+    public Campo( Function<List<Integer>,? extends T> transition, int ... values) {
         this.transition=transition;
         this.mappaPosizioneCellula= new HashMap<>();
-        this.dim = dim;
+        this.values = values;
     }
-
 
     @Override
     public ICampo<T> deepCopyOfThis() {
-        ICampo<T> campo = getInstance(getTransition());
+        ICampo<T> campo = getInstance();
         Map<T, Cellula> copy = new HashMap<T, Cellula>();
         for (Map.Entry<T, Cellula> entry : getMappaPosizioneCellula().entrySet())
         {
@@ -28,7 +27,7 @@ public abstract class Campo<T extends IPosizione> implements ICampo<T> {
         return campo;
     }
 
-    protected abstract ICampo<T> getInstance(Function<List<Integer>, ? extends T> function);
+    protected abstract ICampo<T> getInstance();
 
     @Override
     public void changeCellula(Cellula cellula){
@@ -36,9 +35,10 @@ public abstract class Campo<T extends IPosizione> implements ICampo<T> {
         this.getMappaPosizioneCellula().get(pos).changeStato();
     }
 
-    public int getDim(){
-        return this.dim;
-}
+    public int[] getValues() {
+        return values;
+    }
+
     @Override
     public abstract Set<Cellula> getIntorno(Cellula cellula);
 
@@ -69,7 +69,7 @@ public abstract class Campo<T extends IPosizione> implements ICampo<T> {
 
     @Override
     public void addAEntry( int ... values) {
-        if(values.length == this.dim && !isIntoMap(values)) {
+        if(values.length == this.values.length && !isIntoMap(values)) {
             T pos  = getPosizioneFromInteger(values);
             Cellula cell = new Cellula(Stato.MORTO,iterateAndReturnCount());
             mappaPosizioneCellula.put(pos,cell);

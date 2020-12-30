@@ -7,14 +7,17 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 public class Campo2D<T extends IPosizione> extends Campo<T>{
-
-    public Campo2D( Function<List<Integer>,? extends T> transition) {
-        super(transition,2);
+    private int value1;
+    private int value2;
+    public Campo2D( Function<List<Integer>,? extends T> transition, int value1, int value2) {
+        super(transition,value1,value2);
+        this.value1 = value1;
+        this.value2 = value2;
     }
 
     @Override
-    protected ICampo<T> getInstance(Function<List<Integer>, ? extends T> function) {
-        return new Campo2D<>(function);
+    protected ICampo<T> getInstance() {
+        return new Campo2D<>(getTransition(),value1,value2);
     }
 
     public Set<Cellula> getIntorno(Cellula cellula) {

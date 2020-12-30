@@ -1,10 +1,15 @@
 package it.unicam.cs.pa.jlife105718;
 
-import java.io.File;
-
 public class TxtFileDeserialization implements FileDeserialization {
     @Override
-    public Controller deserializeFile(File file) {
+    public Controller deserializeFile(String pathName) {
         return null;
     }
+
+    @Override
+    public int[] listOfCellsToColorate(String pathName) {
+        return new int[0];
+    }
+
+
 }

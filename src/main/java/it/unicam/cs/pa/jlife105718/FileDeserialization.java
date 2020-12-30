@@ -1,8 +1,9 @@
 package it.unicam.cs.pa.jlife105718;
 
-import java.io.File;
 import java.io.FileNotFoundException;
 
 public interface FileDeserialization {
-    Controller deserializeFile(File file) throws FileNotFoundException;
+    Controller deserializeFile(String pathName) throws FileNotFoundException;
+    int[] listOfCellsToColorate(String pathName);
+
 }

@@ -1,13 +1,10 @@
 package it.unicam.cs.pa.jlife105718;
 
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.*;
-public class RulesFactoryTest implements PropertyListener{
+/*public class RulesFactoryTest implements PropertyListener{
     private  CurrentRulesEnum rule;
     private Campo2D<PosizioneNumericaIntera> campo;
     private GameOfLifeController controller;
-    @BeforeEach
+ /*   @BeforeEach
     void initController(){
         campo = new Campo2D<>(TransitionFactory.getInstance().getTransitionToInteger());
 
@@ -66,5 +63,5 @@ public class RulesFactoryTest implements PropertyListener{
     @Override
     public void onPropertyEvent(Cellula source, String name, Stato state) {
         System.out.println("IO CELLULA "+source.getId()+ " sono cambiata nello stato "+state.toString());
-    }
-}
+    }*/
+//}

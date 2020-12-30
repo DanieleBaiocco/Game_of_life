@@ -19,12 +19,12 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.function.Function;
 
-public class GUIViewFirstSceneController implements Initializable {
-    @FXML private AnchorPane mainAnchorPane;
+public class GUIViewFirstSceneController implements Initializable { @FXML private AnchorPane mainAnchorPane;
 @FXML private RadioButton oneDRadioButton;
 @FXML private RadioButton twoDRadioButton;
 @FXML private RadioButton threeDRadioButton;
@@ -40,42 +40,53 @@ public class GUIViewFirstSceneController implements Initializable {
 @FXML private TextField firstTextField;
 @FXML private TextField secondTextField;
 @FXML private TextField thirdTextField;
-@FXML private Button button1;
-@FXML private Label redLabel;
-@FXML private Label firstRedLabel;
-@FXML private Label secondRedLabel;
-@FXML private Label thirdRedLabel;
+@FXML private Button nextButton;
+@FXML private Label confirmRedLabel;
+@FXML private Label errorRedLabel;
 @FXML private Button loadFromFileButton;
+@FXML private ComboBox choose1;
+@FXML private ComboBox choose2;
+@FXML private ComboBox choose3;
+@FXML private ComboBox choose4;
+@FXML private ComboBox choose5;
 private  final FileChooser fileChooser = new FileChooser();
 private Desktop desktop ;
 private ToggleGroup dimensionChoosedToggleGroup;
 private ToggleGroup ruleChoosedToggleGroup;
 private ToggleGroup positionChoosedToggleGroup;
 private Function<List<Integer>, ? extends IPosizione> function;
-private Campo<?> campo;
+private ICampo<?> campo;
 private CurrentRulesEnum rule;
+private boolean flag;
+private int[] cellsToColorate;
 
 
+private void initComboBoxe(ComboBox comboBox, String ... elements){
+    comboBox.getItems().removeAll(comboBox.getItems());
+    comboBox.getItems().addAll(elements);
+    comboBox.getSelectionModel().select(elements[0]);
+}
+
+private void initToggleGroup( ToggleGroup toggleGroup, RadioButton ... radioButtons){
+    toggleGroup = new ToggleGroup();
+    ToggleGroup finalToggleGroup = toggleGroup;
+    Arrays.stream(radioButtons).forEach(x->x.setToggleGroup(finalToggleGroup));
+}
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        initComboBoxe(choose1,"Block", "Bee-hive", "Loaf", "Boat", "Tub");
+        initComboBoxe(choose2,"Blinker","Toad", "Beacon", "Pulsar", "Penta-decathlon");;
+        initComboBoxe(choose3, "Gosper glider gun","Simkin glider gun", "simple glider", "Light weight spaceship", "Middle weight spaceship", "Heavy weight spaceship");
+        initComboBoxe(choose4,"The R-pentomino", "Diehard", "Acorn");
+        initComboBoxe(choose5, "Infinite growth 1", "Infinite growth 2", "Infinite growth 3");
+
+        flag= true;
         desktop = Desktop.getDesktop();
-        //init the dimension radiobutton
-        dimensionChoosedToggleGroup= new ToggleGroup();
-        this.oneDRadioButton.setToggleGroup(dimensionChoosedToggleGroup);
-        this.twoDRadioButton.setToggleGroup(dimensionChoosedToggleGroup);
-        this.threeDRadioButton.setToggleGroup(dimensionChoosedToggleGroup);
-        //init the position radiobutton
-        ruleChoosedToggleGroup = new ToggleGroup();
-        this.standardRuleRadioButton.setToggleGroup(ruleChoosedToggleGroup);
-        this.alternativeRuleRadioButton.setToggleGroup(ruleChoosedToggleGroup);
-        this.alternativeRule2RadioButton.setToggleGroup(ruleChoosedToggleGroup);
-        //init the rule radiobutton
-        positionChoosedToggleGroup= new ToggleGroup();
-        this.integerNumbersRadioButton.setToggleGroup(positionChoosedToggleGroup);
-        this.doubleNumbersRadioButton.setToggleGroup(positionChoosedToggleGroup);
-        this.alphabetRadioButton.setToggleGroup(positionChoosedToggleGroup);
-        //init labels and textfields
+
+        initToggleGroup(dimensionChoosedToggleGroup,oneDRadioButton,twoDRadioButton,threeDRadioButton);
+        initToggleGroup(ruleChoosedToggleGroup,standardRuleRadioButton,alternativeRuleRadioButton,alternativeRule2RadioButton);
+        initToggleGroup(positionChoosedToggleGroup, integerNumbersRadioButton, doubleNumbersRadioButton, alphabetRadioButton);
 
         this.firstLabel.setText("");
         this.secondLabel.setText("");
@@ -84,20 +95,21 @@ private CurrentRulesEnum rule;
         this.firstTextField.setVisible(false);
         this.secondTextField.setVisible(false);
         this.thirdTextField.setVisible(false);
-        this.button1.setDisable(true);
+        this.nextButton.setDisable(true);
         //redlabels
-        firstRedLabel.setText("");
-        secondRedLabel.setText("");
-        thirdRedLabel.setText("");
-        redLabel.setText("");
+        errorRedLabel.setText("");
+        confirmRedLabel.setText("");
     }
 
     @FXML public void loadConfigFromFile(MouseEvent mouseEvent) throws IOException {
         Stage window = (Stage) ((Node) mouseEvent.getSource()).getScene().getWindow();
         File file = fileChooser.showOpenDialog(window);
-        String[] fileSplitted = file.getName().split("\\.");
-        System.out.println( fileSplitted[fileSplitted.length-1]);
-        Controller.createControllerFromFile(file);
+        String pathName = file.getPath();
+        Controller controller =Controller.createControllerFromFile(pathName);
+        this.campo = controller.getCampo();
+        this.rule = controller.getRule();
+        this.flag = false;
+        this.cellsToColorate =Controller.getListOfCellsToColorate(pathName);
     }
 
    @FXML public void loadLabelsAndTexts(MouseEvent mouseEvent) {
@@ -111,25 +123,7 @@ private CurrentRulesEnum rule;
          } else {
              this.function = TransitionFactory.getInstance().getTransitionToChar();
          }
-         if(oneDRadioButton.isSelected()) {
-             this.campo = new Campo1D<>(this.function);
-             firstLabel.setText("Inserisci la prima dimensione");
-             firstTextField.setVisible(true);
-         }else if(twoDRadioButton.isSelected()) {
-             this.campo = new Campo2D<>(this.function);
-             firstLabel.setText("Inserisci la prima dimensione");
-             firstTextField.setVisible(true);
-             secondLabel.setText("Inserisci la seconda dimensione");
-             secondTextField.setVisible(true);
-         }else {
-             this.campo = new Campo3D<>(this.function);
-             firstLabel.setText("Inserisci la prima dimensione");
-             firstTextField.setVisible(true);
-             secondLabel.setText("Inserisci la seconda dimensione");
-             secondTextField.setVisible(true);
-             thirdLabel.setText("Inserisci la terza dimensione");
-             thirdTextField.setVisible(true);
-         }
+
          if (standardRuleRadioButton.isSelected()) {
              this.rule = CurrentRulesEnum.BasicRules;
          } else if (alternativeRuleRadioButton.isSelected()) {
@@ -137,8 +131,8 @@ private CurrentRulesEnum rule;
          } else {
              this.rule = CurrentRulesEnum.AlternativeRules;
          }
-         if(!redLabel.getText().equals(""))
-             redLabel.setText("");
+         if(!confirmRedLabel.getText().equals(""))
+             confirmRedLabel.setText("");
          oneDRadioButton.setDisable(true);
          twoDRadioButton.setDisable(true);
          threeDRadioButton.setDisable(true);
@@ -149,26 +143,46 @@ private CurrentRulesEnum rule;
          alternativeRuleRadioButton.setDisable(true);
          alternativeRule2RadioButton.setDisable(true);
      }  else{
-         redLabel.setText("Completa la scelta");
+         confirmRedLabel.setText("Completa la scelta");
      }
 }
 
    @FXML
    public void loadGrid(MouseEvent mouseEvent)  throws IOException{
-        FXMLLoader loader = new FXMLLoader();
-        loader.setLocation(getClass().getResource("/GameOfLifeSecondScene.fxml"));
-        AnchorPane gridViewParent = loader.load();
-        GUIViewSecondSceneController secondController = loader.getController();
+       FXMLLoader loader = new FXMLLoader();
+       loader.setLocation(getClass().getResource("/GameOfLifeSecondScene.fxml"));
+       AnchorPane gridViewParent = loader.load();
+       GUIViewSecondSceneController secondController = loader.getController();
+       if(this.flag) {
+           int value1 = Integer.parseInt(firstTextField.getText());
+           int value2 = Integer.parseInt(secondTextField.getText());
+           int value3 = Integer.parseInt(thirdTextField.getText());
+           if (oneDRadioButton.isSelected()) {
+               this.campo = new Campo1D<>(this.function, value1);
+               firstLabel.setText("Inserisci la prima dimensione");
+               firstTextField.setVisible(true);
+           } else if (twoDRadioButton.isSelected()) {
+               this.campo = new Campo2D<>(this.function, value1, value2);
+               firstLabel.setText("Inserisci la prima dimensione");
+               firstTextField.setVisible(true);
+               secondLabel.setText("Inserisci la seconda dimensione");
+               secondTextField.setVisible(true);
+           } else {
+               this.campo = new Campo3D<>(this.function, value1, value2, value3);
+               firstLabel.setText("Inserisci la prima dimensione");
+               firstTextField.setVisible(true);
+               secondLabel.setText("Inserisci la seconda dimensione");
+               secondTextField.setVisible(true);
+               thirdLabel.setText("Inserisci la terza dimensione");
+               thirdTextField.setVisible(true);
+           }
+       }
         secondController.initializeGRASPController(this.campo,this.rule);
-        List<Integer> list = new ArrayList<>();
-        list.add(Integer.parseInt(firstTextField.getText()));
-        if(twoDRadioButton.isSelected())
-            list.add(Integer.parseInt(secondTextField.getText()));
-        else if (threeDRadioButton.isSelected()){
-            list.add(Integer.parseInt(secondTextField.getText()));
-            list.add(Integer.parseInt(thirdTextField.getText()));
+        if(!flag){
+            secondController.setFlag(false);
+            secondController.setCellsToColorate(cellsToColorate);
         }
-        secondController.initGrid(list);
+        secondController.initGrid();
         Scene gridViewScene =  new Scene (gridViewParent);
         Stage window = (Stage) ((Node) mouseEvent.getSource()).getScene().getWindow();
         window.setScene(gridViewScene);
@@ -179,20 +193,22 @@ private CurrentRulesEnum rule;
     //controllo da fare ogni qual volta si seleziona un qualcosa per vedere se si può effettivamente continuare
     //oppure no perchè mancano ancora delle info
     private boolean nextIsPossible(){
-        return positionChoosedToggleGroup.getToggles().stream().anyMatch(Toggle::isSelected)
+        //solo x ora
+        return true;
+                /*positionChoosedToggleGroup.getToggles().stream().anyMatch(Toggle::isSelected)
                 && ruleChoosedToggleGroup.getToggles().stream().anyMatch(Toggle::isSelected)
                 && dimensionChoosedToggleGroup.getToggles().stream().anyMatch(Toggle::isSelected)
                 && (oneDRadioButton.isDisable() && (!firstTextField.isVisible () || !firstTextField.getText().isEmpty()))
                 && (oneDRadioButton.isDisable() && (!secondTextField.isVisible () || !secondTextField.getText().isEmpty()))
                 && (oneDRadioButton.isDisable() && (!thirdTextField.isVisible () || !thirdTextField.getText().isEmpty()))
-                && firstRedLabel.getText().equals("");
+                && firstRedLabel.getText().equals("");*/
     }
 
 
 
     @FXML public void checkOnNextButton() {
         if (nextIsPossible()) {
-          this.button1.setDisable(false);
+          this.nextButton.setDisable(false);
         }
 
     }
@@ -204,16 +220,16 @@ private CurrentRulesEnum rule;
             int x = 0;
             try {
                 x = Integer.parseInt(firstTextField.getText());
-                firstRedLabel.setText("");
+                errorRedLabel.setText("");
                 if (alphabetRadioButton.isSelected()) {
                     List<Integer> list = new ArrayList<>();
                     list.add(x);
                     function.apply(list);
                 }
             } catch (NumberFormatException e) {
-                firstRedLabel.setText("Inserire un NUMERO");
+                errorRedLabel.setText("Inserire un NUMERO");
             } catch (IllegalArgumentException e) {
-                firstRedLabel.setText(e.getMessage());
+                errorRedLabel.setText(e.getMessage());
             }
 
         } else if (twoDRadioButton.isSelected()) {
@@ -222,7 +238,7 @@ private CurrentRulesEnum rule;
             try {
                 x = Integer.parseInt(firstTextField.getText());
                 y = Integer.parseInt(secondTextField.getText());
-                firstRedLabel.setText("");
+                errorRedLabel.setText("");
                 if (alphabetRadioButton.isSelected()) {
                     List<Integer> list = new ArrayList<>();
                     list.add(x);
@@ -230,9 +246,9 @@ private CurrentRulesEnum rule;
                     function.apply(list);
                 }
             } catch (NumberFormatException e) {
-                firstRedLabel.setText("Inserire un NUMERO");
+                errorRedLabel.setText("Inserire un NUMERO");
             } catch (IllegalArgumentException e) {
-                firstRedLabel.setText(e.getMessage());
+                errorRedLabel.setText(e.getMessage());
             }
 
         } else {
@@ -243,7 +259,7 @@ private CurrentRulesEnum rule;
                 x = Integer.parseInt(firstTextField.getText());
                 y = Integer.parseInt(secondTextField.getText());
                 z = Integer.parseInt(thirdTextField.getText());
-                firstRedLabel.setText("");
+                errorRedLabel.setText("");
                 if (alphabetRadioButton.isSelected()) {
                     List<Integer> list = new ArrayList<>();
                     list.add(x);
@@ -252,9 +268,9 @@ private CurrentRulesEnum rule;
                     function.apply(list);
                 }
             } catch (NumberFormatException e) {
-                firstRedLabel.setText("Inserire un NUMERO");
+                errorRedLabel.setText("Inserire un NUMERO");
             } catch (IllegalArgumentException e) {
-                firstRedLabel.setText(e.getMessage());
+                errorRedLabel.setText(e.getMessage());
             }
 
         }

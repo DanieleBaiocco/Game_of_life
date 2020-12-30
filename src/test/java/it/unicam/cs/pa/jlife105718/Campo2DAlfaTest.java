@@ -15,7 +15,7 @@ public class Campo2DAlfaTest {
 
     @BeforeEach
     void initCampoAlfa(){
-        this.campoAlfa =new Campo2D<PosizioneAlfabetica>(TransitionFactory.getInstance().getTransitionToChar());
+        this.campoAlfa =new Campo2D<>(TransitionFactory.getInstance().getTransitionToChar(),10,10);
     }
 
     @Test
