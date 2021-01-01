@@ -15,9 +15,11 @@ private static RulesFactory instance;
             case BasicRules:
                 ruleToReturn = new BasicRules();
                 break;
-            case AlternativeRules:
-                ruleToReturn= new AlternativeRules();
+            case AlternativeRules1:
+                ruleToReturn= new AlternativeRules1();
                 break;
+            case AlternativeRules2:
+                ruleToReturn = new AlternativeRules2();
         }
         return ruleToReturn;
     }
