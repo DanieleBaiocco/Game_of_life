@@ -15,9 +15,5 @@ public interface Controller {
         String extention = fileSplitted[fileSplitted.length-1];
         return DeserializationFactory.getInstance().getControllerFromFile(extention).deserializeFile(pathName);
     }
-    static int[] getListOfCellsToColorate(String pathName){
-        String[] fileSplitted = pathName.split("\\.");
-        String extention = fileSplitted[fileSplitted.length-1];
-        return DeserializationFactory.getInstance().getControllerFromFile(extention).listOfCellsToColorate(pathName);
-    }
+    int[] getCellsToSetAlive();
 }

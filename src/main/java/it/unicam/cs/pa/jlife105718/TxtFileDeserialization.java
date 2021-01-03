@@ -6,10 +6,4 @@ public class TxtFileDeserialization implements FileDeserialization {
         return null;
     }
 
-    @Override
-    public int[] listOfCellsToColorate(String pathName) {
-        return new int[0];
-    }
-
-
 }

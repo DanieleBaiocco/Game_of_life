@@ -8,10 +8,18 @@ public abstract class Campo<T extends IPosizione> implements ICampo<T> {
     private int[] values;
     private  Map<T, Cellula> mappaPosizioneCellula;
     private Function<List<Integer>, ? extends T> transition;
-    public Campo( Function<List<Integer>,? extends T> transition, int ... values) {
+    private int dim;
+    public Campo(Function<List<Integer>, ? extends T> transition, int dim, int... values) {
+        if(values.length != dim)
+            throw new IllegalArgumentException();
         this.transition=transition;
         this.mappaPosizioneCellula= new HashMap<>();
         this.values = values;
+        List<Integer> list = new ArrayList<>();
+        for(int value : values){
+            list.add(value);
+        }
+      transition.apply(list);
     }
 
     @Override

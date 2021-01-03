@@ -5,10 +5,8 @@ import java.util.Set;
 import java.util.function.Function;
 
 public class Campo1D<T extends IPosizione> extends Campo<T>{
-    private int value1;
     public Campo1D(Function<List<Integer>, ? extends T> transition, int value1) {
-        super(transition, value1);
-        this.value1 = value1;
+        super(transition,1, value1);
     }
 
     @Override
@@ -19,7 +17,7 @@ public class Campo1D<T extends IPosizione> extends Campo<T>{
 
     @Override
     protected ICampo<T> getInstance() {
-        return new Campo1D<>(getTransition(),value1);
+        return new Campo1D<>(getTransition(),getValues()[0]);
     }
 
 

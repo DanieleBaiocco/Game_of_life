@@ -9,7 +9,7 @@ public class DeserializationFactory {
     }
 
     public FileDeserialization getControllerFromFile(String string){
-        FileDeserialization fileDeserialization =null;
+        FileDeserialization fileDeserialization;
         switch (string){
             case "json":
                 fileDeserialization = new JsonFileDeserialization();
@@ -17,6 +17,9 @@ public class DeserializationFactory {
             case "txt":
                 fileDeserialization = new TxtFileDeserialization();
                 break;
+            default:
+                //forse qua va il throw di NullPointerException(non solo qua ma in tutti i default(?))
+                fileDeserialization = null;
         }
         return fileDeserialization;
     }

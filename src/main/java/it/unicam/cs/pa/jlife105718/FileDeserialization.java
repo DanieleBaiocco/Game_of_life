@@ -4,6 +4,5 @@ import java.io.FileNotFoundException;
 
 public interface FileDeserialization {
     Controller deserializeFile(String pathName) throws FileNotFoundException;
-    int[] listOfCellsToColorate(String pathName);
 
 }

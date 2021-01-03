@@ -4,16 +4,28 @@ package it.unicam.cs.pa.jlife105718;
 public class  GameOfLifeController implements Controller, PropertyListener {
 private final ICampo<?> campo;
 private final CurrentRulesEnum rule;
+private int[] cellsToSetAlive;
 static private GameOfLifeController controller;
+
+private GameOfLifeController(ICampo<?> campo, CurrentRulesEnum  rule, int[] cellsToSetAlive){
+    this.campo = campo;
+    this.rule = rule;
+    this.cellsToSetAlive = cellsToSetAlive;
+    }
 
 private GameOfLifeController(ICampo<?> campo, CurrentRulesEnum  rule){
     this.campo = campo;
     this.rule = rule;
 }
-/*
-public Controller (File jsonFile){
-    this.field =deserialize(jsonFile);
-}*/
+
+public int[] getCellsToSetAlive() {
+        return cellsToSetAlive;
+}
+
+    public void setCellsToSetAlive(int[] cellsToSetAlive) {
+        this.cellsToSetAlive = cellsToSetAlive;
+    }
+
 static public GameOfLifeController getInstance(ICampo<?> campo, CurrentRulesEnum rule){
     if(controller==null){
        controller= new GameOfLifeController(campo,rule);
@@ -21,6 +33,12 @@ static public GameOfLifeController getInstance(ICampo<?> campo, CurrentRulesEnum
     return controller;
 }
 
+    static public GameOfLifeController getInstance(ICampo<?> campo, CurrentRulesEnum rule, int[] cellsToSetAlive){
+        if(controller==null){
+            controller= new GameOfLifeController(campo,rule, cellsToSetAlive);
+        }
+        return controller;
+    }
 
 @Override
 public void nextGen() {

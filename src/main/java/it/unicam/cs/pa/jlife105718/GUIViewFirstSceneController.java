@@ -2,7 +2,6 @@ package it.unicam.cs.pa.jlife105718;
 
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.fxml.Initializable;
 import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.scene.Scene;
@@ -19,18 +18,18 @@ import javafx.stage.Stage;
 
 import java.awt.*;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.ResourceBundle;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
-public class GUIViewFirstSceneController implements Initializable { @FXML private AnchorPane mainAnchorPane;
+public class GUIViewFirstSceneController  {
+@FXML private AnchorPane mainAnchorPane;
 @FXML private RadioButton oneDRadioButton;
 @FXML private RadioButton twoDRadioButton;
 @FXML private RadioButton threeDRadioButton;
@@ -45,7 +44,7 @@ public class GUIViewFirstSceneController implements Initializable { @FXML privat
 @FXML private RadioButton thirdKnownRadioButton;
 @FXML private RadioButton fourthKnownRadioButton;
 @FXML private RadioButton fifthKnownRadioButton;
-@FXML private Button confirmDimensionButton;
+@FXML private Button loadButton;
 @FXML private Label firstLabel;
 @FXML private Label secondLabel;
 @FXML private Label thirdLabel;
@@ -54,7 +53,6 @@ public class GUIViewFirstSceneController implements Initializable { @FXML privat
 @FXML private TextField thirdTextField;
 @FXML private Button nextButton;
 @FXML private Button backButton;
-@FXML private Label confirmDimensionRedLabel;
 @FXML private Label errorRedLabel;
 @FXML private Button loadFromFileButton;
 @FXML private ComboBox choose1;
@@ -66,6 +64,7 @@ public class GUIViewFirstSceneController implements Initializable { @FXML privat
 @FXML private Pane leftPane;
 @FXML private Pane centralPane;
 @FXML private Pane rightPane;
+@FXML private Label loadRedLabel;
 private  final FileChooser fileChooser = new FileChooser();
 private Desktop desktop ;
 private final ToggleGroup dimensionChoosedToggleGroup = new ToggleGroup();
@@ -73,10 +72,12 @@ private final ToggleGroup ruleChoosedToggleGroup= new ToggleGroup();
 private final ToggleGroup positionChoosedToggleGroup= new ToggleGroup();
 private final ToggleGroup differentKnownConfigurations = new ToggleGroup();
 private Function<List<Integer>, ? extends IPosizione> functionSelected;
-private ICampo<?> campo;
+private int firstMaxCoordinate;
+private int secondMaxCoordinate;
+private int thirdMaxCoordinate;
+private ICampo<?> fieldSelected;
 private CurrentRulesEnum ruleSelected;
-private boolean flag;
-private int[] cellsToColorate;
+private int[] cellsToSetAlive;
 
 private void initComboBoxe(ComboBox comboBox, String ... elements){
     comboBox.getItems().removeAll(comboBox.getItems());
@@ -106,24 +107,103 @@ private List<Pane> getFilteredPanes(Predicate<Node> predicate){
 private boolean hasNotOneActivatedPane(){
     return getFilteredPanes(Node::isDisable).size()!=2;
 }
-
-    @Override
-    public void initialize(URL location, ResourceBundle resources) {
+private void resetToggles(ToggleGroup ... toggleGroups){
+    Arrays.stream(toggleGroups).filter(x->x.getSelectedToggle()!=null).forEach(x->x.getSelectedToggle().setSelected(false));
+}
+    @FXML
+    public void initialize() {
         initComboBoxe(choose1,"Block", "Bee-hive", "Loaf", "Boat", "Tub");
         initComboBoxe(choose2,"Blinker","Toad", "Beacon", "Pulsar", "Penta-decathlon");;
-        initComboBoxe(choose3, "Gosper glider gun","Simkin glider gun", "simple glider", "Light weight spaceship", "Middle weight spaceship", "Heavy weight spaceship");
-        initComboBoxe(choose4,"The R-pentomino", "Diehard", "Acorn");
-        initComboBoxe(choose5, "Infinite growth 1", "Infinite growth 2", "Infinite growth 3");
-        flag= true;
+        initComboBoxe(choose3, "Gosper-glider-gun","Simkin-glider-gun", "Simple-glider", "Light-weight-spaceship", "Middle-weight-spaceship", "Heavy-weight-spaceship");
+        initComboBoxe(choose4,"R-pentomino", "Diehard", "Acorn");
+        initComboBoxe(choose5, "Infinite-growth-1", "Infinite-growth-2", "Infinite-growth-3");
         desktop = Desktop.getDesktop();
         initToggleGroup(dimensionChoosedToggleGroup,oneDRadioButton,twoDRadioButton,threeDRadioButton);
         initToggleGroup(ruleChoosedToggleGroup,standardRuleRadioButton,alternativeRuleRadioButton,alternativeRule2RadioButton);
         initToggleGroup(positionChoosedToggleGroup, integerNumbersRadioButton, doubleNumbersRadioButton, alphabetRadioButton);
         initToggleGroup(differentKnownConfigurations, firstKnownRadioButton, secondKnownRadioButton,thirdKnownRadioButton,fourthKnownRadioButton,fifthKnownRadioButton);
-        changeNodes(x->x.setVisible(false), confirmDimensionRedLabel, errorRedLabel, firstTextField, secondTextField, thirdTextField, firstLabel, secondLabel, thirdLabel);
+        changeNodes(x->((TextField)x).setText(""), firstTextField, secondTextField, thirdTextField);
+        changeNodes(x->x.setVisible(false), loadRedLabel, firstTextField, secondTextField, thirdTextField, firstLabel, secondLabel, thirdLabel, loadButton);
         changeNodes(x->x.setDisable(true),  nextButton, backButton);
         changeNodes(x->((Pane)x).getChildren().forEach(y->y.setDisable(true)),rightPane,leftPane,centralPane);
+}
 
+@FXML public void createGridFromAPreconfiguredGrid(MouseEvent mouseEvent){
+    reset();
+    String radioButtonClicked = ((RadioButton)mouseEvent.getSource()).getText();
+    String basePath = new File("").getAbsolutePath();
+    buildControllerFromRadioButton(radioButtonClicked, basePath);
+    nextButton.setDisable(false);
+}
+
+private void buildControllerFromRadioButton(String radioButtonClicked, String basePath) {
+    Controller controller = null;
+    String pathThroughDirectories = "/src/main/resources/preconfiguredGridsInJson/";
+    String halfPath = basePath.concat(pathThroughDirectories);
+    try {
+        switch (radioButtonClicked){
+            case "STILL LIFES":
+                controller = Controller.createControllerFromFile(halfPath.concat(buildEndPath(choose1)));
+                break;
+            case "OSCILLATORS":
+                controller = Controller.createControllerFromFile(halfPath.concat(buildEndPath(choose2)));
+                break;
+            case "SPACESHIPS":
+                controller = Controller.createControllerFromFile(halfPath.concat(buildEndPath(choose3)));
+                break;
+            case "METHUSELAHS" :
+                controller = Controller.createControllerFromFile(halfPath.concat(buildEndPath(choose4)));
+                break;
+            case "INFINITE GROWTH":
+                controller = Controller.createControllerFromFile(halfPath.concat(buildEndPath(choose5)));
+                break;
+            }
+        initGRASPControllerVars(controller);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+}
+
+@FXML void createGridFromInitialization(){
+    try {
+        if(errorRedLabel.getText().equals("")){
+          functionSelected = Utility.switchOnPositionChoosed(getStringFromToggle(positionChoosedToggleGroup));
+          ruleSelected = Utility.switchOnRuleChoosed(getStringFromToggle(ruleChoosedToggleGroup));
+          fieldSelected = Utility.switchOnDimensionChoosed(getStringFromToggle(dimensionChoosedToggleGroup),
+                  ()->new Campo1D<>(functionSelected,Integer.parseInt(firstTextField.getText())),
+                  ()->new Campo2D<>(functionSelected,Integer.parseInt(firstTextField.getText()),
+                          Integer.parseInt(secondTextField.getText())),
+                  ()->new Campo3D<>(functionSelected,Integer.parseInt(firstTextField.getText()),
+                          Integer.parseInt(secondTextField.getText()),
+                          Integer.parseInt(thirdTextField.getText())));
+          nextButton.setDisable(false);
+          loadRedLabel.setText("");
+          loadButton.setVisible(false);
+        } else{
+            changeNodes(x->x.setVisible(true), loadRedLabel);
+            changeNodes(x->((Label)x).setText("Inserisci i valori corretti"),loadRedLabel);
+        }
+    }
+    catch (NumberFormatException e){
+        changeNodes(x->x.setVisible(true),loadRedLabel);
+        changeNodes(x->((Label)x).setText("TextField vuoto/i"), loadRedLabel);
+    }
+    //forse è giusto levare la IllegalArgumentException dal costruttore di Campo e da qua(?)
+    catch (NullPointerException | IllegalArgumentException  exception){
+       changeNodes(x->x.setVisible(true),loadRedLabel);
+       changeNodes(x->((Label)x).setText("Completa la scelta"), loadRedLabel);
+    }
+}
+
+
+private void initGRASPControllerVars(Controller controller){
+    fieldSelected = controller.getCampo();
+    ruleSelected = controller.getRule();
+    cellsToSetAlive = controller.getCellsToSetAlive();
+}
+
+private String buildEndPath(ComboBox comboBox){
+    return comboBox.getSelectionModel().getSelectedItem().toString().concat(".json");
 }
 
 @FXML public void changeToHandCursor(MouseEvent mouseEvent){
@@ -158,94 +238,49 @@ private boolean hasNotOneActivatedPane(){
 }
 
 @FXML public void goBackToNoPaneChoosed(){
-    List<Pane> panes= getFilteredPanes(y->!(y.isDisable()));
-    Pane previouslySelectedPane = panes.get(1);
-    previouslySelectedPane.getChildren().forEach(x->x.setDisable(true));
     backButton.setDisable(true);
+    resetToggles(dimensionChoosedToggleGroup,positionChoosedToggleGroup,differentKnownConfigurations,ruleChoosedToggleGroup);
+    initialize();
+    reset();
 }
 
-@FXML public void loadConfigFromFile(MouseEvent mouseEvent) throws IOException {
+private void reset() {
+    cellsToSetAlive = null;
+    fieldSelected= null;
+    ruleSelected = null;
+    functionSelected = null;
+    firstMaxCoordinate = -1;
+    secondMaxCoordinate = -1;
+    thirdMaxCoordinate = -1;
+}
+
+    @FXML public void createGridFromFile(MouseEvent mouseEvent) throws IOException {
+        reset();
         Stage window = (Stage) ((Node) mouseEvent.getSource()).getScene().getWindow();
         File file = fileChooser.showOpenDialog(window);
-        String pathName = file.getPath();
-        Controller controller =Controller.createControllerFromFile(pathName);
-        this.campo = controller.getCampo();
-        this.ruleSelected = controller.getRule();
-        this.flag = false;
-        this.cellsToColorate =Controller.getListOfCellsToColorate(pathName);
+        Controller createdController = Controller.createControllerFromFile(file.getPath());
+        initGRASPControllerVars(createdController);
+        nextButton.setDisable(false);
     }
 
     @FXML public void showDimensionLabelsAndTexts(MouseEvent mouseEvent) {
-     if (positionChoosedToggleGroup.getSelectedToggle()!=null
-     && dimensionChoosedToggleGroup.getSelectedToggle()!=null
-     && ruleChoosedToggleGroup.getSelectedToggle()!=null) {
-           switchOnDimensionChoosed(getStringFromToggle(dimensionChoosedToggleGroup),
-                   ()->changeNodes(x->x.setVisible(true),firstLabel,firstTextField),
-                   ()->changeNodes(x->x.setVisible(true),firstLabel,firstTextField,secondLabel,secondTextField),
-                   ()->changeNodes(x->x.setVisible(true),firstLabel,firstTextField,secondLabel,secondTextField,thirdLabel,thirdTextField ));
-           switchOnPositionChoosed(getStringFromToggle(positionChoosedToggleGroup));
-           switchOnRuleChoosed(getStringFromToggle(ruleChoosedToggleGroup));
-           if(!confirmDimensionRedLabel.getText().equals(""))
-               confirmDimensionRedLabel.setText("");
-         dimensionChoosedToggleGroup.getToggles().stream().map(x->(RadioButton)x).forEach(x->x.setDisable(true));
-         positionChoosedToggleGroup.getToggles().stream().map(x->(RadioButton)x).forEach(x->x.setDisable(true));
-         ruleChoosedToggleGroup.getToggles().stream().map(x->(RadioButton)x).forEach(x->x.setDisable(true));
-     }  else{
-         changeNodes(x->x.setVisible(true),confirmDimensionRedLabel);
-     }
+    Utility.switchOnDimensionChoosed(getStringFromToggle(dimensionChoosedToggleGroup),
+            ()->{changeNodes(x->x.setVisible(true),firstLabel,firstTextField);
+            changeNodes(x->x.setVisible(false), secondLabel, secondTextField, thirdLabel, thirdTextField);
+            return null;},
+            ()->{ changeNodes(x->x.setVisible(true),firstLabel,firstTextField,secondLabel,secondTextField);
+            changeNodes(x->x.setVisible(false), thirdTextField, thirdLabel);
+            return null;
+            },
+            ()->{changeNodes(x->x.setVisible(true),firstLabel,firstTextField,secondLabel,secondTextField,thirdLabel,thirdTextField);
+            return null;
+    });
+    loadButton.setVisible(true);
 }
 
     private String getStringFromToggle(ToggleGroup toggleGroup) {
     return ((RadioButton)toggleGroup.getSelectedToggle()).getText();
 }
-
-    private void switchOnDimensionChoosed(String dimensionChoosed, Runnable runnable1, Runnable runnable2, Runnable runnable3){
-    switch(dimensionChoosed){
-        case "1D": {
-            runnable1.run();
-            break;
-        }
-        case "2D": {
-            runnable2.run();
-            break;
-        }
-        case "3D": {
-            runnable3.run();
-            break;
-        }
-    }
-}
-
-private void switchOnPositionChoosed(String positionChoosed){
-    switch (positionChoosed){
-        case "Alfabetico":
-            functionSelected = TransitionFactory.getInstance().getTransitionToChar();
-            break;
-        case "Numerico":
-            functionSelected = TransitionFactory.getInstance().getTransitionToInteger();
-            break;
-        case "Virgola Mobile" :
-            functionSelected = TransitionFactory.getInstance().getTransitionToDouble();
-            break;
-    }
-}
-
-private void switchOnRuleChoosed(String ruleChoosed){
-    switch (ruleChoosed){
-        case "Standard":
-            ruleSelected =  CurrentRulesEnum.BasicRules;
-            break;
-        case "Alternativa1":
-            ruleSelected = CurrentRulesEnum.AlternativeRules1;
-            break;
-        case "Alternativa2":
-            ruleSelected = CurrentRulesEnum.AlternativeRules2;
-            break;
-    }
-}
-
-
-
 
    @FXML
    public void loadGrid(MouseEvent mouseEvent)  throws IOException{
@@ -253,22 +288,22 @@ private void switchOnRuleChoosed(String ruleChoosed){
        loader.setLocation(getClass().getResource("/GameOfLifeSecondScene.fxml"));
        AnchorPane gridViewParent = loader.load();
         GUIViewSecondSceneController secondController = loader.getController();
-       if(this.flag) {
+     //  if(this.flag) {
            int value1 = Integer.parseInt(firstTextField.getText());
            int value2 = Integer.parseInt(secondTextField.getText());
            int value3 = Integer.parseInt(thirdTextField.getText());
            if (oneDRadioButton.isSelected()) {
-               this.campo = new Campo1D<>(this.functionSelected, value1);
+               this.fieldSelected = new Campo1D<>(this.functionSelected, value1);
                firstLabel.setText("Inserisci la prima dimensione");
                firstTextField.setVisible(true);
            } else if (twoDRadioButton.isSelected()) {
-               this.campo = new Campo2D<>(this.functionSelected, value1, value2);
+               this.fieldSelected = new Campo2D<>(this.functionSelected, value1, value2);
                firstLabel.setText("Inserisci la prima dimensione");
                firstTextField.setVisible(true);
                secondLabel.setText("Inserisci la seconda dimensione");
                secondTextField.setVisible(true);
            } else {
-               this.campo = new Campo3D<>(this.functionSelected, value1, value2, value3);
+               this.fieldSelected = new Campo3D<>(this.functionSelected, value1, value2, value3);
                firstLabel.setText("Inserisci la prima dimensione");
                firstTextField.setVisible(true);
                secondLabel.setText("Inserisci la seconda dimensione");
@@ -276,43 +311,18 @@ private void switchOnRuleChoosed(String ruleChoosed){
                thirdLabel.setText("Inserisci la terza dimensione");
                thirdTextField.setVisible(true);
            }
-       }
-        secondController.initializeGRASPController(this.campo,this.ruleSelected);
-        if(!flag){
+    //   }
+        secondController.initializeGRASPController(this.fieldSelected,this.ruleSelected);
+      //  if(!flag){
             secondController.setFlag(false);
-            secondController.setCellsToColorate(cellsToColorate);
-        }
+            secondController.setCellsToColorate(cellsToSetAlive);
+        //}
         secondController.initGrid();
         Scene gridViewScene =  new Scene (gridViewParent);
         Stage window = (Stage) ((Node) mouseEvent.getSource()).getScene().getWindow();
         window.setScene(gridViewScene);
         window.show();
     }
-
-
-    //controllo da fare ogni qual volta si seleziona un qualcosa per vedere se si può effettivamente continuare
-    //oppure no perchè mancano ancora delle info
-    private boolean nextIsPossible(){
-        //solo x ora
-        return true;
-                /*positionChoosedToggleGroup.getToggles().stream().anyMatch(Toggle::isSelected)
-                && ruleChoosedToggleGroup.getToggles().stream().anyMatch(Toggle::isSelected)
-                && dimensionChoosedToggleGroup.getToggles().stream().anyMatch(Toggle::isSelected)
-                && (oneDRadioButton.isDisable() && (!firstTextField.isVisible () || !firstTextField.getText().isEmpty()))
-                && (oneDRadioButton.isDisable() && (!secondTextField.isVisible () || !secondTextField.getText().isEmpty()))
-                && (oneDRadioButton.isDisable() && (!thirdTextField.isVisible () || !thirdTextField.getText().isEmpty()))
-                && firstRedLabel.getText().equals("");*/
-    }
-
-
-
-    @FXML public void checkOnNextButton() {
-        if (nextIsPossible()) {
-          this.nextButton.setDisable(false);
-        }
-
-    }
-
 
     //le eccezioni lanciate dovrebbero esser dgenerate dalla view
     @FXML public void checkMaxCoordinate() {
