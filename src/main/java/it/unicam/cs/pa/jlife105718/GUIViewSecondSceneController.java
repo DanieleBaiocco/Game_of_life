@@ -1,7 +1,6 @@
 package it.unicam.cs.pa.jlife105718;
 
 import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.input.MouseEvent;
@@ -10,17 +9,14 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 
-import java.net.URL;
-import java.util.ResourceBundle;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
-public class GUIViewSecondSceneController implements PropertyListener, Initializable {
+public class GUIViewSecondSceneController implements PropertyListener {
 
 @FXML private Label firstLabel;
 @FXML private Label secondLabel;
-@FXML private Label thirdLabel;
 @FXML private AnchorPane containerOfGrid;
 @FXML private  AnchorPane parent;
 @FXML private Button startButton;
@@ -30,15 +26,10 @@ private ScheduledExecutorService executor;
 private boolean exit = false;
 private GridPane gridPane ;
 private Controller GRASPController;
-private boolean flag;
-private int[] cellsToColorate;
-    public void initializeGRASPController(ICampo<? extends IPosizione> campo,CurrentRulesEnum rule){
-        GRASPController = GameOfLifeController.getInstance(campo,rule);
-        this.flag = true;
-    }
 
-    public int[] getCellsToColorate() {
-        return cellsToColorate;
+    public void initializeGRASPController(ICampo<? extends IPosizione> campo,CurrentRulesEnum rule, int[] cellsToSetAlive){
+        //System.getproperty
+        GRASPController = GameOfLifeController.getInstance(campo,rule, cellsToSetAlive);
     }
 
     public void initGrid(){
@@ -54,20 +45,6 @@ private int[] cellsToColorate;
                 initGrid3D(values[0],values[1], values[2]);
                 break;
         }
-    }
-
-    public void setCellsToColorate(int[] cells){
-        for(int i =0; i<cells.length; i++)
-            System.out.println(cells[i]);
-        this.cellsToColorate = cells;
-    }
-
-    public boolean getFlag(){
-        return flag;
-    }
-
-    public void setFlag(boolean bool){
-        flag= bool;
     }
 
     @FXML
@@ -97,8 +74,8 @@ private int[] cellsToColorate;
                 System.out.println("Sto aspettando");
             }
         };
-        this.executor = Executors.newScheduledThreadPool(1);
-        this.executor.scheduleAtFixedRate(startGen, 0, 1, TimeUnit.SECONDS);
+        this.executor.scheduleAtFixedRate(startGen, 0, 1000, TimeUnit.MILLISECONDS);
+
     }
 
     private void initGrid1D(int x1) {
@@ -106,7 +83,22 @@ private int[] cellsToColorate;
 
 
     private void initGrid2D(int x1, int x2) {
-        firstLabel.setText("");
+        int f =GRASPController.getCampo().getValues()[0];
+        int s = GRASPController.getCampo().getValues()[1];
+        if(f!=s){
+           if(f<s){
+               double result = containerOfGrid.getPrefWidth()/s;
+               System.out.println(result);
+               containerOfGrid.setPrefHeight(result*f);
+            //   gridPane.setPrefHeight(result*f);
+            } else{
+               double result= containerOfGrid.getPrefHeight()/f;
+               containerOfGrid.setPrefWidth(result*s);
+            //   gridPane.setPrefWidth(result*s);
+           }
+        }
+        firstLabel.setText(Integer.toString(GRASPController.getCampo().getValues().length).concat("D"));
+        secondLabel.setText(GRASPController.getRule().toString());
         for(int i=0; i<x1; i++){
             for(int j=0; j<x2; j++){
                 Pane pane = new Pane();
@@ -119,10 +111,10 @@ private int[] cellsToColorate;
                 GRASPController.addAEntry(j,i);
                 GRASPController.getCampo().getCellulaFromInteger(j,i).addPropertyListener(this);
                 //int leng = GRASPController.getCampo().getValues().length;
-                if(!this.getFlag()){
-                    for(int k=0; k<cellsToColorate.length; k=k+2){
-                        int firstCoo = cellsToColorate[k];
-                        int secondCoo = cellsToColorate[k+1];
+                if(GRASPController.getCellsToSetAlive()!=null){
+                    for(int k=0; k<GRASPController.getCellsToSetAlive().length; k=k+2){
+                        int firstCoo = GRASPController.getCellsToSetAlive()[k];
+                        int secondCoo = GRASPController.getCellsToSetAlive()[k+1];
                         if(j==firstCoo&&i==secondCoo)
                             GRASPController.colorateDecolorateACellula(j,i);
                     }
@@ -178,8 +170,8 @@ private int[] cellsToColorate;
         //System.out.println(GridPane.getColumnIndex(pane1)+ " "+ GridPane.getRowIndex(pane1));
     }
 
-    @Override
-    public void initialize(URL location, ResourceBundle resources) {
+    @FXML
+    public void initialize() {
         gridPane= new GridPane();
         gridPane.setGridLinesVisible(true);
         this.containerOfGrid.getChildren().add(gridPane);
@@ -187,6 +179,6 @@ private int[] cellsToColorate;
         AnchorPane.setTopAnchor(gridPane, .0);
         AnchorPane.setLeftAnchor(gridPane, .0);
         AnchorPane.setBottomAnchor(gridPane, .0);
-
+        executor = Executors.newScheduledThreadPool(1);
     }
 }

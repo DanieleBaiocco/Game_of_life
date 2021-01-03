@@ -1,0 +1,6 @@
+{
+  "posizione": "Numerico",
+  "regola" : "Standard",
+  "colorare": [1,2,2,2,3,2],
+  "limite": [5,5]
+}

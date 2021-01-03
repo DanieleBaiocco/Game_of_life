@@ -8,7 +8,6 @@
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.Pane?>
-<?import javafx.scene.shape.Line?>
 <?import javafx.scene.text.Font?>
 
 <BorderPane fx:id="borderPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="720.0" prefWidth="1400.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.unicam.cs.pa.jlife105718.GUIViewFirstSceneController">
@@ -36,7 +35,7 @@
          </children></Pane>
    </bottom>
    <center>
-      <Pane fx:id="centralPane" onMouseClicked="#unlockThisPane" onMouseEntered="#overThePane" onMouseExited="#exitThePane" prefHeight="588.0" prefWidth="476.0" style="-fx-border-color: black;" BorderPane.alignment="CENTER">
+      <Pane fx:id="centralPane" onMouseClicked="#unlockThisPane" onMouseEntered="#overThePane" onMouseExited="#exitThePane" prefHeight="586.0" prefWidth="476.0" style="-fx-border-color: black;" BorderPane.alignment="CENTER">
          <children>
             <Label layoutX="23.0" layoutY="18.0" prefHeight="23.0" prefWidth="301.0" style="-fx-border-color: grey;" text="CONFIGURAZIONI CONOSCIUTE" textAlignment="CENTER">
                <font>
@@ -57,7 +56,7 @@
          </children></Pane>
    </center>
    <left>
-      <Pane fx:id="leftPane" onMouseClicked="#unlockThisPane" onMouseEntered="#overThePane" onMouseExited="#exitThePane" prefHeight="567.0" prefWidth="561.0" BorderPane.alignment="CENTER">
+      <Pane fx:id="leftPane" onMouseClicked="#unlockThisPane" onMouseEntered="#overThePane" onMouseExited="#exitThePane" prefHeight="566.0" prefWidth="561.0" BorderPane.alignment="CENTER">
          <children>
             <Label layoutX="29.0" layoutY="14.0" prefHeight="23.0" prefWidth="333.0" style="-fx-border-color: grey;" text="INIZIALIZZAZIONE DELLA GRIGLIA" textAlignment="CENTER">
                <font>
@@ -69,18 +68,16 @@
                   <Font size="19.0" />
                </font>
             </Label>
-            <Line endX="-2.0" startX="9.0" />
             <RadioButton fx:id="oneDRadioButton" layoutX="28.0" layoutY="102.0" mnemonicParsing="false" onMouseClicked="#showDimensionLabelsAndTexts" onMouseEntered="#changeToHandCursor" onMouseExited="#changeToDefaultCursor" prefHeight="0.0" prefWidth="99.0" text="1" />
             <RadioButton fx:id="threeDRadioButton" layoutX="28.0" layoutY="150.0" mnemonicParsing="false" onMouseClicked="#showDimensionLabelsAndTexts" onMouseEntered="#changeToHandCursor" onMouseExited="#changeToDefaultCursor" prefHeight="0.0" prefWidth="99.0" text="3" />
             <RadioButton fx:id="twoDRadioButton" layoutX="29.0" layoutY="128.0" mnemonicParsing="false" onMouseClicked="#showDimensionLabelsAndTexts" onMouseEntered="#changeToHandCursor" onMouseExited="#changeToDefaultCursor" prefHeight="0.0" prefWidth="99.0" text="2" />
             <Separator layoutY="375.0" prefHeight="3.0" prefWidth="565.0" />
-            <Label fx:id="firstLabel" layoutX="168.0" layoutY="116.0" text="Valore Max prima coordinata" />
+            <Label fx:id="firstLabel" layoutX="168.0" layoutY="94.0" text="Valore Max prima coordinata" />
             <Label fx:id="secondLabel" layoutX="167.0" layoutY="150.0" prefHeight="18.0" prefWidth="220.0" text="Valore Max seconda coordinata" />
-            <Label fx:id="thirdLabel" layoutX="167.0" layoutY="188.0" prefHeight="18.0" prefWidth="191.0" text="Valore Max terza coordinata" />
+            <Label fx:id="thirdLabel" layoutX="167.0" layoutY="206.0" prefHeight="18.0" prefWidth="191.0" text="Valore Max terza coordinata" />
             <TextField fx:id="secondTextField" layoutX="387.0" layoutY="146.0" onMouseEntered="#changeToHandCursor" onMouseExited="#changeToDefaultCursor" prefHeight="26.0" prefWidth="152.0" />
-            <TextField fx:id="thirdTextField" layoutX="386.0" layoutY="184.0" onMouseEntered="#changeToHandCursor" onMouseExited="#changeToDefaultCursor" prefHeight="26.0" prefWidth="153.0" />
-            <TextField fx:id="firstTextField" layoutX="386.0" layoutY="111.0" onMouseEntered="#changeToHandCursor" onMouseExited="#changeToDefaultCursor" prefHeight="17.0" prefWidth="153.0" />
-            <Line endX="-2.0" startX="9.5" />
+            <TextField fx:id="thirdTextField" layoutX="386.0" layoutY="202.0" onMouseEntered="#changeToHandCursor" onMouseExited="#changeToDefaultCursor" prefHeight="26.0" prefWidth="153.0" />
+            <TextField fx:id="firstTextField" layoutX="386.0" layoutY="89.0" onMouseEntered="#changeToHandCursor" onMouseExited="#changeToDefaultCursor" prefHeight="17.0" prefWidth="153.0" />
             <Label layoutX="31.0" layoutY="250.0" prefHeight="26.0" prefWidth="185.0" style="-fx-border-color: black;" text="TIPO COORDINATE">
                <font>
                   <Font size="19.0" />
@@ -90,7 +87,6 @@
             <RadioButton fx:id="integerNumbersRadioButton" layoutX="26.0" layoutY="315.0" mnemonicParsing="false" onMouseEntered="#changeToHandCursor" onMouseExited="#changeToDefaultCursor" prefHeight="18.0" prefWidth="105.0" text="Numerico" />
             <RadioButton fx:id="doubleNumbersRadioButton" layoutX="23.0" layoutY="341.0" mnemonicParsing="false" onMouseEntered="#changeToHandCursor" onMouseExited="#changeToDefaultCursor" prefHeight="18.0" prefWidth="140.0" text="Virgola Mobile" />
             <Separator layoutX="2.0" layoutY="54.0" prefHeight="3.0" prefWidth="560.0" />
-            <Line endX="-2.0" startX="9.5" />
             <Label layoutX="33.0" layoutY="390.0" prefHeight="26.0" prefWidth="88.0" style="-fx-border-color: black;" text="REGOLA">
                <font>
                   <Font size="19.0" />
@@ -101,8 +97,10 @@
             <RadioButton fx:id="alternativeRule2RadioButton" layoutX="33.0" layoutY="481.0" mnemonicParsing="false" onMouseEntered="#changeToHandCursor" onMouseExited="#changeToDefaultCursor" prefHeight="18.0" prefWidth="120.0" text="Alternativa2" />
             <Separator layoutX="1.0" layoutY="236.0" prefHeight="5.0" prefWidth="564.0" />
             <Label fx:id="loadRedLabel" layoutX="410.0" layoutY="481.0" prefHeight="18.0" prefWidth="124.0" text="Completa la scelta" textFill="#fc0000" />
-            <Label fx:id="errorRedLabel" layoutX="168.0" layoutY="93.0" prefHeight="18.0" prefWidth="247.0" textFill="#ee0000" />
             <Button fx:id="loadButton" layoutX="411.0" layoutY="509.0" mnemonicParsing="false" onMouseClicked="#createGridFromInitialization" onMouseEntered="#changeToHandCursor" onMouseExited="#changeToDefaultCursor" prefHeight="26.0" prefWidth="124.0" text="Load" />
+            <Label fx:id="firstErrorRedLabel" layoutX="167.0" layoutY="72.0" prefHeight="16.0" prefWidth="370.0" textFill="#ee0000" />
+            <Label fx:id="thirdErrorRedLabel" layoutX="167.0" layoutY="186.0" prefHeight="16.0" prefWidth="370.0" textFill="RED" />
+            <Label fx:id="secondErrorRedLabel" layoutX="167.0" layoutY="129.0" prefHeight="16.0" prefWidth="370.0" textFill="#ee0000" />
          </children>
       </Pane>
    </left>

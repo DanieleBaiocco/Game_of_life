@@ -8,9 +8,9 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane fx:id="parent" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onScroll="#zoom" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.unicam.cs.pa.jlife105718.GUIViewSecondSceneController">
+<AnchorPane fx:id="parent" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onScroll="#zoom" prefHeight="720.0" prefWidth="1400.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.unicam.cs.pa.jlife105718.GUIViewSecondSceneController">
    <children>
-      <GridPane layoutX="20.0" layoutY="14.0" prefHeight="56.0" prefWidth="368.0">
+      <GridPane gridLinesVisible="true" layoutX="752.0" layoutY="46.0" prefHeight="119.0" prefWidth="427.0">
         <columnConstraints>
           <ColumnConstraints hgrow="SOMETIMES" maxWidth="179.0" minWidth="10.0" prefWidth="75.0" />
           <ColumnConstraints hgrow="SOMETIMES" maxWidth="307.0" minWidth="10.0" prefWidth="293.0" />
@@ -18,32 +18,25 @@
         <rowConstraints>
           <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
           <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
         </rowConstraints>
          <children>
-            <Label fx:id="firstLabel" text="Label" GridPane.columnIndex="1" />
-            <Label text="Posizione" GridPane.rowIndex="1">
+            <Label fx:id="firstLabel" alignment="CENTER" prefHeight="16.0" prefWidth="79.0" text="Label" textAlignment="CENTER" GridPane.columnIndex="1" />
+            <Label alignment="CENTER" prefHeight="18.0" prefWidth="97.0" text="Regola" GridPane.rowIndex="1">
                <font>
                   <Font name="System Bold Italic" size="14.0" />
                </font>
             </Label>
-            <Label fx:id="secondLabel" text="Label" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-            <Label text="Regola" GridPane.rowIndex="2">
-               <font>
-                  <Font name="System Bold Italic" size="14.0" />
-               </font>
-            </Label>
-            <Label fx:id="thirdLabel" text="Label" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-            <Label text="Campo">
+            <Label fx:id="secondLabel" alignment="CENTER" contentDisplay="CENTER" prefHeight="16.0" prefWidth="77.0" text="Label" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+            <Label alignment="CENTER" prefHeight="18.0" prefWidth="82.0" text="Campo">
                <font>
                   <Font name="System Bold Italic" size="14.0" />
                </font>
             </Label>
          </children>
       </GridPane>
-      <AnchorPane fx:id="containerOfGrid" layoutX="50.0" layoutY="86.0" prefHeight="600.0" prefWidth="600.0" />
-      <Button fx:id="startButton" layoutX="370.0" layoutY="29.0" mnemonicParsing="false" onMouseClicked="#startSimulation" text="START" />
-      <Button fx:id="stopButton" layoutX="478.0" layoutY="29.0" mnemonicParsing="false" onMouseClicked="#stopSimulation" text="STOP" />
-      <Button fx:id="finishButton" layoutX="578.0" layoutY="29.0" mnemonicParsing="false" onMouseClicked="#finishSimulation" text="FINISH" />
+      <AnchorPane fx:id="containerOfGrid" layoutX="14.0" layoutY="16.0" prefHeight="688.0" prefWidth="688.0" />
+      <Button fx:id="startButton" layoutX="799.0" layoutY="312.0" mnemonicParsing="false" onMouseClicked="#startSimulation" prefHeight="70.0" prefWidth="167.0" text="START" />
+      <Button fx:id="stopButton" layoutX="799.0" layoutY="427.0" mnemonicParsing="false" onMouseClicked="#stopSimulation" prefHeight="70.0" prefWidth="167.0" text="STOP" />
+      <Button fx:id="finishButton" layoutX="799.0" layoutY="547.0" mnemonicParsing="false" onMouseClicked="#finishSimulation" prefHeight="70.0" prefWidth="167.0" text="FINISH" />
    </children>
 </AnchorPane>

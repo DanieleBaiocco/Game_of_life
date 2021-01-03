@@ -20,7 +20,6 @@ import java.awt.*;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.function.Consumer;
@@ -53,7 +52,9 @@ public class GUIViewFirstSceneController  {
 @FXML private TextField thirdTextField;
 @FXML private Button nextButton;
 @FXML private Button backButton;
-@FXML private Label errorRedLabel;
+@FXML private Label firstErrorRedLabel;
+@FXML private Label secondErrorRedLabel;
+@FXML private Label thirdErrorRedLabel;
 @FXML private Button loadFromFileButton;
 @FXML private ComboBox choose1;
 @FXML private ComboBox choose2;
@@ -115,7 +116,7 @@ private void resetToggles(ToggleGroup ... toggleGroups){
         initComboBoxe(choose1,"Block", "Bee-hive", "Loaf", "Boat", "Tub");
         initComboBoxe(choose2,"Blinker","Toad", "Beacon", "Pulsar", "Penta-decathlon");;
         initComboBoxe(choose3, "Gosper-glider-gun","Simkin-glider-gun", "Simple-glider", "Light-weight-spaceship", "Middle-weight-spaceship", "Heavy-weight-spaceship");
-        initComboBoxe(choose4,"R-pentomino", "Diehard", "Acorn");
+        initComboBoxe(choose4, "Diehard");
         initComboBoxe(choose5, "Infinite-growth-1", "Infinite-growth-2", "Infinite-growth-3");
         desktop = Desktop.getDesktop();
         initToggleGroup(dimensionChoosedToggleGroup,oneDRadioButton,twoDRadioButton,threeDRadioButton);
@@ -166,7 +167,7 @@ private void buildControllerFromRadioButton(String radioButtonClicked, String ba
 
 @FXML void createGridFromInitialization(){
     try {
-        if(errorRedLabel.getText().equals("")){
+        if(firstErrorRedLabel.getText().equals("") && secondErrorRedLabel.getText().equals("") && thirdErrorRedLabel.getText().equals("")){
           functionSelected = Utility.switchOnPositionChoosed(getStringFromToggle(positionChoosedToggleGroup));
           ruleSelected = Utility.switchOnRuleChoosed(getStringFromToggle(ruleChoosedToggleGroup));
           fieldSelected = Utility.switchOnDimensionChoosed(getStringFromToggle(dimensionChoosedToggleGroup),
@@ -189,7 +190,7 @@ private void buildControllerFromRadioButton(String radioButtonClicked, String ba
         changeNodes(x->((Label)x).setText("TextField vuoto/i"), loadRedLabel);
     }
     //forse è giusto levare la IllegalArgumentException dal costruttore di Campo e da qua(?)
-    catch (NullPointerException | IllegalArgumentException  exception){
+    catch (NullPointerException e){
        changeNodes(x->x.setVisible(true),loadRedLabel);
        changeNodes(x->((Label)x).setText("Completa la scelta"), loadRedLabel);
     }
@@ -287,46 +288,18 @@ private void reset() {
        FXMLLoader loader = new FXMLLoader();
        loader.setLocation(getClass().getResource("/GameOfLifeSecondScene.fxml"));
        AnchorPane gridViewParent = loader.load();
-        GUIViewSecondSceneController secondController = loader.getController();
-     //  if(this.flag) {
-           int value1 = Integer.parseInt(firstTextField.getText());
-           int value2 = Integer.parseInt(secondTextField.getText());
-           int value3 = Integer.parseInt(thirdTextField.getText());
-           if (oneDRadioButton.isSelected()) {
-               this.fieldSelected = new Campo1D<>(this.functionSelected, value1);
-               firstLabel.setText("Inserisci la prima dimensione");
-               firstTextField.setVisible(true);
-           } else if (twoDRadioButton.isSelected()) {
-               this.fieldSelected = new Campo2D<>(this.functionSelected, value1, value2);
-               firstLabel.setText("Inserisci la prima dimensione");
-               firstTextField.setVisible(true);
-               secondLabel.setText("Inserisci la seconda dimensione");
-               secondTextField.setVisible(true);
-           } else {
-               this.fieldSelected = new Campo3D<>(this.functionSelected, value1, value2, value3);
-               firstLabel.setText("Inserisci la prima dimensione");
-               firstTextField.setVisible(true);
-               secondLabel.setText("Inserisci la seconda dimensione");
-               secondTextField.setVisible(true);
-               thirdLabel.setText("Inserisci la terza dimensione");
-               thirdTextField.setVisible(true);
-           }
-    //   }
-        secondController.initializeGRASPController(this.fieldSelected,this.ruleSelected);
-      //  if(!flag){
-            secondController.setFlag(false);
-            secondController.setCellsToColorate(cellsToSetAlive);
-        //}
-        secondController.initGrid();
-        Scene gridViewScene =  new Scene (gridViewParent);
-        Stage window = (Stage) ((Node) mouseEvent.getSource()).getScene().getWindow();
-        window.setScene(gridViewScene);
-        window.show();
+       GUIViewSecondSceneController secondController = loader.getController();
+       secondController.initializeGRASPController(fieldSelected,ruleSelected, cellsToSetAlive);
+       secondController.initGrid();
+       Scene gridViewScene =  new Scene (gridViewParent);
+       Stage window = (Stage) ((Node) mouseEvent.getSource()).getScene().getWindow();
+       window.setScene(gridViewScene);
+       window.show();
     }
 
     //le eccezioni lanciate dovrebbero esser dgenerate dalla view
     @FXML public void checkMaxCoordinate() {
-        if (oneDRadioButton.isSelected()) {
+      /*  if (oneDRadioButton.isSelected()) {
             int x = 0;
             try {
                 x = Integer.parseInt(firstTextField.getText());
@@ -382,9 +355,9 @@ private void reset() {
             } catch (IllegalArgumentException e) {
                 errorRedLabel.setText(e.getMessage());
             }
-
+*/
         }
         //FAI IN MODO DI REFACTORARE IL CODICE PER NON AVERLO RIPETUTO PER GLI ALTRI DUE CASI
-    }
+   // }
 
 }

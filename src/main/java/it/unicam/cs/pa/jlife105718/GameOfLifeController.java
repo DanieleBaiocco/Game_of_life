@@ -22,10 +22,6 @@ public int[] getCellsToSetAlive() {
         return cellsToSetAlive;
 }
 
-    public void setCellsToSetAlive(int[] cellsToSetAlive) {
-        this.cellsToSetAlive = cellsToSetAlive;
-    }
-
 static public GameOfLifeController getInstance(ICampo<?> campo, CurrentRulesEnum rule){
     if(controller==null){
        controller= new GameOfLifeController(campo,rule);
@@ -40,7 +36,7 @@ static public GameOfLifeController getInstance(ICampo<?> campo, CurrentRulesEnum
         return controller;
     }
 
-@Override
+    @Override
 public void nextGen() {
     ICampo<?> campoCopy =  this.campo.deepCopyOfThis();
     campoCopy.getMappaPosizioneCellula().values().forEach(x->x.addPropertyListener(this));
@@ -51,6 +47,11 @@ public void nextGen() {
     @Override
     public void colorateDecolorateACellula(int ... posInInt) {
       campo.changeStateOfACellula(posInInt);
+      String str = "";
+      for(int value : posInInt){
+          str = str.concat(String.valueOf(value));
+      }
+      System.out.println(str);
     }
 
     public void loadBoardFromFile() { }
