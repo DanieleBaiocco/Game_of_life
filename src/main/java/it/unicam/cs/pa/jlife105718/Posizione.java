@@ -1,15 +1,14 @@
 package it.unicam.cs.pa.jlife105718;
 
-import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Arrays;
 
 public abstract class Posizione implements IPosizione {
-    private List<Object> params;
-    public Posizione(List<Integer> params) {
-        this.params = params.stream().map(this::changeToPos).collect(Collectors.toList());
+    private Object[] params;
+    public Posizione(int[] params) {
+        this.params = Arrays.stream(params).mapToObj(this::changeToPos).toArray();
     }
 
-public List<Object> getParams(){
+public Object[] getParams(){
         return params;
     }
 
@@ -22,14 +21,14 @@ public List<Object> getParams(){
         if (getClass() != obj.getClass())
             return false;
         Posizione other = (Posizione) obj;
-        if(this.getParams().size() != other.getParams().size())
+        if(this.getParams().length != other.getParams().length)
             return false;
         int count = 0;
-        for (int i=0; i<this.getParams().size(); i++){
-            if(this.getParams().get(i).equals(other.getParams().get(i)))
+        for (int i=0; i<this.getParams().length; i++){
+            if(this.getParams()[i].equals(other.getParams()[i]))
                 count++;
         }
-        return count == getParams().size();
+        return count == getParams().length;
     }
 
     @Override

@@ -1,48 +1,36 @@
 package it.unicam.cs.pa.jlife105718;
 
 
-public class  GameOfLifeController implements Controller, PropertyListener {
-private final ICampo<?> campo;
+public class  GameOfLifeController<T extends IPosizione> implements Controller<T>, PropertyListener {
+private final ICampo<T> campo;
 private final CurrentRulesEnum rule;
 private int[] cellsToSetAlive;
-static private GameOfLifeController controller;
 
-private GameOfLifeController(ICampo<?> campo, CurrentRulesEnum  rule, int[] cellsToSetAlive){
+public GameOfLifeController(ICampo<T> campo, CurrentRulesEnum  rule, int[] cellsToSetAlive){
     this.campo = campo;
     this.rule = rule;
     this.cellsToSetAlive = cellsToSetAlive;
     }
 
-private GameOfLifeController(ICampo<?> campo, CurrentRulesEnum  rule){
-    this.campo = campo;
-    this.rule = rule;
-}
-
 public int[] getCellsToSetAlive() {
         return cellsToSetAlive;
 }
 
-static public GameOfLifeController getInstance(ICampo<?> campo, CurrentRulesEnum rule){
-    if(controller==null){
-       controller= new GameOfLifeController(campo,rule);
-    }
-    return controller;
+@Override
+public String getRepresentation(int i, int... values) {
+    T pos =campo.getPosizioneFromIntegers(values);
+    return (String) TransitionFactory.getInstance().getPrinter(campo.getTransitionEnum()).toStringFormat(pos)[i];
 }
 
-    static public GameOfLifeController getInstance(ICampo<?> campo, CurrentRulesEnum rule, int[] cellsToSetAlive){
-        if(controller==null){
-            controller= new GameOfLifeController(campo,rule, cellsToSetAlive);
-        }
-        return controller;
-    }
 
     @Override
 public void nextGen() {
-    ICampo<?> campoCopy =  this.campo.deepCopyOfThis();
+    ICampo<T> campoCopy =  this.campo.deepCopyOfThis();
     campoCopy.getMappaPosizioneCellula().values().forEach(x->x.addPropertyListener(this));
     campoCopy.getMappaPosizioneCellula().values()
             .forEach(x->RulesFactory.getInstance().getRule(rule).step(x, campoCopy.getIntorno(x)));
 }
+
 
     @Override
     public void colorateDecolorateACellula(int ... posInInt) {
@@ -54,10 +42,8 @@ public void nextGen() {
       System.out.println(str);
     }
 
-    public void loadBoardFromFile() { }
-
     @Override
-    public ICampo<?> getCampo() {
+    public ICampo<T> getCampo() {
         return this.campo;
     }
 
@@ -83,6 +69,7 @@ public void nextGen() {
        else source.setStato(Stato.VIVO);
        this.campo.changeCellula(source);
     }
+
 }
 
 

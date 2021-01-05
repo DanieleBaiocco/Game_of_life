@@ -1,10 +1,10 @@
 package it.unicam.cs.pa.jlife105718;
 
-import java.util.List;
+import java.util.Arrays;
 
 public class PosizioneAlfabetica extends Posizione{
 
-    public PosizioneAlfabetica(List<Integer> params) {
+    public PosizioneAlfabetica(int[] params) {
         super(params);
     }
 
@@ -23,9 +23,8 @@ public class PosizioneAlfabetica extends Posizione{
         }
 
     @Override
-    public Integer getCoordinateI(int i) {
-        String charI = (String) super.getParams().get(i);
-        return charI.charAt(0)-65;
+    public int[] getCoordinateI() {
+        return  Arrays.stream(getParams()).map(x->(String)x).mapToInt(x->x.charAt(0)-65).toArray();
     }
 
 @Override

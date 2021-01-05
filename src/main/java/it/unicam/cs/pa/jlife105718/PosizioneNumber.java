@@ -1,20 +1,22 @@
 package it.unicam.cs.pa.jlife105718;
 
-import java.util.List;
+import java.util.Arrays;
 
 public abstract class PosizioneNumber extends Posizione{
-    public PosizioneNumber(List<Integer> params) {
+    public PosizioneNumber(int[] params) {
         super(params);
     }
 
     @Override
-    public Integer getCoordinateI(int i) {
-        return (Integer) getParams().get(i);
+    public int[] getCoordinateI() {
+        return  Arrays.stream(getParams()).map(x->(Number)x).mapToInt(Number::intValue).toArray();
+        /*Number number=  (Number) getParams()[i];
+        return number.intValue();*/
     }
 
     @Override
     protected int getResultForHash(Object obj, int result, int prime) {
-        Integer numberToInt = (Integer) obj;
-        return prime * result +numberToInt;
+        Number numberToNumb = (Number) obj;
+        return prime * result +numberToNumb.intValue();
     }
 }

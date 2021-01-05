@@ -1,25 +1,23 @@
 package it.unicam.cs.pa.jlife105718;
 
-import java.util.*;
-import java.util.function.Function;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
 
 public abstract class Campo<T extends IPosizione> implements ICampo<T> {
     private static int count =-1;
     private int[] values;
     private  Map<T, Cellula> mappaPosizioneCellula;
-    private Function<List<Integer>, ? extends T> transition;
+    private CurrentTransitionEnum transitionEnum;
     private int dim;
-    public Campo(Function<List<Integer>, ? extends T> transition, int dim, int... values) {
+    public Campo(CurrentTransitionEnum transitionEnum, int dim, int... values) {
         if(values.length != dim)
             throw new IllegalArgumentException();
-        this.transition=transition;
+        this.transitionEnum=transitionEnum;
         this.mappaPosizioneCellula= new HashMap<>();
         this.values = values;
-        List<Integer> list = new ArrayList<>();
-        for(int value : values){
-            list.add(value);
-        }
-      transition.apply(list);
+        //TransitionFactory.getInstance().getTransition(transitionEnum).apply(values);
     }
 
     @Override
@@ -71,8 +69,8 @@ public abstract class Campo<T extends IPosizione> implements ICampo<T> {
         this.mappaPosizioneCellula= mappaPosizioneCellula;
     }
     @Override
-    public Function<List<Integer>, ? extends T> getTransition() {
-        return this.transition;
+    public CurrentTransitionEnum getTransition() {
+        return this.transitionEnum;
     }
 
     @Override
@@ -108,17 +106,21 @@ public abstract class Campo<T extends IPosizione> implements ICampo<T> {
 
     //non so se mettere questo metodo pubblico o privato
     private T getPosizioneFromInteger( int ... values){
-        List<Integer> list = new ArrayList<>();
-        for ( int x: values){
-            list.add(x);
-        }
-        return transition.apply(list);
+        return (T) TransitionFactory.getInstance().getTransition(transitionEnum).apply(values);
     }
-
 @Override
-    public Integer getIntegerFromCellula(Cellula cellula, int i){
+    public CurrentTransitionEnum getTransitionEnum(){
+        return this.transitionEnum;
+}
+
+    @Override
+    public T getPosizioneFromIntegers(int ... values){
+        return (T) TransitionFactory.getInstance().getTransition(transitionEnum).apply(values);
+    }
+@Override
+    public int[] getIntegerFromCellula(Cellula cellula){
         T pos = getPosizioneFromCellula(cellula);
-        return pos.getCoordinateI(i);
+        return pos.getCoordinateI();
     }
 
     @Override

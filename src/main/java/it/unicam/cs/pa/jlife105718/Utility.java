@@ -1,27 +1,25 @@
 package it.unicam.cs.pa.jlife105718;
 
-import java.util.List;
-import java.util.function.Function;
 import java.util.function.Supplier;
 
 public class Utility {
 
-    public static Function<List<Integer>, ? extends IPosizione> switchOnPositionChoosed(String positionChoosed){
-        Function<List<Integer>, ? extends IPosizione> functionToReturn;
+    public static CurrentTransitionEnum switchOnPositionChoosed(String positionChoosed){
+        CurrentTransitionEnum transitionEnum;
         switch (positionChoosed){
             case "Alfabetico":
-                functionToReturn = TransitionFactory.getInstance().getTransitionToChar();
+                transitionEnum = CurrentTransitionEnum.Alfabetico;
                 break;
             case "Numerico":
-                functionToReturn = TransitionFactory.getInstance().getTransitionToInteger();
+                transitionEnum = CurrentTransitionEnum.Interno;
                 break;
             case "Virgola Mobile" :
-                functionToReturn = TransitionFactory.getInstance().getTransitionToDouble();
+                transitionEnum = CurrentTransitionEnum.VirgolaMobile;
                 break;
             default:
-                functionToReturn = null;
+                transitionEnum = null;
         }
-        return functionToReturn;
+        return transitionEnum;
     }
 
     public static CurrentRulesEnum switchOnRuleChoosed(String ruleChoosed) {
@@ -42,9 +40,9 @@ public class Utility {
         return ruleToReturn;
     }
 
-    public static ICampo<?> switchOnDimensionChoosed(String dimensionChoosed, Supplier<ICampo<?>> firstFunc,
-                                                     Supplier<ICampo<?>> secondFunc, Supplier<ICampo<?>> thirdFunc){
-        ICampo<?> fieldToReturn;
+    public static <T extends IPosizione> ICampo<T> switchOnDimensionChoosed(String dimensionChoosed, Supplier<ICampo<T>> firstFunc,
+                                                     Supplier<ICampo<T>> secondFunc, Supplier<ICampo<T>> thirdFunc){
+        ICampo<T> fieldToReturn;
         switch(dimensionChoosed){
             case "1": {
                fieldToReturn = firstFunc.get();

@@ -23,7 +23,6 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.function.Consumer;
-import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
@@ -72,13 +71,10 @@ private final ToggleGroup dimensionChoosedToggleGroup = new ToggleGroup();
 private final ToggleGroup ruleChoosedToggleGroup= new ToggleGroup();
 private final ToggleGroup positionChoosedToggleGroup= new ToggleGroup();
 private final ToggleGroup differentKnownConfigurations = new ToggleGroup();
-private Function<List<Integer>, ? extends IPosizione> functionSelected;
 private int firstMaxCoordinate;
 private int secondMaxCoordinate;
 private int thirdMaxCoordinate;
-private ICampo<?> fieldSelected;
-private CurrentRulesEnum ruleSelected;
-private int[] cellsToSetAlive;
+private Controller<?> controllerCreated;
 
 private void initComboBoxe(ComboBox comboBox, String ... elements){
     comboBox.getItems().removeAll(comboBox.getItems());
@@ -138,34 +134,35 @@ private void resetToggles(ToggleGroup ... toggleGroups){
 }
 
 private void buildControllerFromRadioButton(String radioButtonClicked, String basePath) {
-    Controller controller = null;
     String pathThroughDirectories = "/src/main/resources/preconfiguredGridsInJson/";
     String halfPath = basePath.concat(pathThroughDirectories);
     try {
         switch (radioButtonClicked){
             case "STILL LIFES":
-                controller = Controller.createControllerFromFile(halfPath.concat(buildEndPath(choose1)));
+                controllerCreated = Controller.createControllerFromFile(halfPath.concat(buildEndPath(choose1)));
                 break;
             case "OSCILLATORS":
-                controller = Controller.createControllerFromFile(halfPath.concat(buildEndPath(choose2)));
+                controllerCreated = Controller.createControllerFromFile(halfPath.concat(buildEndPath(choose2)));
                 break;
             case "SPACESHIPS":
-                controller = Controller.createControllerFromFile(halfPath.concat(buildEndPath(choose3)));
+                controllerCreated = Controller.createControllerFromFile(halfPath.concat(buildEndPath(choose3)));
                 break;
             case "METHUSELAHS" :
-                controller = Controller.createControllerFromFile(halfPath.concat(buildEndPath(choose4)));
+                controllerCreated = Controller.createControllerFromFile(halfPath.concat(buildEndPath(choose4)));
                 break;
             case "INFINITE GROWTH":
-                controller = Controller.createControllerFromFile(halfPath.concat(buildEndPath(choose5)));
+                controllerCreated = Controller.createControllerFromFile(halfPath.concat(buildEndPath(choose5)));
                 break;
             }
-        initGRASPControllerVars(controller);
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
 }
 
-@FXML void createGridFromInitialization(){
+@FXML <T extends IPosizione> void createGridFromInitialization(){
+    CurrentTransitionEnum functionSelected;
+    ICampo<T> fieldSelected;
+    CurrentRulesEnum ruleSelected;
     try {
         if(firstErrorRedLabel.getText().equals("") && secondErrorRedLabel.getText().equals("") && thirdErrorRedLabel.getText().equals("")){
           functionSelected = Utility.switchOnPositionChoosed(getStringFromToggle(positionChoosedToggleGroup));
@@ -177,6 +174,7 @@ private void buildControllerFromRadioButton(String radioButtonClicked, String ba
                   ()->new Campo3D<>(functionSelected,Integer.parseInt(firstTextField.getText()),
                           Integer.parseInt(secondTextField.getText()),
                           Integer.parseInt(thirdTextField.getText())));
+          controllerCreated = new GameOfLifeController<>(fieldSelected,ruleSelected, null);
           nextButton.setDisable(false);
           loadRedLabel.setText("");
           loadButton.setVisible(false);
@@ -184,6 +182,7 @@ private void buildControllerFromRadioButton(String radioButtonClicked, String ba
             changeNodes(x->x.setVisible(true), loadRedLabel);
             changeNodes(x->((Label)x).setText("Inserisci i valori corretti"),loadRedLabel);
         }
+
     }
     catch (NumberFormatException e){
         changeNodes(x->x.setVisible(true),loadRedLabel);
@@ -194,13 +193,6 @@ private void buildControllerFromRadioButton(String radioButtonClicked, String ba
        changeNodes(x->x.setVisible(true),loadRedLabel);
        changeNodes(x->((Label)x).setText("Completa la scelta"), loadRedLabel);
     }
-}
-
-
-private void initGRASPControllerVars(Controller controller){
-    fieldSelected = controller.getCampo();
-    ruleSelected = controller.getRule();
-    cellsToSetAlive = controller.getCellsToSetAlive();
 }
 
 private String buildEndPath(ComboBox comboBox){
@@ -246,10 +238,7 @@ private String buildEndPath(ComboBox comboBox){
 }
 
 private void reset() {
-    cellsToSetAlive = null;
-    fieldSelected= null;
-    ruleSelected = null;
-    functionSelected = null;
+    controllerCreated = null;
     firstMaxCoordinate = -1;
     secondMaxCoordinate = -1;
     thirdMaxCoordinate = -1;
@@ -259,8 +248,7 @@ private void reset() {
         reset();
         Stage window = (Stage) ((Node) mouseEvent.getSource()).getScene().getWindow();
         File file = fileChooser.showOpenDialog(window);
-        Controller createdController = Controller.createControllerFromFile(file.getPath());
-        initGRASPControllerVars(createdController);
+        controllerCreated = Controller.createControllerFromFile(file.getPath());
         nextButton.setDisable(false);
     }
 
@@ -289,7 +277,7 @@ private void reset() {
        loader.setLocation(getClass().getResource("/GameOfLifeSecondScene.fxml"));
        AnchorPane gridViewParent = loader.load();
        GUIViewSecondSceneController secondController = loader.getController();
-       secondController.initializeGRASPController(fieldSelected,ruleSelected, cellsToSetAlive);
+       secondController.initializeGRASPController(controllerCreated);
        secondController.initGrid();
        Scene gridViewScene =  new Scene (gridViewParent);
        Stage window = (Stage) ((Node) mouseEvent.getSource()).getScene().getWindow();

@@ -1,13 +1,11 @@
 package it.unicam.cs.pa.jlife105718;
 
-import java.util.List;
 import java.util.Set;
-import java.util.function.Function;
 
 public class Campo3D<T extends IPosizione> extends Campo<T>{
 
-    public Campo3D( Function<List<Integer>,? extends T> transizioneScelta, int value1, int value2, int value3) {
-        super(transizioneScelta,3, value1,value2,value3);
+    public Campo3D( CurrentTransitionEnum transitionEnum, int value1, int value2, int value3) {
+        super(transitionEnum,3, value1,value2,value3);
     }
 
     public Set<Cellula>  getIntorno(Cellula cellula) {

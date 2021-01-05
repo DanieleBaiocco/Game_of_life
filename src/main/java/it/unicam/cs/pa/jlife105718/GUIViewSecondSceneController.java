@@ -19,17 +19,21 @@ public class GUIViewSecondSceneController implements PropertyListener {
 @FXML private Label secondLabel;
 @FXML private AnchorPane containerOfGrid;
 @FXML private  AnchorPane parent;
+@FXML private Pane leftPane;
+@FXML private Pane topPane;
 @FXML private Button startButton;
 @FXML private Button stopButton;
+
 @FXML private Button finishButton;
 private ScheduledExecutorService executor;
 private boolean exit = false;
 private GridPane gridPane ;
-private Controller GRASPController;
+private Controller<?> GRASPController;
 
-    public void initializeGRASPController(ICampo<? extends IPosizione> campo,CurrentRulesEnum rule, int[] cellsToSetAlive){
+
+    public void initializeGRASPController(Controller<?> controller){
         //System.getproperty
-        GRASPController = GameOfLifeController.getInstance(campo,rule, cellsToSetAlive);
+        GRASPController = controller;
     }
 
     public void initGrid(){
@@ -83,22 +87,22 @@ private Controller GRASPController;
 
 
     private void initGrid2D(int x1, int x2) {
-        int f =GRASPController.getCampo().getValues()[0];
-        int s = GRASPController.getCampo().getValues()[1];
-        if(f!=s){
-           if(f<s){
-               double result = containerOfGrid.getPrefWidth()/s;
-               System.out.println(result);
-               containerOfGrid.setPrefHeight(result*f);
-            //   gridPane.setPrefHeight(result*f);
+        if(x1!=x2){
+           if(x1<x2){
+               double result = containerOfGrid.getPrefWidth()/x2;
+               containerOfGrid.setPrefHeight(result*x1);
+               leftPane.setPrefHeight(result*x1);
+
             } else{
-               double result= containerOfGrid.getPrefHeight()/f;
-               containerOfGrid.setPrefWidth(result*s);
-            //   gridPane.setPrefWidth(result*s);
+               double result= containerOfGrid.getPrefHeight()/x1;
+               containerOfGrid.setPrefWidth(result*x2);
+               topPane.setPrefWidth(result*x2);
+
            }
         }
         firstLabel.setText(Integer.toString(GRASPController.getCampo().getValues().length).concat("D"));
         secondLabel.setText(GRASPController.getRule().toString());
+        double altezzaScacco = containerOfGrid.getPrefHeight()/x1;
         for(int i=0; i<x1; i++){
             for(int j=0; j<x2; j++){
                 Pane pane = new Pane();
@@ -108,7 +112,22 @@ private Controller GRASPController;
                 pane.setOnMouseClicked(event -> {
                     GRASPController.colorateDecolorateACellula(GridPane.getColumnIndex(pane),GridPane.getRowIndex(pane));
                 });
+
                 GRASPController.addAEntry(j,i);
+                if(j==0){
+                    double altezzaLabel = altezzaScacco* i + altezzaScacco/2;
+                    Label label = new Label();
+                    leftPane.getChildren().add(label);
+                    label.setLayoutY(altezzaLabel);
+                    label.setText(GRASPController.getRepresentation(1,j,i));
+                }
+                if(i==0){
+                    double altezzaLabel = altezzaScacco* j + altezzaScacco/2;
+                    Label label = new Label();
+                    topPane.getChildren().add(label);
+                    label.setLayoutX(altezzaLabel);
+                    label.setText(GRASPController.getRepresentation(0,j,i));
+                }
                 GRASPController.getCampo().getCellulaFromInteger(j,i).addPropertyListener(this);
                 //int leng = GRASPController.getCampo().getValues().length;
                 if(GRASPController.getCellsToSetAlive()!=null){
@@ -131,8 +150,9 @@ private Controller GRASPController;
     //da refactorare per renderla generica a tutti i casi (anche per 1d e 3d)
     @Override
     public void onPropertyEvent(Cellula source, String name, Stato state) {
-        int x = GRASPController.getCampo().getIntegerFromCellula(source,0);
-        int y = GRASPController.getCampo().getIntegerFromCellula(source,1);
+        int[] result = GRASPController.getCampo().getIntegerFromCellula(source);
+       int x=  result[0];
+       int y = result[1];
         Pane pane = getPaneFromIntegers(x,y);
 
       //metodo che fa la ricerca del gridpane corrispondente alla cellula

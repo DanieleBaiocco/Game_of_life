@@ -2,14 +2,15 @@ package it.unicam.cs.pa.jlife105718;
 
 
 import com.google.gson.*;
+import com.google.gson.reflect.TypeToken;
 
 import java.io.IOException;
 import java.io.Reader;
+import java.lang.reflect.Type;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.List;
 import java.util.function.Function;
 
 public class JsonFileDeserialization implements FileDeserialization {
@@ -26,16 +27,16 @@ public class JsonFileDeserialization implements FileDeserialization {
     }
 
     @Override
-    public Controller deserializeFile(String pathName){
+    public <T extends IPosizione> Controller<?> deserializeFile(String pathName){
         JsonElement tree = JsonParser.parseReader(getReaderFromPathName(pathName));
         GsonBuilder gsonBuilder = new GsonBuilder();
-        JsonDeserializer<Controller> deserializer = (json, typeOfT, context) -> {
+        JsonDeserializer<Controller<?>> deserializer = (json, typeOfT, context) -> {
             JsonObject treeAsJsonObj = json.getAsJsonObject();
             String typeOfPosition = treeAsJsonObj.get("posizione").getAsString();
 
-            Function<List<Integer>, ? extends IPosizione> transition = Utility.switchOnPositionChoosed(typeOfPosition);
+            CurrentTransitionEnum transition = Utility.switchOnPositionChoosed(typeOfPosition);
             JsonArray values = treeAsJsonObj.get("limite").getAsJsonArray();
-            ICampo<?> fieldCreated = Utility.switchOnDimensionChoosed(String.valueOf(values.size()),
+            ICampo<T> fieldCreated = Utility.switchOnDimensionChoosed(String.valueOf(values.size()),
                     ()->new Campo1D<>(transition,values.get(0).getAsInt()),
                     ()->new Campo2D<>(transition,values.get(0).getAsInt(),values.get(1).getAsInt()),
                     ()->new Campo3D<>(transition,values.get(0).getAsInt(),
@@ -46,11 +47,12 @@ public class JsonFileDeserialization implements FileDeserialization {
             JsonArray cellsInJson = treeAsJsonObj.get("colorare").getAsJsonArray();
             int[] cells = getListOfCellsToSetAlive(cellsInJson);
             //qua fai la cosa col System.getProperties
-            return GameOfLifeController.getInstance(fieldCreated,currentRulesEnum, cells);
+            return new GameOfLifeController<>(fieldCreated,currentRulesEnum, cells);
         };
         gsonBuilder.registerTypeAdapter(Controller.class, deserializer);
         Gson customGson = gsonBuilder.create();
-        return customGson.fromJson(tree, Controller.class);
+        Type typeOfController = new TypeToken<Controller<?>>() {}.getType();
+        return customGson.fromJson(tree,typeOfController);
     }
 
 

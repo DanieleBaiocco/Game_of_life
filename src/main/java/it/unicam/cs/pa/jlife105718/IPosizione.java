@@ -3,8 +3,10 @@ package it.unicam.cs.pa.jlife105718;
 
 public interface IPosizione {
 
-    Integer getCoordinateI(int i) ;
+    int[] getCoordinateI() ;
 
     Object changeToPos(int x);
+
+    Object[] getParams();
 
 }

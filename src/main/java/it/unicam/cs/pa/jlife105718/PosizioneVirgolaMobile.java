@@ -1,10 +1,8 @@
 package it.unicam.cs.pa.jlife105718;
 
-import java.util.List;
-
 public class PosizioneVirgolaMobile extends PosizioneNumber{
 
-    public PosizioneVirgolaMobile(List<Integer> params){
+    public PosizioneVirgolaMobile(int[] params){
         super(params);
     }
 

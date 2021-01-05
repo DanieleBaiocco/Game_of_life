@@ -5,6 +5,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.text.Font?>
 
@@ -34,9 +35,11 @@
             </Label>
          </children>
       </GridPane>
-      <AnchorPane fx:id="containerOfGrid" layoutX="14.0" layoutY="16.0" prefHeight="688.0" prefWidth="688.0" />
+      <AnchorPane fx:id="containerOfGrid" layoutX="50.0" layoutY="56.0" prefHeight="650.0" prefWidth="650.0" />
       <Button fx:id="startButton" layoutX="799.0" layoutY="312.0" mnemonicParsing="false" onMouseClicked="#startSimulation" prefHeight="70.0" prefWidth="167.0" text="START" />
       <Button fx:id="stopButton" layoutX="799.0" layoutY="427.0" mnemonicParsing="false" onMouseClicked="#stopSimulation" prefHeight="70.0" prefWidth="167.0" text="STOP" />
       <Button fx:id="finishButton" layoutX="799.0" layoutY="547.0" mnemonicParsing="false" onMouseClicked="#finishSimulation" prefHeight="70.0" prefWidth="167.0" text="FINISH" />
+      <Pane fx:id="leftPane" layoutX="14.0" layoutY="46.0" prefHeight="650.0" prefWidth="45.0" />
+      <Pane fx:id="topPane" layoutX="43.0" layoutY="21.0" prefHeight="37.0" prefWidth="657.0" />
    </children>
 </AnchorPane>
