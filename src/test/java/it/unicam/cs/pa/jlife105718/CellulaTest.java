@@ -3,16 +3,18 @@
  */
 package it.unicam.cs.pa.jlife105718;
 
+import it.unicam.cs.pa.jlife105718.Model.Cell.MyCell;
+import it.unicam.cs.pa.jlife105718.Model.Cell.Stato;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class CellulaTest {
-    private Cellula cellula;
+    private MyCell cellula;
 
     @BeforeEach
     void createCellula(){
-        cellula = new Cellula(Stato.MORTO,0);
+        cellula = new MyCell(Stato.MORTO,0);
     }
 
     @Test
