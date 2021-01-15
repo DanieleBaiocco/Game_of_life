@@ -75,9 +75,9 @@
             <Label fx:id="firstLabel" layoutX="168.0" layoutY="94.0" text="Valore Max prima coordinata" />
             <Label fx:id="secondLabel" layoutX="167.0" layoutY="150.0" prefHeight="18.0" prefWidth="220.0" text="Valore Max seconda coordinata" />
             <Label fx:id="thirdLabel" layoutX="167.0" layoutY="206.0" prefHeight="18.0" prefWidth="191.0" text="Valore Max terza coordinata" />
-            <TextField fx:id="secondTextField" layoutX="387.0" layoutY="146.0" onMouseEntered="#changeToHandCursor" onMouseExited="#changeToDefaultCursor" prefHeight="26.0" prefWidth="152.0" />
-            <TextField fx:id="thirdTextField" layoutX="386.0" layoutY="202.0" onMouseEntered="#changeToHandCursor" onMouseExited="#changeToDefaultCursor" prefHeight="26.0" prefWidth="153.0" />
-            <TextField fx:id="firstTextField" layoutX="386.0" layoutY="89.0" onMouseEntered="#changeToHandCursor" onMouseExited="#changeToDefaultCursor" prefHeight="17.0" prefWidth="153.0" />
+            <TextField fx:id="secondTextField" layoutX="387.0" layoutY="146.0" onKeyTyped="#checkInputPosError2" onMouseEntered="#changeToHandCursor" onMouseExited="#changeToDefaultCursor" prefHeight="26.0" prefWidth="152.0" />
+            <TextField fx:id="thirdTextField" layoutX="386.0" layoutY="202.0" onKeyTyped="#checkInputPosError3" onMouseEntered="#changeToHandCursor" onMouseExited="#changeToDefaultCursor" prefHeight="26.0" prefWidth="153.0" />
+            <TextField fx:id="firstTextField" layoutX="386.0" layoutY="89.0" onKeyTyped="#checkInputPosError1" onMouseEntered="#changeToHandCursor" onMouseExited="#changeToDefaultCursor" prefHeight="17.0" prefWidth="153.0" />
             <Label layoutX="31.0" layoutY="250.0" prefHeight="26.0" prefWidth="185.0" style="-fx-border-color: black;" text="TIPO COORDINATE">
                <font>
                   <Font size="19.0" />
@@ -98,9 +98,9 @@
             <Separator layoutX="1.0" layoutY="236.0" prefHeight="5.0" prefWidth="564.0" />
             <Label fx:id="loadRedLabel" layoutX="410.0" layoutY="481.0" prefHeight="18.0" prefWidth="124.0" text="Completa la scelta" textFill="#fc0000" />
             <Button fx:id="loadButton" layoutX="411.0" layoutY="509.0" mnemonicParsing="false" onMouseClicked="#createGridFromInitialization" onMouseEntered="#changeToHandCursor" onMouseExited="#changeToDefaultCursor" prefHeight="26.0" prefWidth="124.0" text="Load" />
-            <Label fx:id="firstErrorRedLabel" layoutX="167.0" layoutY="72.0" prefHeight="16.0" prefWidth="370.0" textFill="#ee0000" />
-            <Label fx:id="thirdErrorRedLabel" layoutX="167.0" layoutY="186.0" prefHeight="16.0" prefWidth="370.0" textFill="RED" />
-            <Label fx:id="secondErrorRedLabel" layoutX="167.0" layoutY="129.0" prefHeight="16.0" prefWidth="370.0" textFill="#ee0000" />
+            <Label fx:id="firstErrorRedLabel" layoutX="167.0" layoutY="72.0" prefHeight="16.0" prefWidth="370.0" text="Label" textFill="#ee0000" />
+            <Label fx:id="thirdErrorRedLabel" layoutX="167.0" layoutY="186.0" prefHeight="16.0" prefWidth="370.0" text="Label" textFill="RED" />
+            <Label fx:id="secondErrorRedLabel" layoutX="167.0" layoutY="129.0" prefHeight="16.0" prefWidth="370.0" text="Label" textFill="#ee0000" />
          </children>
       </Pane>
    </left>

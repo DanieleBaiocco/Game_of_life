@@ -1,5 +1,6 @@
 package it.unicam.cs.pa.jlife105718.Model.Board;
 
+import it.unicam.cs.pa.jlife105718.Model.Cell.Stato;
 import it.unicam.cs.pa.jlife105718.Model.Position.PositionsEnum;
 import it.unicam.cs.pa.jlife105718.Model.Position.IPosition;
 import it.unicam.cs.pa.jlife105718.Model.Cell.ICell;
@@ -7,14 +8,11 @@ import it.unicam.cs.pa.jlife105718.Model.Cell.ICell;
 import java.util.Map;
 import java.util.Set;
 
-public interface IField<T extends IPosition> {
+public interface IField<T extends IPosition> extends DeepCopy<T> {
     Set<ICell> getIntorno(ICell cellula);
-    T getPosizioneFromCellula(ICell cellula);
     Map<T, ICell> getMappaPosizioneCellula();
     PositionsEnum getTransition();
-    IField<T> deepCopyOfThis();
     void addAEntry(int ... values) ;
-    boolean isIntoMap (int ... coordinate);
     ICell getCellulaFromInteger(int ... values);
     void changeStateOfACellula(int ... values);
     int[] getValues();
@@ -23,5 +21,5 @@ public interface IField<T extends IPosition> {
     void setMappaPosizioneCellula(Map<T, ICell> map);
     T getPosizioneFromIntegers(int ... values);
     PositionsEnum getTransitionEnum();
-
+    ICell getCell(Stato stato, int id);
 }

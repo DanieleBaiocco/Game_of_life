@@ -34,7 +34,7 @@ public String getRepresentation(int i, int... values) {
 
     @Override
 public void nextGen() {
-    IField<T> campoCopy =  this.campo.deepCopyOfThis();
+    IField<T> campoCopy =  this.campo.deepCopyClone();
     campoCopy.getMappaPosizioneCellula().values().forEach(x->x.addPropertyListener(this));
     campoCopy.getMappaPosizioneCellula().values()
             .forEach(x-> RulesFactory.getInstance().getRule(rule).step(x, campoCopy.getIntorno(x)));
@@ -72,7 +72,6 @@ public void nextGen() {
 
     @Override
     public void onPropertyEvent(ICell source, String name, Stato state) {
-    //forse serve un metodo per ritornare la cellula passata all'interno del campo
        if(state==Stato.VIVO)
            source.setStato(Stato.MORTO);
        else source.setStato(Stato.VIVO);

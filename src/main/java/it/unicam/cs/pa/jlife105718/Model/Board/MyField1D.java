@@ -6,9 +6,13 @@ import it.unicam.cs.pa.jlife105718.Model.Position.PositionsEnum;
 
 import java.util.Set;
 
-public class MyField1D<T extends IPosition> extends MyField<T> {
+public class MyField1D<T extends IPosition> extends MyField<T> implements IField1D<T>{
     public MyField1D(PositionsEnum currentTransitionEnum , int value1) {
         super(currentTransitionEnum,1, value1);
+    }
+
+    public MyField1D(IField<T> field) {
+        super(field);
     }
 
     @Override
@@ -18,8 +22,8 @@ public class MyField1D<T extends IPosition> extends MyField<T> {
     }
 
     @Override
-    protected IField<T> getInstance() {
-        return new MyField1D<>(getTransition(),getValues()[0]);
+    public IField<T> deepCopyClone() {
+        return new MyField1D<>(this);
     }
 
 

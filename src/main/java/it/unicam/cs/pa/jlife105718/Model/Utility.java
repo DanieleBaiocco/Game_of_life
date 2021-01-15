@@ -15,10 +15,10 @@ public class Utility {
             case "Alfabetico":
                 transitionEnum = PositionsEnum.Alfabetico;
                 break;
-            case "Intero":
+            case "Numerico":
                 transitionEnum = PositionsEnum.Interno;
                 break;
-            case "VirgolaMobile" :
+            case "Virgola Mobile" :
                 transitionEnum = PositionsEnum.VirgolaMobile;
                 break;
             default:

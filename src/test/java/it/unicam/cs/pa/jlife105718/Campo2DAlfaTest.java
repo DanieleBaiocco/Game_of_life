@@ -1,6 +1,6 @@
 package it.unicam.cs.pa.jlife105718;
 
-import it.unicam.cs.pa.jlife105718.Model.Board.MyField;
+import it.unicam.cs.pa.jlife105718.Model.Board.GenericField;
 import it.unicam.cs.pa.jlife105718.Model.Board.MyField2D;
 import it.unicam.cs.pa.jlife105718.Model.Cell.MyCell;
 import it.unicam.cs.pa.jlife105718.Model.Cell.Stato;
@@ -17,7 +17,7 @@ import java.util.Set;
 import static org.junit.jupiter.api.Assertions.*;
 public class Campo2DAlfaTest {
 
-    private MyField<PosizioneAlfabetica> campoAlfa;
+    private GenericField<PosizioneAlfabetica> campoAlfa;
 
     @BeforeEach
     void initCampoAlfa(){
@@ -116,7 +116,7 @@ public class Campo2DAlfaTest {
     void cloneTest() throws CloneNotSupportedException {
         campoAlfa.addAEntry(0,0);
         campoAlfa.addAEntry(0,1);
-        MyField2D<PosizioneAlfabetica> campoCopy = (MyField2D<PosizioneAlfabetica>) campoAlfa.deepCopyOfThis();
+        MyField2D<PosizioneAlfabetica> campoCopy = (MyField2D<PosizioneAlfabetica>) campoAlfa.deepCopyClone();
         campoAlfa.addAEntry(0,2);
         assertThrows(IllegalArgumentException.class, ()->
                  campoCopy.getCellulaFromInteger(0,2));

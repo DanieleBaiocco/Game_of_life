@@ -11,4 +11,5 @@ public interface ICell {
      void addPropertyListener (PropertyListener lis);
      boolean equals(Object o);
      int hashCode();
+     void setId(int id);
 }

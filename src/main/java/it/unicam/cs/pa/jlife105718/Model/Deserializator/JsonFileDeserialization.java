@@ -5,10 +5,7 @@ import com.google.gson.*;
 import com.google.gson.reflect.TypeToken;
 import it.unicam.cs.pa.jlife105718.Controller.IController;
 import it.unicam.cs.pa.jlife105718.Controller.MyGameOfLifeController;
-import it.unicam.cs.pa.jlife105718.Model.Board.IField;
-import it.unicam.cs.pa.jlife105718.Model.Board.MyField1D;
-import it.unicam.cs.pa.jlife105718.Model.Board.MyField2D;
-import it.unicam.cs.pa.jlife105718.Model.Board.MyField3D;
+import it.unicam.cs.pa.jlife105718.Model.Board.*;
 import it.unicam.cs.pa.jlife105718.Model.Position.IPosition;
 import it.unicam.cs.pa.jlife105718.Model.Position.PositionsEnum;
 import it.unicam.cs.pa.jlife105718.Model.Rule.RulesEnum;
@@ -36,26 +33,25 @@ public class JsonFileDeserialization implements FileDeserialization {
     }
 
     @Override
-    public <T extends IPosition> IController<?> deserializeFile(String pathName){
+    public <T extends IPosition> IController<?> deserializeFile(String pathName, IFactoryField factoryField){
         JsonElement tree = JsonParser.parseReader(getReaderFromPathName(pathName));
         GsonBuilder gsonBuilder = new GsonBuilder();
         JsonDeserializer<IController<?>> deserializer = (json, typeOfT, context) -> {
             JsonObject treeAsJsonObj = json.getAsJsonObject();
             String typeOfPosition = treeAsJsonObj.get("posizione").getAsString();
-
             PositionsEnum transition = Utility.switchOnPositionChoosed(typeOfPosition);
             JsonArray values = treeAsJsonObj.get("limite").getAsJsonArray();
             IField<T> fieldCreated = Utility.switchOnDimensionChoosed(String.valueOf(values.size()),
-                    ()->new MyField1D<>(transition,values.get(0).getAsInt()),
-                    ()->new MyField2D<>(transition,values.get(0).getAsInt(),values.get(1).getAsInt()),
-                    ()->new MyField3D<>(transition,values.get(0).getAsInt(),
+                    ()->factoryField.createField1D(transition,values.get(0).getAsInt()),
+                    ()->factoryField.createField2D(transition,values.get(0).getAsInt(),values.get(1).getAsInt()),
+                    ()->factoryField.createField3D(transition,values.get(0).getAsInt(),
                             values.get(1).getAsInt(),
                             values.get(2).getAsInt()));
             String rule = treeAsJsonObj.get("regola").getAsString();
             RulesEnum currentRulesEnum = Utility.switchOnRuleChoosed(rule);
             JsonArray cellsInJson = treeAsJsonObj.get("colorare").getAsJsonArray();
             int[] cells = getListOfCellsToSetAlive(cellsInJson);
-            //qua fai la cosa col System.getProperties
+
             return new MyGameOfLifeController<>(fieldCreated,currentRulesEnum, cells);
         };
         gsonBuilder.registerTypeAdapter(IController.class, deserializer);

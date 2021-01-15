@@ -10,8 +10,6 @@ public abstract class PosizioneNumerica extends MyPosition {
     @Override
     public int[] getCoordinateI() {
         return  Arrays.stream(getParams()).map(x->(Number)x).mapToInt(Number::intValue).toArray();
-        /*Number number=  (Number) getParams()[i];
-        return number.intValue();*/
     }
 
     @Override

@@ -2,10 +2,7 @@ package it.unicam.cs.pa.jlife105718.View.GUIView;
 
 import it.unicam.cs.pa.jlife105718.Controller.IController;
 import it.unicam.cs.pa.jlife105718.Controller.MyGameOfLifeController;
-import it.unicam.cs.pa.jlife105718.Model.Board.IField;
-import it.unicam.cs.pa.jlife105718.Model.Board.MyField1D;
-import it.unicam.cs.pa.jlife105718.Model.Board.MyField2D;
-import it.unicam.cs.pa.jlife105718.Model.Board.MyField3D;
+import it.unicam.cs.pa.jlife105718.Model.Board.*;
 import it.unicam.cs.pa.jlife105718.Model.Position.IPosition;
 import it.unicam.cs.pa.jlife105718.Model.Position.PositionsEnum;
 import it.unicam.cs.pa.jlife105718.Model.Rule.RulesEnum;
@@ -130,7 +127,8 @@ private void resetToggles(ToggleGroup ... toggleGroups){
         initToggleGroup(positionChoosedToggleGroup, integerNumbersRadioButton, doubleNumbersRadioButton, alphabetRadioButton);
         initToggleGroup(differentKnownConfigurations, firstKnownRadioButton, secondKnownRadioButton,thirdKnownRadioButton,fourthKnownRadioButton,fifthKnownRadioButton);
         changeNodes(x->((TextField)x).setText(""), firstTextField, secondTextField, thirdTextField);
-        changeNodes(x->x.setVisible(false), loadRedLabel, firstTextField, secondTextField, thirdTextField, firstLabel, secondLabel, thirdLabel, loadButton);
+        changeNodes(x->((Label)x).setText(""),firstErrorRedLabel, secondErrorRedLabel, thirdErrorRedLabel);
+        changeNodes(x->x.setVisible(false), loadRedLabel, firstTextField, secondTextField, thirdTextField, firstLabel, secondLabel, thirdLabel, loadButton, firstErrorRedLabel, secondErrorRedLabel, thirdErrorRedLabel);
         changeNodes(x->x.setDisable(true),  nextButton, backButton);
         changeNodes(x->((Pane)x).getChildren().forEach(y->y.setDisable(true)),rightPane,leftPane,centralPane);
 }
@@ -170,6 +168,7 @@ private void buildControllerFromRadioButton(String radioButtonClicked, String ba
 }
 
 @FXML <T extends IPosition> void createGridFromInitialization(){
+    IFactoryField factoryField =new MyFactoryField();
     PositionsEnum functionSelected;
     IField<T> fieldSelected;
     RulesEnum ruleSelected;
@@ -178,10 +177,10 @@ private void buildControllerFromRadioButton(String radioButtonClicked, String ba
           functionSelected = Utility.switchOnPositionChoosed(getStringFromToggle(positionChoosedToggleGroup));
           ruleSelected = Utility.switchOnRuleChoosed(getStringFromToggle(ruleChoosedToggleGroup));
           fieldSelected = Utility.switchOnDimensionChoosed(getStringFromToggle(dimensionChoosedToggleGroup),
-                  ()->new MyField1D<>(functionSelected,Integer.parseInt(firstTextField.getText())),
-                  ()->new MyField2D<>(functionSelected,Integer.parseInt(firstTextField.getText()),
+                  ()->factoryField.createField1D(functionSelected,Integer.parseInt(firstTextField.getText())),
+                  ()->factoryField.createField2D(functionSelected,Integer.parseInt(firstTextField.getText()),
                           Integer.parseInt(secondTextField.getText())),
-                  ()->new MyField3D<>(functionSelected,Integer.parseInt(firstTextField.getText()),
+                  ()->factoryField.createField3D(functionSelected,Integer.parseInt(firstTextField.getText()),
                           Integer.parseInt(secondTextField.getText()),
                           Integer.parseInt(thirdTextField.getText())));
           controllerCreated = new MyGameOfLifeController<>(fieldSelected,ruleSelected, null);
@@ -258,6 +257,7 @@ private void reset() {
         reset();
         Stage window = (Stage) ((Node) mouseEvent.getSource()).getScene().getWindow();
         File file = fileChooser.showOpenDialog(window);
+        System.out.println(file.getPath());
         controllerCreated = IController.createControllerFromFile(file.getPath());
         nextButton.setDisable(false);
     }
@@ -295,67 +295,32 @@ private void reset() {
        window.show();
     }
 
-    //le eccezioni lanciate dovrebbero esser dgenerate dalla view
-    @FXML public void checkMaxCoordinate() {
-      /*  if (oneDRadioButton.isSelected()) {
-            int x = 0;
-            try {
-                x = Integer.parseInt(firstTextField.getText());
-                errorRedLabel.setText("");
-                if (alphabetRadioButton.isSelected()) {
-                    List<Integer> list = new ArrayList<>();
-                    list.add(x);
-                    functionSelected.apply(list);
-                }
-            } catch (NumberFormatException e) {
-                errorRedLabel.setText("Inserire un NUMERO");
-            } catch (IllegalArgumentException e) {
-                errorRedLabel.setText(e.getMessage());
-            }
+    @FXML public void checkInputPosError1(){
+    checkInputPosError(firstTextField,firstErrorRedLabel);
+    }
 
-        } else if (twoDRadioButton.isSelected()) {
-            int x = 0;
-            int y=0;
-            try {
-                x = Integer.parseInt(firstTextField.getText());
-                y = Integer.parseInt(secondTextField.getText());
-                errorRedLabel.setText("");
-                if (alphabetRadioButton.isSelected()) {
-                    List<Integer> list = new ArrayList<>();
-                    list.add(x);
-                    list.add(y);
-                    functionSelected.apply(list);
-                }
-            } catch (NumberFormatException e) {
-                errorRedLabel.setText("Inserire un NUMERO");
-            } catch (IllegalArgumentException e) {
-                errorRedLabel.setText(e.getMessage());
-            }
+    @FXML public void checkInputPosError2(){
+    checkInputPosError(secondTextField, secondErrorRedLabel);
+    }
 
-        } else {
-            int x = 0;
-            int y=0;
-            int z=0;
-            try {
-                x = Integer.parseInt(firstTextField.getText());
-                y = Integer.parseInt(secondTextField.getText());
-                z = Integer.parseInt(thirdTextField.getText());
-                errorRedLabel.setText("");
-                if (alphabetRadioButton.isSelected()) {
-                    List<Integer> list = new ArrayList<>();
-                    list.add(x);
-                    list.add(y);
-                    list.add(z);
-                    functionSelected.apply(list);
-                }
-            } catch (NumberFormatException e) {
-                errorRedLabel.setText("Inserire un NUMERO");
-            } catch (IllegalArgumentException e) {
-                errorRedLabel.setText(e.getMessage());
-            }
-*/
+    @FXML public void checkInputPosError3(){
+    checkInputPosError(thirdTextField, thirdErrorRedLabel);
+    }
+
+    private void checkInputPosError(TextField textField, Label label){
+        String valueString = textField.getText();
+        try{
+            label.setText("");
+            int value = Integer.parseInt(valueString);
+            if(value<=0)
+                throw new IllegalArgumentException("Il numero inserito e' <= 0!");
+        }catch (NumberFormatException e){
+            changeNodes(x->x.setVisible(true), label);
+            label.setText("Il valore inserito non e' un numero!");
         }
-        //FAI IN MODO DI REFACTORARE IL CODICE PER NON AVERLO RIPETUTO PER GLI ALTRI DUE CASI
-   // }
+        catch (IllegalArgumentException e){
+            label.setText(e.getMessage());
+        }
+    }
 
 }

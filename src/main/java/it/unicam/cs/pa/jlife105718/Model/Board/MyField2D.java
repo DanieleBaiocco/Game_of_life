@@ -8,15 +8,19 @@ import java.util.Set;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
-public class MyField2D<T extends IPosition> extends MyField<T> {
+public class MyField2D<T extends IPosition> extends MyField<T> implements IField2D<T>{
 
     public MyField2D(PositionsEnum transition, int value1, int value2) {
         super(transition,2,  value1,value2);
     }
 
+    public MyField2D(IField<T> field) {
+        super(field);
+    }
+
     @Override
-    protected IField<T> getInstance() {
-        return new MyField2D<>(getTransition(), getValues()[0], getValues()[1]);
+    public IField<T> deepCopyClone() {
+        return new MyField2D<>(this);
     }
 
     public Set<ICell> getIntorno(ICell cellula) {

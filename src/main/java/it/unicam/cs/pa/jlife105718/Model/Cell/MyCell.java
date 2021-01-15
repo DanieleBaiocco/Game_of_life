@@ -65,4 +65,9 @@ public class MyCell implements ICell {
     public int hashCode() {
         return this.id;
     }
+
+    @Override
+    public void setId(int id) {
+        this.id = id;
+    }
 }
