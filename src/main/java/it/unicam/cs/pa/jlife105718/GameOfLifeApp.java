@@ -9,9 +9,21 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.logging.*;
 
+/**
+ * Ha la responsabilità di lanciare l'applicazione.
+ */
 public class GameOfLifeApp {
+
+    /**
+     * Variabile di logging.
+     */
     private static final Logger logger = Logger.getGlobal();
 
+    /**
+     * Personalizza il logger per permettere di esser scritto su file, inizializzare la directory dove i file di
+     * logging vengono salvati e non essere stampato a console.
+     * @throws IOException
+     */
     private static void setLogger() {
         String dirPath = "fileDiLog";
         new File((dirPath)).mkdir();
@@ -28,6 +40,10 @@ public class GameOfLifeApp {
         logger.addHandler(handler);
     }
 
+    /**
+     * Lancia la GUI View.
+     * @param args Stringhe passate in input al metodo main.
+     */
     public static void main(String[] args) {
         setLogger();
         logger.info("App started.");

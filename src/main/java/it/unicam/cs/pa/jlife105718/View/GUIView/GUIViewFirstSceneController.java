@@ -1,5 +1,4 @@
 package it.unicam.cs.pa.jlife105718.View.GUIView;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 import it.unicam.cs.pa.jlife105718.Controller.IController;
 import it.unicam.cs.pa.jlife105718.Controller.MyGameOfLifeController;
@@ -35,70 +34,282 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 public class GUIViewFirstSceneController  {
-private static final Logger logger = Logger.getGlobal();
-@FXML private RadioButton oneDRadioButton;
-@FXML private RadioButton twoDRadioButton;
-@FXML private RadioButton threeDRadioButton;
-@FXML private RadioButton integerNumbersRadioButton;
-@FXML private RadioButton doubleNumbersRadioButton;
-@FXML private RadioButton alphabetRadioButton;
-@FXML private RadioButton standardRuleRadioButton;
-@FXML private RadioButton alternativeRuleRadioButton;
-@FXML private RadioButton alternativeRule2RadioButton;
-@FXML private RadioButton firstKnownRadioButton;
-@FXML private RadioButton secondKnownRadioButton;
-@FXML private RadioButton thirdKnownRadioButton;
-@FXML private RadioButton fourthKnownRadioButton;
-@FXML private RadioButton fifthKnownRadioButton;
-@FXML private Label loadFromFileErrorLabel;
-@FXML private Button loadButton;
-@FXML private Label firstLabel;
-@FXML private Label secondLabel;
-@FXML private Label thirdLabel;
-@FXML private TextField firstTextField;
-@FXML private TextField secondTextField;
-@FXML private TextField thirdTextField;
-@FXML private Button nextButton;
-@FXML private Button backButton;
-@FXML private Label firstErrorRedLabel;
-@FXML private Label secondErrorRedLabel;
-@FXML private Label thirdErrorRedLabel;
-@FXML private ComboBox choose1;
-@FXML private ComboBox choose2;
-@FXML private ComboBox choose3;
-@FXML private ComboBox choose4;
-@FXML private ComboBox choose5;
-@FXML private BorderPane borderPane;
-@FXML private Pane leftPane;
-@FXML private Pane centralPane;
-@FXML private Pane rightPane;
-@FXML private Label loadRedLabel;
-private  final FileChooser fileChooser = new FileChooser();
-private Desktop desktop ;
-private final ToggleGroup dimensionChoosedToggleGroup = new ToggleGroup();
-private final ToggleGroup ruleChoosedToggleGroup= new ToggleGroup();
-private final ToggleGroup positionChoosedToggleGroup= new ToggleGroup();
-private final ToggleGroup differentKnownConfigurations = new ToggleGroup();
-private int firstMaxCoordinate;
-private int secondMaxCoordinate;
-private int thirdMaxCoordinate;
-private IController<?> controllerCreated;
+    /**
+     * Utile per la gestione del logging
+     */
+    private static final Logger logger = Logger.getGlobal();
 
-private void initComboBoxe(ComboBox comboBox, String ... elements){
+    /**
+     * Rappresenta il Radio Button relativo a una griglia in una dimensione
+     */
+    @FXML private RadioButton oneDRadioButton;
+
+    /**
+     * Rappresenta il Radio Button relativo a una griglia di due dimensioni
+     */
+    @FXML private RadioButton twoDRadioButton;
+
+    /**
+     * Rappresenta il Radio Button relativo a una griglia di tre dimensioni
+     */
+    @FXML private RadioButton threeDRadioButton;
+
+    /**
+     * Rappresenta il Radio Button relativo a una griglia che ha sugli assi come coordinate dei numeri interi
+     */
+    @FXML private RadioButton integerNumbersRadioButton;
+
+    /**
+     * Rappresenta il Radio Button relativo a una griglia che ha sugli assi come coordinate dei numeri
+     * in virgola mobile
+     */
+    @FXML private RadioButton doubleNumbersRadioButton;
+
+    /**
+     * Rappresenta il Radio Button relativo a una griglia che ha sugli assi come coordinate delle lettere
+     */
+    @FXML private RadioButton alphabetRadioButton;
+
+    /**
+     * Rappresenta il Radio Button relativo a una griglia che utilizza come calcolo della Next Generation
+     * la regola di base
+     */
+    @FXML private RadioButton standardRuleRadioButton;
+
+    /**
+     * Rappresenta il Radio Button relativo a una griglia che utilizza come calcolo della Next Generation
+     * un primo tipo di regola alternativa
+     */
+    @FXML private RadioButton alternativeRuleRadioButton;
+
+    /**
+     * Rappresenta il Radio Button relativo a una griglia che utilizza come calcolo della Next Generation
+     * un secondo tipo di regola alternativa
+     */
+    @FXML private RadioButton alternativeRule2RadioButton;
+
+    /**
+     * Rappresenta il Radio Button relativo a una griglia con delle configurazioni del genere STILL LIFES
+     */
+    @FXML private RadioButton firstKnownRadioButton;
+
+    /**
+     * Rappresenta il Radio Button relativo a una griglia con delle configurazioni del genere OSCILLATORS
+     */
+    @FXML private RadioButton secondKnownRadioButton;
+
+    /**
+     * Rappresenta il Radio Button relativo a una griglia con delle configurazioni del genere SPACESHIPS
+     */
+    @FXML private RadioButton thirdKnownRadioButton;
+
+    /**
+     * Rappresenta il Radio Button relativo a una griglia con delle configurazioni del genere METHUSELAHS
+     */
+    @FXML private RadioButton fourthKnownRadioButton;
+
+    /**
+     * Rappresenta il Radio Button relativo a una griglia con delle configurazioni del genere INFINITE GROWTH
+     */
+    @FXML private RadioButton fifthKnownRadioButton;
+
+    /**
+     * Viene visualizzata con all'interno un messaggio di errore nel caso in cui fallisce il caricamento della
+     * griglia da file
+     */
+    @FXML private Label loadFromFileErrorLabel;
+
+    /**
+     * Usato per caricare la griglia da file
+     */
+    @FXML private Button loadButton;
+
+    /**
+     * Contiene del testo che intima l'utente a inserire il valore della lunghezza della griglia
+     */
+    @FXML private Label firstLabel;
+
+    /**
+     * Contiene del testo che intima l'utente a inserire il valore della larghezza della griglia
+     */
+    @FXML private Label secondLabel;
+
+    /**
+     * Contiene del testo che intima l'utente a inserire il valore dell'altezza della griglia
+     */
+    @FXML private Label thirdLabel;
+
+    /**
+     * Campo in cui inserire il valore della lunghezza della griglia
+     */
+    @FXML private TextField firstTextField;
+
+    /**
+     * Campo in cui inserire il valore della larghezza della griglia
+     */
+    @FXML private TextField secondTextField;
+
+    /**
+     * Campo in cui inserire il valore dell'altezza della griglia
+     */
+    @FXML private TextField thirdTextField;
+
+    /**
+     * Se cliccato carica le specifiche con le quali si desidera costruire la griglia
+     */
+    @FXML private Button nextButton;
+
+    /**
+     * Se cliccato permette di tornare allo stato iniziale della prima scena, nel quale si può scegliere
+     * tra uno dei tre pannelli
+     */
+    @FXML private Button backButton;
+
+    /**
+     * Visualizza un messaggio di errore, in caso di un valore non supportato nel primo Text Field indicante
+     * la lunghezza della griglia
+     */
+    @FXML private Label firstErrorRedLabel;
+
+    /**
+     * Visualizza un messaggio di errore, in caso di un valore non supportato nel secondo Text Field indicante
+     * la larghezza della griglia
+     */
+    @FXML private Label secondErrorRedLabel;
+
+    /**
+     * Visualizza un messaggio di errore, in caso di un valore non supportato nel primo Text Field indicante
+     * l'altezza della griglia
+     */
+    @FXML private Label thirdErrorRedLabel;
+
+    /**
+     * Contiene tutte le configurazioni del genere STILL LIFES
+     */
+    @FXML private ComboBox choose1;
+
+    /**
+     * Contiene tutte le configurazioni del genere OSCILLATORS
+     */
+    @FXML private ComboBox choose2;
+
+    /**
+     * Contiene tutte le configurazioni del genere SPACESHIPS
+     */
+    @FXML private ComboBox choose3;
+
+    /**
+     * Contiene tutte le configurazioni del genere METHUSELAHS
+     */
+    @FXML private ComboBox choose4;
+
+    /**
+     * Contiene tutte le configurazioni del genere INFINITE GROWTH
+     */
+    @FXML private ComboBox choose5;
+
+    /**
+     * Rappresenta il contenitore di 5 diversi pane che lo partizionano
+     */
+    @FXML private BorderPane borderPane;
+
+    /**
+     * Partizione sinistra del borderPane
+     */
+    @FXML private Pane leftPane;
+
+    /**
+     * Partizione centrare del borderPane
+     */
+    @FXML private Pane centralPane;
+
+    /**
+     * Partizione destra del borderPane
+     */
+    @FXML private Pane rightPane;
+
+    /**
+     * Visualizza un messaggio di errore in caso di fallimento nel caricamento delle specifiche con cui l'utente
+     * vuole costruire la griglia
+     */
+    @FXML private Label loadRedLabel;
+
+    /**
+     * Viene visualizzato per la scelta di un file dal filesystem dell'utente da cui caricare la configurazione
+     * della griglia
+     */
+    private  final FileChooser fileChooser = new FileChooser();
+
+    /**
+     * Permette di interagire col desktop dell'utente
+     */
+    private Desktop desktop ;
+
+    /**
+     * Contiene i Radio Buttons riferiti alla dimensione della griglia
+     */
+    private final ToggleGroup dimensionChoosedToggleGroup = new ToggleGroup();
+
+    /**
+     * Contiene i Radio Buttons riferiti alla regola da adottare per calcolare la generazione successiva
+     */
+    private final ToggleGroup ruleChoosedToggleGroup= new ToggleGroup();
+
+    /**
+     * Contiene i Radio Buttons riferiti al tipo di coordinate da voler visualizzare
+     */
+    private final ToggleGroup positionChoosedToggleGroup= new ToggleGroup();
+
+    /**
+     * Contiene i Radio Buttons riferiti a configurazioni conosciute (Still Lifes, Infinite Growth, ecc...)
+     */
+    private final ToggleGroup differentKnownConfigurations = new ToggleGroup();
+
+    /**
+     * Viene creato o dopo aver caricato delle specifiche inserite a mano, o dopo aver scelto un tipo di
+     * preconfigurazione tra quelle disponibili o dopo aver caricato una configurazione da file
+     */
+    private IController<?> controllerCreated;
+
+
+    /**
+     * Rimuove inizialmente tutti gli elementi all'interno del Combo Box, poi aggiunge gli elementi passati
+     * come elementi del comboBox. Infine seleziona il primo tra quelli inseriti per renderlo visibile.
+     * @param comboBox la casella usata per contenere tutti i tipi di configurazioni conosciute di un tipo
+     * @param elements le stringhe corrispondenti a configurazioni di uno stesso tipo
+     */
+    private void initComboBoxe(ComboBox comboBox, String ... elements){
     comboBox.getItems().removeAll(comboBox.getItems());
     comboBox.getItems().addAll(elements);
     comboBox.getSelectionModel().select(elements[0]);
 }
 
-private void initToggleGroup( ToggleGroup toggleGroup, RadioButton ... radioButtons){
+    /**
+     * Inizializza un Toggle Group aggiungendo dei Radio Buttons al suo interno
+     * @param toggleGroup il contenitore in cui inserire i radio buttons
+     * @param radioButtons gli elementi che verranno inseriti nel toggle group
+     */
+    private void initToggleGroup( ToggleGroup toggleGroup, RadioButton ... radioButtons){
     Arrays.stream(radioButtons).forEach(x->x.setToggleGroup(toggleGroup));
 }
 
-private void changeNodes(Consumer<Node> consumer, Node... nodes){
+    /**
+     * Esegue un'azione su ogni nodo passato
+     * @param consumer l'azione eseguita per ogni nodo
+     * @param nodes i nodi sui quali verrà eseguita un'azione
+     */
+    private void changeNodes(Consumer<Node> consumer, Node... nodes){
     Arrays.stream(nodes).forEach(consumer);
 }
 
-private List<Pane> getFilteredPanes(Predicate<Node> predicate){
+    /**
+     * Mi dice quanti panes, tra i figli del borderPane, contano tra i propri figli un numero pari a quello
+     * ritornato dal predicato a loro applicato
+     * @param predicate filtra i panes figli del borderPane
+     * @return una lista di panes che, dopo l'applicazione del predicato, contano lo stesso numero di figli di
+     * prima
+     */
+    private List<Pane> getFilteredPanes(Predicate<Node> predicate){
     return  borderPane.getChildren()
             .stream()
             .map(x->(Pane)x)
@@ -109,12 +320,36 @@ private List<Pane> getFilteredPanes(Predicate<Node> predicate){
             .collect(Collectors.toList());
 }
 
-private boolean hasNotOneActivatedPane(){
+    /**
+     * Dice se c'è, tra i pane della fascia centrale (dove sono i 3 pannelli con cui l'utente interagisce)
+     * almeno un pane attivo/selezionato
+     * @return Se non c'è un pane selezionato ritorna true, altrimenti false
+     */
+    private boolean hasNotOneActivatedPane(){
     return getFilteredPanes(Node::isDisable).size()!=2;
 }
-private void resetToggles(ToggleGroup ... toggleGroups){
+
+    /**
+     * Per ogni Toggle Group passato, leva il pallino di selezione dal toggle che era stato precedentemente
+     * selezionato all'interno di quel Toggle Group
+     * @param toggleGroups i vari Toggle Groups passati
+     */
+    private void resetToggles(ToggleGroup ... toggleGroups){
     Arrays.stream(toggleGroups).filter(x->x.getSelectedToggle()!=null).forEach(x->x.getSelectedToggle().setSelected(false));
 }
+
+    /**
+     * Inizializza la prima scena che si presenta con 3 zone nella fascia centrale, che hanno all'interno tutti
+     * gli elementi disabilitati. La prima zona a sinistra è divisa in tre sezioni dall'alto verso il basso in cui
+     * poter personalizzare la griglia che si vuole andar a costruire:
+     * - Selezione della dimensione
+     * - Selezione delle coordinate da visualizzare
+     * - Selezione della regola da adottare per calcolare la next gen
+     * La seconda zona al centro presenta 5 caselle con apertura a cascata che permettono di scegliere un tipo
+     * specifico di configurazione conosciuta. Affianco di ognuna casella è presente un Radio Button che ne conferma
+     * la scelta
+     * La Terza zona a destra permette di caricare una configurazione da un file preso dal filesystem dell'utente
+     */
     @FXML
     public void initialize() {
         initComboBoxe(choose1,"Block", "Bee-hive", "Loaf", "Boat", "Tub");
@@ -135,7 +370,14 @@ private void resetToggles(ToggleGroup ... toggleGroups){
         logger.info("GUIViewFirstSceneController initialized");
 }
 
-@FXML public void createGridFromAPreconfiguredGrid(MouseEvent mouseEvent){
+    /**
+     * Cliccando su uno tra i Radio Button della zona centrale, viene inizializzato il controller con le
+     * informazioni deseriallizate dal file .json corrispondente al contenuto attuale della casella a cascata
+     * affianco al Radio Button
+     * @param mouseEvent serve a rilevare qual è stato il Radio Button che è stato selezionato (dal quale è
+     * partito l'evento)
+     */
+    @FXML public void createGridFromAPreconfiguredGrid(MouseEvent mouseEvent){
     reset();
     String radioButtonClicked = ((RadioButton)mouseEvent.getSource()).getText();
     String basePath = new File("").getAbsolutePath();
@@ -144,7 +386,16 @@ private void resetToggles(ToggleGroup ... toggleGroups){
     logger.info("Grid selected from preconfigured grids");
 }
 
-private void buildControllerFromRadioButton(String radioButtonClicked, String basePath) {
+    /**
+     * Costruisce il pathname per raggiungere il file json e inizializza il controller con le informazioni
+     * contenute al suo interno. L'intero pathname sarà dato dal pathname dalla root alla cartella
+     * preconfiguredGridsInJson concatenato alla stringa corrispondente al valore nella casella a cascata
+     * alla destra del Radio Button. Questo quindi dipenderà sia dal Radio Button cliccato, sia dal valore
+     * selezionato nella casella a cascata prima del click.
+     * @param radioButtonClicked il nome del Radio Button cliccato
+     * @param basePath il pathname dalla root dell'utente fino alla cartella del progetto
+     */
+    private void buildControllerFromRadioButton(String radioButtonClicked, String basePath) {
     String pathThroughDirectories = "/src/main/resources/preconfiguredGridsInJson/";
     String halfPath = basePath.concat(pathThroughDirectories);
     try {
@@ -171,31 +422,74 @@ private void buildControllerFromRadioButton(String radioButtonClicked, String ba
         }
 }
 
-@FXML <T extends IPosition> void createGridFromInitialization(){
+    /**
+     * Mi da' un valore dell'enumerazione dei vari tipi di coordinate prendendo il valore della stringa
+     * corrispondente al Radio Button selezionato nel Toggle Group riferito alle coordinate della prima zona
+     * del border pane (quella di sinistra)
+     * @return uno tra i valori dell'enumerazione dei tipi di coordinate
+     */
+    private PositionsEnum getPositionFromManualInit(){
+    logger.info("Creation from manual initalization of Position done.");
+    return Utility.switchOnPositionChoosed(getStringFromToggle(positionChoosedToggleGroup));
+}
+
+    /**
+     * Mi da' un valore dell'enumerazione dei vari tipi di regole prendendo il valore della stringa
+     * corrispondente al Radio Button selezionato nel Toggle Group riferito alle regole della prima zona
+     * del border pane (quella di sinistra)
+     * @return uno tra i valori dell'enumerazione dei tipi di regole
+     */
+    private RulesEnum getRuleFromManualInit(){
+    logger.info("Creation from manual initalization of Rule done.");
+    return Utility.switchOnRuleChoosed(getStringFromToggle(ruleChoosedToggleGroup));
+
+}
+
+    /**
+     * Mi da' un'istanza di un tipo di griglia prendendo il valore della stringa
+     * corrispondente al Radio Button selezionato nel Toggle Group riferito alla dimensione della griglia
+     * della prima zona del border pane (quella di sinistra).
+     * @param position
+     * @param factoryField
+     * @param <T>
+     * @return
+     */
+    private <T extends IPosition> IField<T> getFieldFromManualInit(PositionsEnum position, IFactoryField factoryField){
+    return Utility.switchOnDimensionChoosed(getStringFromToggle(dimensionChoosedToggleGroup),
+            ()->factoryField.createField1D(position,Integer.parseInt(firstTextField.getText())),
+            ()->factoryField.createField2D(position,Integer.parseInt(firstTextField.getText()),
+                    Integer.parseInt(secondTextField.getText())),
+            ()->factoryField.createField3D(position,Integer.parseInt(firstTextField.getText()),
+                    Integer.parseInt(secondTextField.getText()),
+                    Integer.parseInt(thirdTextField.getText())));
+}
+
+private void changeLayoutAfterSuccessOnManualInit(){
+    nextButton.setDisable(false);
+    loadRedLabel.setText("");
+    loadButton.setVisible(false);
+}
+
+private void changeLayoutAfterFailure1OnManualInit(){
+    changeNodes(x->x.setVisible(true),loadRedLabel);
+    changeNodes(x->((Label)x).setText("TextField vuoto/i"), loadRedLabel);
+
+}
+
+private void changeLayoutAfterFailure2OnManualInit(){
+    changeNodes(x->x.setVisible(true),loadRedLabel);
+    changeNodes(x->((Label)x).setText("Completa la scelta"), loadRedLabel);
+}
+
+@FXML void createGridFromInitialization(){
     IFactoryField factoryField =new MyFactoryField();
     PositionsEnum functionSelected;
-    IField<T> fieldSelected;
-    RulesEnum ruleSelected;
     try {
         if(firstErrorRedLabel.getText().equals("") && secondErrorRedLabel.getText().equals("") && thirdErrorRedLabel.getText().equals("")){
-          functionSelected = Utility.switchOnPositionChoosed(getStringFromToggle(positionChoosedToggleGroup));
-          logger.info("Creation from manual initalization of Position done.");
-          ruleSelected = Utility.switchOnRuleChoosed(getStringFromToggle(ruleChoosedToggleGroup));
-          logger.finest("Creation from manual initalization of Rule done.");
-          fieldSelected = Utility.switchOnDimensionChoosed(getStringFromToggle(dimensionChoosedToggleGroup),
-                  ()->factoryField.createField1D(functionSelected,Integer.parseInt(firstTextField.getText())),
-                  ()->factoryField.createField2D(functionSelected,Integer.parseInt(firstTextField.getText()),
-                          Integer.parseInt(secondTextField.getText())),
-                  ()->factoryField.createField3D(functionSelected,Integer.parseInt(firstTextField.getText()),
-                          Integer.parseInt(secondTextField.getText()),
-                          Integer.parseInt(thirdTextField.getText())));
-          logger.info("Creation from manual initalization of Position done.");
-          controllerCreated = new MyGameOfLifeController<>(fieldSelected,ruleSelected, null);
+          functionSelected = getPositionFromManualInit();
+          controllerCreated = new MyGameOfLifeController<>(getFieldFromManualInit(functionSelected, factoryField),getRuleFromManualInit(), null);
+          changeLayoutAfterSuccessOnManualInit();
           logger.info("Creation from manual initalization of Controller done.");
-          nextButton.setDisable(false);
-          loadRedLabel.setText("");
-          loadButton.setVisible(false);
-          logger.info("Grid correctly initialized from the manual initialization section. ");
         } else{
             changeNodes(x->x.setVisible(true), loadRedLabel);
             changeNodes(x->((Label)x).setText("Inserisci i valori corretti"),loadRedLabel);
@@ -203,14 +497,12 @@ private void buildControllerFromRadioButton(String radioButtonClicked, String ba
         }
     }
     catch (NumberFormatException e){
-        changeNodes(x->x.setVisible(true),loadRedLabel);
-        changeNodes(x->((Label)x).setText("TextField vuoto/i"), loadRedLabel);
+        changeLayoutAfterFailure1OnManualInit();
         logger.severe("Failed to initialize Grid for not entering values inside fields! ");
     }
     catch (NullPointerException e){
-       changeNodes(x->x.setVisible(true),loadRedLabel);
-       changeNodes(x->((Label)x).setText("Completa la scelta"), loadRedLabel);
-       logger.severe("Failed to initialize Grid because is provided an incomplete configuration! ");
+      changeLayoutAfterFailure2OnManualInit();
+      logger.severe("Failed to initialize Grid because is provided an incomplete configuration! ");
     }
 }
 
@@ -264,9 +556,6 @@ private String buildEndPath(ComboBox comboBox){
 
 private void reset() {
     controllerCreated = null;
-    firstMaxCoordinate = -1;
-    secondMaxCoordinate = -1;
-    thirdMaxCoordinate = -1;
     logger.info("System variables are resetted.");
 }
 
@@ -275,7 +564,6 @@ private void reset() {
         reset();
         Stage window = (Stage) ((Node) mouseEvent.getSource()).getScene().getWindow();
         File file = fileChooser.showOpenDialog(window);
-        System.out.println(file.getPath());
         try{
         controllerCreated = IController.createControllerFromFile(file.getPath());
         }catch (IOException e){
@@ -289,7 +577,7 @@ private void reset() {
 
     @FXML public void showDimensionLabelsAndTexts(MouseEvent mouseEvent) {
     Utility.switchOnDimensionChoosed(getStringFromToggle(dimensionChoosedToggleGroup),
-            ()->{changeNodes(x->x.setVisible(true),firstLabel,firstTextField);
+            ()->{ changeNodes(x->x.setVisible(true),firstLabel,firstTextField);
             changeNodes(x->x.setVisible(false), secondLabel, secondTextField, thirdLabel, thirdTextField);
             return null;},
             ()->{ changeNodes(x->x.setVisible(true),firstLabel,firstTextField,secondLabel,secondTextField);
@@ -347,7 +635,6 @@ private void reset() {
             label.setText("");
             value = Integer.parseInt(valueString);
             if (value <= 0) {
-
                 throw new IllegalArgumentException("Il numero inserito e' <= 0!");
             }
         }catch (NumberFormatException e){

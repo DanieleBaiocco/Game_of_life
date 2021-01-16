@@ -159,15 +159,13 @@ private IController<?> GRASPController;
         double altezzaScacco = containerOfGrid.getPrefHeight()/x1;
         for(int i=0; i<x1; i++){
             for(int j=0; j<x2; j++){
+                if(j==0)
+                    createAndSetPositionLabel(altezzaScacco,i,leftPane,true,j,i);
+                if(i==0)
+                    createAndSetPositionLabel(altezzaScacco,j,topPane,false,j,i);
                 GRASPController.addAEntry(j,i);
                 logger.info("Pane at position {"+j+","+i+"} is initialized as white.");
                 paneCreation(j,i);
-                if(j==0){
-                    createAndSetPositionLabel(altezzaScacco,i,leftPane,true,j,i);
-                }
-                if(i==0){
-                    createAndSetPositionLabel(altezzaScacco,j,topPane,false,j,i);
-                }
                 GRASPController.getCellulaFromInteger(j,i).addPropertyListener(this);
                 if(GRASPController.getCellsToSetAlive()!=null){
                    initGridFromCells(j,i);

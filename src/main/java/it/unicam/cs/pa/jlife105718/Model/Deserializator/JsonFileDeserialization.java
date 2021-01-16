@@ -35,34 +35,60 @@ public class JsonFileDeserialization implements FileDeserialization {
         return readerToReturn;
     }
 
+    private RulesEnum getRuleFromDeserialization(JsonObject treeAsJsonObj){
+        String rule = treeAsJsonObj.get("regola").getAsString();
+        logger.info("Json deserialization of Rule done.");
+         return Utility.switchOnRuleChoosed(rule);
+
+    }
+
+    private PositionsEnum getPositionFromDeserialization(JsonObject treeAsJsonObj){
+        String typeOfPosition = treeAsJsonObj.get("posizione").getAsString();
+        logger.info("Json deserialization of Position done.");
+        return Utility.switchOnPositionChoosed(typeOfPosition);
+    }
+
+    private <T extends IPosition> IField<T> getFieldFromDeserialization(JsonObject treeAsJsonObj, PositionsEnum pos, IFactoryField factoryField){
+        JsonArray values = treeAsJsonObj.get("limite").getAsJsonArray();
+        logger.info("Json deserialization of Field done.");
+        return Utility.switchOnDimensionChoosed(String.valueOf(values.size()),
+                ()->factoryField.createField1D(pos,values.get(0).getAsInt()),
+                ()->factoryField.createField2D(pos,values.get(0).getAsInt(),values.get(1).getAsInt()),
+                ()->factoryField.createField3D(pos,values.get(0).getAsInt(),
+                        values.get(1).getAsInt(),
+                        values.get(2).getAsInt()));
+
+    }
+
+    private int [] getCellsFromDeserialization(JsonObject treeAsJsonObj){
+        JsonArray cellsInJson = treeAsJsonObj.get("colorare").getAsJsonArray();
+        logger.info("Json deserialization of Cells to set alive done.");
+        return getListOfCellsToSetAlive(cellsInJson);
+    }
+
+    private <T extends IPosition> JsonDeserializer<IController<T>> createDeserializer(IFactoryField factoryField){
+       return  (json, typeOfT, context) -> {
+            JsonObject treeAsJsonObj = json.getAsJsonObject();
+            PositionsEnum transition = getPositionFromDeserialization(treeAsJsonObj);
+            IField<T> fieldCreated = getFieldFromDeserialization(treeAsJsonObj, transition, factoryField);
+            RulesEnum rule = getRuleFromDeserialization(treeAsJsonObj);
+            int[] cells = getCellsFromDeserialization(treeAsJsonObj);
+            return new MyGameOfLifeController<>(fieldCreated,rule, cells);
+        };
+    }
+
+    private <T extends IPosition> Gson createGson(JsonDeserializer<IController<T>> deserializer){
+        GsonBuilder gsonBuilder = new GsonBuilder();
+        gsonBuilder.registerTypeAdapter(IController.class, deserializer);
+        return gsonBuilder.create();
+    }
+
     @Override
     public <T extends IPosition> IController<?> deserializeFile(String pathName, IFactoryField factoryField){
+        JsonDeserializer<IController<T>> deserializer = createDeserializer(factoryField);
         JsonElement tree = JsonParser.parseReader(getReaderFromPathName(pathName));
-        GsonBuilder gsonBuilder = new GsonBuilder();
-        JsonDeserializer<IController<?>> deserializer = (json, typeOfT, context) -> {
-            JsonObject treeAsJsonObj = json.getAsJsonObject();
-            String typeOfPosition = treeAsJsonObj.get("posizione").getAsString();
-            PositionsEnum transition = Utility.switchOnPositionChoosed(typeOfPosition);
-            logger.info("Json deserialization of Position done.");
-            JsonArray values = treeAsJsonObj.get("limite").getAsJsonArray();
-            IField<T> fieldCreated = Utility.switchOnDimensionChoosed(String.valueOf(values.size()),
-                    ()->factoryField.createField1D(transition,values.get(0).getAsInt()),
-                    ()->factoryField.createField2D(transition,values.get(0).getAsInt(),values.get(1).getAsInt()),
-                    ()->factoryField.createField3D(transition,values.get(0).getAsInt(),
-                            values.get(1).getAsInt(),
-                            values.get(2).getAsInt()));
-            logger.info("Json deserialization of Field done.");
-            String rule = treeAsJsonObj.get("regola").getAsString();
-            RulesEnum currentRulesEnum = Utility.switchOnRuleChoosed(rule);
-            logger.info("Json deserialization of Rule done.");
-            JsonArray cellsInJson = treeAsJsonObj.get("colorare").getAsJsonArray();
-            int[] cells = getListOfCellsToSetAlive(cellsInJson);
-            logger.info("Json deserialization of Cells to set alive done.");
-            return new MyGameOfLifeController<>(fieldCreated,currentRulesEnum, cells);
-        };
-        gsonBuilder.registerTypeAdapter(IController.class, deserializer);
-        Gson customGson = gsonBuilder.create();
-        Type typeOfController = new TypeToken<IController<?>>() {}.getType();
+        Gson customGson = createGson(deserializer);
+        Type typeOfController = new TypeToken<IController<T>>() {}.getType();
         logger.info("Json Deserialization done.");
         return customGson.fromJson(tree,typeOfController);
     }
