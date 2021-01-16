@@ -12,4 +12,5 @@ public interface ICell {
      boolean equals(Object o);
      int hashCode();
      void setId(int id);
+
 }

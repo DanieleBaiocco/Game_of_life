@@ -5,7 +5,7 @@ import it.unicam.cs.pa.jlife105718.Model.Cell.Stato;
 import it.unicam.cs.pa.jlife105718.Model.Position.IPosition;
 import it.unicam.cs.pa.jlife105718.Model.Position.PositionsEnum;
 import it.unicam.cs.pa.jlife105718.Model.Position.PositionFactory;
-import it.unicam.cs.pa.jlife105718.Model.IdGenerator;
+import it.unicam.cs.pa.jlife105718.Model.MyIdGenerator;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -86,7 +86,7 @@ public abstract class GenericField<T extends IPosition> implements IField<T> {
     public void addAEntry( int ... values) {
         if(values.length == this.values.length && !isIntoMap(values)) {
             T pos  = getPosizioneFromInteger(values);
-            ICell cell =getCell(Stato.MORTO, IdGenerator.getInstance().getIdAndIncrement());
+            ICell cell =getCell(Stato.MORTO, MyIdGenerator.getInstance().getIdAndIncrement());
             mappaPosizioneCellula.put(pos,cell);
         }
         else throw new IllegalArgumentException();

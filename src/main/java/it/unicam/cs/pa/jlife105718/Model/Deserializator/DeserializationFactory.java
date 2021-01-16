@@ -18,7 +18,6 @@ public class DeserializationFactory {
                 fileDeserialization = new TxtFileDeserialization();
                 break;
             default:
-                //forse qua va il throw di NullPointerException(non solo qua ma in tutti i default(?))
                 fileDeserialization = null;
         }
         return fileDeserialization;

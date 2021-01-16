@@ -1,11 +1,15 @@
 package it.unicam.cs.pa.jlife105718.Model.Position;
 
 import java.util.Arrays;
+import java.util.logging.Logger;
 
 public class PosizioneAlfabetica extends MyPosition {
 
+    private static final Logger logger = Logger.getGlobal();
+
     public PosizioneAlfabetica(int[] params) {
         super(params);
+        logger.finest("Alphabet Position created.");
     }
 
         @Override
@@ -24,7 +28,15 @@ public class PosizioneAlfabetica extends MyPosition {
 
     @Override
     public int[] getCoordinateI() {
-        return  Arrays.stream(getParams()).map(x->(String)x).mapToInt(x->x.charAt(0)-65).toArray();
+          return Arrays.stream(getParams()).map(x->(String)x).mapToInt(x->{
+            if(x.length()==2){
+                int first = x.toCharArray()[0];
+                int second = x.toCharArray()[1];
+                return 26*(first-65+1)+second-65;
+            }else{
+                return x.toCharArray()[0]-65;
+            }
+        }).toArray();
     }
 
 @Override

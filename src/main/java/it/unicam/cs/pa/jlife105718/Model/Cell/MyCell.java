@@ -7,8 +7,10 @@ import it.unicam.cs.pa.jlife105718.Model.PropertyListener;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Logger;
 
 public class MyCell implements ICell {
+    private static final Logger logger = Logger.getGlobal();
     private int id;
     private List<PropertyListener> listeners;
     private Stato stato;
@@ -16,6 +18,7 @@ public class MyCell implements ICell {
         this.stato=stato;
         listeners= new ArrayList<>();
         this.id = id;
+        logger.finest("Cell with id: +"+id+" created");
     }
 
     public void setListeners(List<PropertyListener> listeners) {

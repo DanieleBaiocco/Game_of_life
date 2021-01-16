@@ -1,27 +1,26 @@
-package it.unicam.cs.pa.jlife105718;
+package it.unicam.cs.pa.jlife105718.Model.Field2DTest;
 
 import it.unicam.cs.pa.jlife105718.Model.Board.GenericField;
 import it.unicam.cs.pa.jlife105718.Model.Board.MyField2D;
+import it.unicam.cs.pa.jlife105718.Model.Cell.ICell;
 import it.unicam.cs.pa.jlife105718.Model.Cell.MyCell;
 import it.unicam.cs.pa.jlife105718.Model.Cell.Stato;
+import it.unicam.cs.pa.jlife105718.Model.Position.PositionsEnum;
 import it.unicam.cs.pa.jlife105718.Model.Position.PosizioneAlfabetica;
-import it.unicam.cs.pa.jlife105718.Model.Position.PositionFactory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
-public class Campo2DAlfaTest {
+public class MyField2DTest {
 
     private GenericField<PosizioneAlfabetica> campoAlfa;
 
     @BeforeEach
     void initCampoAlfa(){
-        this.campoAlfa =new MyField2D<>(PositionFactory.getInstance().getTransitionToChar(),10,10);
+        this.campoAlfa =new MyField2D<>(PositionsEnum.Alfabetico,10,10);
     }
 
     @Test
@@ -37,38 +36,42 @@ public class Campo2DAlfaTest {
         assertThrows(IllegalArgumentException.class, () -> {
             campoAlfa.addAEntry(1,3,4);
         });
-        assertTrue(campoAlfa.isIntoMap(9,0));
-        assertFalse(campoAlfa.isIntoMap(10,0));
+        assertDoesNotThrow(()->{
+            campoAlfa.getCellulaFromInteger(9,0);
+        });
+        assertThrows(IllegalArgumentException.class,()->{
+            campoAlfa.getCellulaFromInteger(10,0);
+        });
     }
 
     @Test
     void testGetPosizioneFromCellulaAlfa(){
         campoAlfa.addAEntry(3,0);
         MyCell cellula3 = new MyCell(Stato.MORTO, 0);
-        PosizioneAlfabetica posAlph3 =campoAlfa.getPosizioneFromCellula(cellula3);
+        int[] posAlph3 =campoAlfa.getIntegerFromCellula(cellula3);
         assertNotNull(posAlph3);
-        assertEquals(posAlph3.getCoordinateI(0), 3);
-        assertEquals(posAlph3.getCoordinateI(1), 0);
+        assertEquals(posAlph3[0], 3);
+        assertEquals(posAlph3[1], 0);
         MyCell cellula900 = new MyCell(Stato.MORTO, 900);
         assertThrows(NullPointerException.class, () -> {
-            campoAlfa.getPosizioneFromCellula(cellula900);
+            campoAlfa.getIntegerFromCellula(cellula900);
         });
     }
 
     @Test
-     void testGetIntornoAlfa(){
+     void testGetIntorno(){
         for(int i=0; i<10; i++){
             for (int j=0; j<10; j++) {
                 campoAlfa.addAEntry(j,i);
             }
         }
-        Set<MyCell> intorno10 = campoAlfa.getIntorno(campoAlfa.getCellulaFromInteger(1,0));
+        Set<ICell> intorno10 = campoAlfa.getIntorno(campoAlfa.getCellulaFromInteger(1,0));
         assertTrue(intorno10.contains(campoAlfa.getCellulaFromInteger(0,0)));
         assertTrue(intorno10.contains(campoAlfa.getCellulaFromInteger(0,1)));
         assertTrue(intorno10.contains(campoAlfa.getCellulaFromInteger(1,1)));
         assertTrue(intorno10.contains(campoAlfa.getCellulaFromInteger(2,0)));
         assertTrue(intorno10.contains(campoAlfa.getCellulaFromInteger(2,1)));
-        Set<MyCell> intorno11 = campoAlfa.getIntorno(campoAlfa.getCellulaFromInteger(1,1));
+        Set<ICell> intorno11 = campoAlfa.getIntorno(campoAlfa.getCellulaFromInteger(1,1));
         assertTrue(intorno11.contains(campoAlfa.getCellulaFromInteger(0,0)));
         assertTrue(intorno11.contains(campoAlfa.getCellulaFromInteger(0,1)));
         assertTrue(intorno11.contains(campoAlfa.getCellulaFromInteger(0,2)));
@@ -77,23 +80,6 @@ public class Campo2DAlfaTest {
         assertTrue(intorno11.contains(campoAlfa.getCellulaFromInteger(2,2)));
         assertTrue(intorno11.contains(campoAlfa.getCellulaFromInteger(2,1)));
         assertTrue(intorno11.contains(campoAlfa.getCellulaFromInteger(2,0)));
-    }
-
-
-    @Test
-    void testChangeToPos(){
-        List<PosizioneAlfabetica> list = new ArrayList<>();
-        for(int i=0; i<30; i++){
-            List<Integer> integers = new ArrayList<>();
-            integers.add(0);
-            integers.add(i);
-            list.add(campoAlfa.getTransition().apply(integers));
-        }
-        assertEquals(list.get(0).getParams().get(1), "A");
-        assertEquals(list.get(1).getParams().get(1), "B");
-        assertEquals(list.get(25).getParams().get(1), "Z");
-        assertEquals(list.get(26).getParams().get(1), "AA");
-        assertEquals(list.get(27).getParams().get(1), "AB");
     }
 
     @Test
@@ -121,7 +107,7 @@ public class Campo2DAlfaTest {
         assertThrows(IllegalArgumentException.class, ()->
                  campoCopy.getCellulaFromInteger(0,2));
         assertEquals(campoAlfa.getCellulaFromInteger(0,0).getId(),campoCopy.getCellulaFromInteger(0,0).getId());
-        HashMap<PosizioneAlfabetica, MyCell> map = (HashMap<PosizioneAlfabetica, MyCell>) campoCopy.getMappaPosizioneCellula();
+        HashMap<PosizioneAlfabetica, ICell> map = (HashMap<PosizioneAlfabetica, ICell>) campoCopy.getMappaPosizioneCellula();
         map.values().forEach(x->System.out.println(x.getId()));
     }
 }

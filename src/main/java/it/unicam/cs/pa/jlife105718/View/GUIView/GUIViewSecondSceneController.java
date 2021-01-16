@@ -15,9 +15,10 @@ import javafx.scene.layout.Pane;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
+import java.util.logging.Logger;
 
 public class GUIViewSecondSceneController implements PropertyListener {
-
+    private static final Logger logger = Logger.getGlobal();
 @FXML private Label firstLabel;
 @FXML private Label secondLabel;
 @FXML private AnchorPane containerOfGrid;
@@ -39,6 +40,7 @@ private IController<?> GRASPController;
         AnchorPane.setLeftAnchor(gridPane, .0);
         AnchorPane.setBottomAnchor(gridPane, .0);
         executor = Executors.newScheduledThreadPool(1);
+        logger.info("New scene correctly initialized.");
     }
 
     public void initializeGRASPController(IController<?> controller){
@@ -50,12 +52,15 @@ private IController<?> GRASPController;
         switch (values.length){
             case 1:
                 initGrid1D(values[0]);
+                logger.info("Grid in 1D choosed");
                 break;
             case 2:
                 initGrid2D(values[0],values[1]);
+                logger.info("Grid in 2D choosed");
                 break;
             case 3:
                 initGrid3D(values[0],values[1], values[2]);
+                logger.info("Grid in 3D choosed");
                 break;
         }
     }
@@ -70,10 +75,12 @@ private IController<?> GRASPController;
         if(stopButton.getText().equals("STOP")){
             exit =true;
             stopButton.setText("RESUME");
+            logger.info("Execution stopped.");
         }
        else {
            exit = false;
            stopButton.setText("STOP");
+           logger.info("Execution resumed.");
         }
     }
 
@@ -83,8 +90,8 @@ private IController<?> GRASPController;
             public void run() {
                 if (!exit) {
                         GRASPController.nextGen();
-                }else
-                System.out.println("Sto aspettando");
+                        logger.info("Next Generation calculated and shown");
+                }
             }
         };
         this.executor.scheduleAtFixedRate(startGen, 0, 1000, TimeUnit.MILLISECONDS);
@@ -139,8 +146,10 @@ private IController<?> GRASPController;
         for(int k=0; k<GRASPController.getCellsToSetAlive().length; k=k+2){
             int firstCoo = GRASPController.getCellsToSetAlive()[k];
             int secondCoo = GRASPController.getCellsToSetAlive()[k+1];
-            if(j==firstCoo&&i==secondCoo)
+            if(j==firstCoo&&i==secondCoo){
                 GRASPController.colorateDecolorateACellula(j,i);
+                logger.info("Pane at position {"+j+","+i+"} turned black.");
+            }
         }
     }
 
@@ -151,6 +160,7 @@ private IController<?> GRASPController;
         for(int i=0; i<x1; i++){
             for(int j=0; j<x2; j++){
                 GRASPController.addAEntry(j,i);
+                logger.info("Pane at position {"+j+","+i+"} is initialized as white.");
                 paneCreation(j,i);
                 if(j==0){
                     createAndSetPositionLabel(altezzaScacco,i,leftPane,true,j,i);
@@ -176,9 +186,11 @@ private IController<?> GRASPController;
         Pane pane = getPaneFromIntegers(result);
        if (state == Stato.VIVO){
             pane.setStyle("-fx-background-color: black");
-        } else {
+            logger.info("Cell {"+result[0]+","+result[1]+"} lives");
+       } else {
            pane.setStyle("-fx-background-color: #f4f4f4");
            pane.setStyle("-fx-border-color: #838383");
+           logger.info("Cell {"+result[0]+","+result[1]+"} dies");
        }
     }
 

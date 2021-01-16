@@ -1,5 +1,6 @@
 package it.unicam.cs.pa.jlife105718.View.GUIView;
-
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import it.unicam.cs.pa.jlife105718.Controller.IController;
 import it.unicam.cs.pa.jlife105718.Controller.MyGameOfLifeController;
 import it.unicam.cs.pa.jlife105718.Model.Board.*;
@@ -34,7 +35,7 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 public class GUIViewFirstSceneController  {
-@FXML private AnchorPane mainAnchorPane;
+private static final Logger logger = Logger.getGlobal();
 @FXML private RadioButton oneDRadioButton;
 @FXML private RadioButton twoDRadioButton;
 @FXML private RadioButton threeDRadioButton;
@@ -49,6 +50,7 @@ public class GUIViewFirstSceneController  {
 @FXML private RadioButton thirdKnownRadioButton;
 @FXML private RadioButton fourthKnownRadioButton;
 @FXML private RadioButton fifthKnownRadioButton;
+@FXML private Label loadFromFileErrorLabel;
 @FXML private Button loadButton;
 @FXML private Label firstLabel;
 @FXML private Label secondLabel;
@@ -61,7 +63,6 @@ public class GUIViewFirstSceneController  {
 @FXML private Label firstErrorRedLabel;
 @FXML private Label secondErrorRedLabel;
 @FXML private Label thirdErrorRedLabel;
-@FXML private Button loadFromFileButton;
 @FXML private ComboBox choose1;
 @FXML private ComboBox choose2;
 @FXML private ComboBox choose3;
@@ -128,9 +129,10 @@ private void resetToggles(ToggleGroup ... toggleGroups){
         initToggleGroup(differentKnownConfigurations, firstKnownRadioButton, secondKnownRadioButton,thirdKnownRadioButton,fourthKnownRadioButton,fifthKnownRadioButton);
         changeNodes(x->((TextField)x).setText(""), firstTextField, secondTextField, thirdTextField);
         changeNodes(x->((Label)x).setText(""),firstErrorRedLabel, secondErrorRedLabel, thirdErrorRedLabel);
-        changeNodes(x->x.setVisible(false), loadRedLabel, firstTextField, secondTextField, thirdTextField, firstLabel, secondLabel, thirdLabel, loadButton, firstErrorRedLabel, secondErrorRedLabel, thirdErrorRedLabel);
+        changeNodes(x->x.setVisible(false), loadRedLabel, firstTextField, secondTextField, thirdTextField, firstLabel, secondLabel, thirdLabel, loadButton, firstErrorRedLabel, secondErrorRedLabel, thirdErrorRedLabel, loadFromFileErrorLabel);
         changeNodes(x->x.setDisable(true),  nextButton, backButton);
         changeNodes(x->((Pane)x).getChildren().forEach(y->y.setDisable(true)),rightPane,leftPane,centralPane);
+        logger.info("GUIViewFirstSceneController initialized");
 }
 
 @FXML public void createGridFromAPreconfiguredGrid(MouseEvent mouseEvent){
@@ -139,6 +141,7 @@ private void resetToggles(ToggleGroup ... toggleGroups){
     String basePath = new File("").getAbsolutePath();
     buildControllerFromRadioButton(radioButtonClicked, basePath);
     nextButton.setDisable(false);
+    logger.info("Grid selected from preconfigured grids");
 }
 
 private void buildControllerFromRadioButton(String radioButtonClicked, String basePath) {
@@ -164,6 +167,7 @@ private void buildControllerFromRadioButton(String radioButtonClicked, String ba
             }
         } catch (FileNotFoundException e) {
             e.printStackTrace();
+            logger.severe("File not found!");
         }
 }
 
@@ -175,7 +179,9 @@ private void buildControllerFromRadioButton(String radioButtonClicked, String ba
     try {
         if(firstErrorRedLabel.getText().equals("") && secondErrorRedLabel.getText().equals("") && thirdErrorRedLabel.getText().equals("")){
           functionSelected = Utility.switchOnPositionChoosed(getStringFromToggle(positionChoosedToggleGroup));
+          logger.info("Creation from manual initalization of Position done.");
           ruleSelected = Utility.switchOnRuleChoosed(getStringFromToggle(ruleChoosedToggleGroup));
+          logger.finest("Creation from manual initalization of Rule done.");
           fieldSelected = Utility.switchOnDimensionChoosed(getStringFromToggle(dimensionChoosedToggleGroup),
                   ()->factoryField.createField1D(functionSelected,Integer.parseInt(firstTextField.getText())),
                   ()->factoryField.createField2D(functionSelected,Integer.parseInt(firstTextField.getText()),
@@ -183,24 +189,28 @@ private void buildControllerFromRadioButton(String radioButtonClicked, String ba
                   ()->factoryField.createField3D(functionSelected,Integer.parseInt(firstTextField.getText()),
                           Integer.parseInt(secondTextField.getText()),
                           Integer.parseInt(thirdTextField.getText())));
+          logger.info("Creation from manual initalization of Position done.");
           controllerCreated = new MyGameOfLifeController<>(fieldSelected,ruleSelected, null);
+          logger.info("Creation from manual initalization of Controller done.");
           nextButton.setDisable(false);
           loadRedLabel.setText("");
           loadButton.setVisible(false);
+          logger.info("Grid correctly initialized from the manual initialization section. ");
         } else{
             changeNodes(x->x.setVisible(true), loadRedLabel);
             changeNodes(x->((Label)x).setText("Inserisci i valori corretti"),loadRedLabel);
+            logger.warning("Failed to initialize Grid because of problems still not solved! ");
         }
-
     }
     catch (NumberFormatException e){
         changeNodes(x->x.setVisible(true),loadRedLabel);
         changeNodes(x->((Label)x).setText("TextField vuoto/i"), loadRedLabel);
+        logger.severe("Failed to initialize Grid for not entering values inside fields! ");
     }
-    //forse è giusto levare la IllegalArgumentException dal costruttore di Campo e da qua(?)
     catch (NullPointerException e){
        changeNodes(x->x.setVisible(true),loadRedLabel);
        changeNodes(x->((Label)x).setText("Completa la scelta"), loadRedLabel);
+       logger.severe("Failed to initialize Grid because is provided an incomplete configuration! ");
     }
 }
 
@@ -210,16 +220,19 @@ private String buildEndPath(ComboBox comboBox){
 
 @FXML public void changeToHandCursor(MouseEvent mouseEvent){
     ((Node)mouseEvent.getSource()).getScene().setCursor(Cursor.HAND);
+    logger.info("Cursor is a hand");
 }
 
 @FXML public void changeToDefaultCursor(MouseEvent mouseEvent){
     ((Node)mouseEvent.getSource()).getScene().setCursor(Cursor.DEFAULT);
+    logger.info("Cursor is set to default");
 }
 
 @FXML public void overThePane(MouseEvent mouseEvent){
      if(hasNotOneActivatedPane()){
        changeToHandCursor(mouseEvent);
        ((Node)mouseEvent.getSource()).setStyle("-fx-background-color: pink");
+       logger.info("Mouse entered a pane");
     }
 }
 
@@ -228,6 +241,7 @@ private String buildEndPath(ComboBox comboBox){
         changeToDefaultCursor(mouseEvent);
         ((Node) mouseEvent.getSource()).setStyle("-fx-background-color: #f4f4f4");
         ((Node) mouseEvent.getSource()).setStyle("-fx-border-color: black");
+        logger.info("Mouse exited a pane.");
     }
 }
 
@@ -236,6 +250,7 @@ private String buildEndPath(ComboBox comboBox){
         ((Pane) mouseEvent.getSource()).getChildren().forEach(x -> x.setDisable(false));
         changeToDefaultCursor(mouseEvent);
         backButton.setDisable(false);
+        logger.info("Pane is selected and enabled.");
    }
 }
 
@@ -244,6 +259,7 @@ private String buildEndPath(ComboBox comboBox){
     resetToggles(dimensionChoosedToggleGroup,positionChoosedToggleGroup,differentKnownConfigurations,ruleChoosedToggleGroup);
     initialize();
     reset();
+    logger.info("All panes are disabled.");
 }
 
 private void reset() {
@@ -251,15 +267,24 @@ private void reset() {
     firstMaxCoordinate = -1;
     secondMaxCoordinate = -1;
     thirdMaxCoordinate = -1;
+    logger.info("System variables are resetted.");
 }
 
-    @FXML public void createGridFromFile(MouseEvent mouseEvent) throws IOException {
+    @FXML public void createGridFromFile(MouseEvent mouseEvent) {
+        loadFromFileErrorLabel.setText("");
         reset();
         Stage window = (Stage) ((Node) mouseEvent.getSource()).getScene().getWindow();
         File file = fileChooser.showOpenDialog(window);
         System.out.println(file.getPath());
+        try{
         controllerCreated = IController.createControllerFromFile(file.getPath());
+        }catch (IOException e){
+            loadFromFileErrorLabel.setText("Fallimento nel caricare da file!");
+            loadFromFileErrorLabel.setVisible(true);
+            logger.severe("Failed to load grid from file! ");
+        }
         nextButton.setDisable(false);
+        logger.info("Grid is correctly loaded from file and initialized. ");
     }
 
     @FXML public void showDimensionLabelsAndTexts(MouseEvent mouseEvent) {
@@ -275,6 +300,7 @@ private void reset() {
             return null;
     });
     loadButton.setVisible(true);
+    logger.info("Dimension buttons are shown.");
 }
 
     private String getStringFromToggle(ToggleGroup toggleGroup) {
@@ -282,10 +308,16 @@ private void reset() {
 }
 
    @FXML
-   public void loadGrid(MouseEvent mouseEvent)  throws IOException{
+   public void loadGrid(MouseEvent mouseEvent) {
        FXMLLoader loader = new FXMLLoader();
        loader.setLocation(getClass().getResource("/GameOfLifeSecondScene.fxml"));
-       AnchorPane gridViewParent = loader.load();
+       AnchorPane gridViewParent = null;
+       try{
+       gridViewParent = loader.load();}
+       catch (IOException e){
+           e.printStackTrace();
+           logger.severe("Failed to load next scene!");
+       }
        GUIViewSecondSceneController secondController = loader.getController();
        secondController.initializeGRASPController(controllerCreated);
        secondController.initGrid();
@@ -293,6 +325,7 @@ private void reset() {
        Stage window = (Stage) ((Node) mouseEvent.getSource()).getScene().getWindow();
        window.setScene(gridViewScene);
        window.show();
+       logger.info("Grid has been initialized correctly. Grid is shown in next scene.");
     }
 
     @FXML public void checkInputPosError1(){
@@ -309,17 +342,22 @@ private void reset() {
 
     private void checkInputPosError(TextField textField, Label label){
         String valueString = textField.getText();
+        int value = 0;
         try{
             label.setText("");
-            int value = Integer.parseInt(valueString);
-            if(value<=0)
+            value = Integer.parseInt(valueString);
+            if (value <= 0) {
+
                 throw new IllegalArgumentException("Il numero inserito e' <= 0!");
+            }
         }catch (NumberFormatException e){
             changeNodes(x->x.setVisible(true), label);
             label.setText("Il valore inserito non e' un numero!");
+            logger.severe("Value entered ["+valueString+"] is not an integer");
         }
         catch (IllegalArgumentException e){
             label.setText(e.getMessage());
+            logger.severe("Integer entered [" + value + "] is less than or equals 0!");
         }
     }
 

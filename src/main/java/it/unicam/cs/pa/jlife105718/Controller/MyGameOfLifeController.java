@@ -10,15 +10,19 @@ import it.unicam.cs.pa.jlife105718.Model.PropertyListener;
 import it.unicam.cs.pa.jlife105718.Model.Rule.RulesEnum;
 import it.unicam.cs.pa.jlife105718.Model.Rule.RulesFactory;
 
+import java.util.logging.Logger;
+
 public class MyGameOfLifeController<T extends IPosition> implements IController<T>, PropertyListener {
 private final IField<T> campo;
 private final RulesEnum rule;
 private int[] cellsToSetAlive;
+private static final Logger logger = Logger.getGlobal();
 
 public MyGameOfLifeController(IField<T> campo, RulesEnum rule, int[] cellsToSetAlive){
     this.campo = campo;
     this.rule = rule;
     this.cellsToSetAlive = cellsToSetAlive;
+    logger.finest("MyGameOfLifeController created.");
     }
 
 public int[] getCellsToSetAlive() {
@@ -39,7 +43,6 @@ public void nextGen() {
     campoCopy.getMappaPosizioneCellula().values()
             .forEach(x-> RulesFactory.getInstance().getRule(rule).step(x, campoCopy.getIntorno(x)));
 }
-
 
     @Override
     public void colorateDecolorateACellula(int ... posInInt) {

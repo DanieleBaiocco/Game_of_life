@@ -6,16 +6,21 @@ import it.unicam.cs.pa.jlife105718.Model.Position.PositionsEnum;
 
 import java.util.Set;
 import java.util.function.Predicate;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 public class MyField2D<T extends IPosition> extends MyField<T> implements IField2D<T>{
 
+    private static final Logger logger = Logger.getGlobal();
+
     public MyField2D(PositionsEnum transition, int value1, int value2) {
         super(transition,2,  value1,value2);
+        logger.finest("MyField2D created.");
     }
 
     public MyField2D(IField<T> field) {
         super(field);
+        logger.finest("MyField2D copy created.");
     }
 
     @Override

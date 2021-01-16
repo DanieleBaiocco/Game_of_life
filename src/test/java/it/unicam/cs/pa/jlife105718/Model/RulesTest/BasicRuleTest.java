@@ -1,15 +1,27 @@
-package it.unicam.cs.pa.jlife105718;
+package it.unicam.cs.pa.jlife105718.Model.RulesTest;
 
-/*public class RulesFactoryTest implements PropertyListener{
-    private  CurrentRulesEnum rule;
-    private Campo2D<PosizioneNumericaIntera> campo;
-    private GameOfLifeController controller;
- /*   @BeforeEach
+import it.unicam.cs.pa.jlife105718.Controller.MyGameOfLifeController;
+import it.unicam.cs.pa.jlife105718.Model.Board.IField2D;
+import it.unicam.cs.pa.jlife105718.Model.Board.MyField2D;
+import it.unicam.cs.pa.jlife105718.Model.Cell.Stato;
+import it.unicam.cs.pa.jlife105718.Model.Position.PositionsEnum;
+import it.unicam.cs.pa.jlife105718.Model.Position.PosizioneNumericaIntera;
+import it.unicam.cs.pa.jlife105718.Model.Rule.RulesEnum;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.*;
+
+public class BasicRuleTest {
+    private RulesEnum rule;
+    private IField2D<PosizioneNumericaIntera> campo;
+    private MyGameOfLifeController<?> controller;
+    @BeforeEach
     void initController(){
-        campo = new Campo2D<>(TransitionFactory.getInstance().getTransitionToInteger());
-
-        rule = CurrentRulesEnum.BasicRules;
-        controller = GameOfLifeController.getInstance(campo, rule);
+        campo = new MyField2D<>(PositionsEnum.Interno,5,5);
+        rule = RulesEnum.BasicRules;
+        controller = new MyGameOfLifeController<>(campo,rule, null);
         for(int i=0; i<5; i++){
             for (int j=0; j<5; j++) {
                 campo.addAEntry(j,i);
@@ -24,14 +36,10 @@ package it.unicam.cs.pa.jlife105718;
         controller.colorateDecolorateACellula(2,2);
         controller.colorateDecolorateACellula(4,0);
         controller.colorateDecolorateACellula(2,0);
-        controller.getCampo().getMappaPosizioneCellula().forEach((key,value)->{
-            value.addPropertyListener(this);
-        });
     }
 
     @Test
-    void testNextGen() throws InterruptedException, CloneNotSupportedException {
-        System.out.println("DOADIGS");
+    void testNextGen(){
         controller.nextGen();
         assertEquals(this.campo.getCellulaFromInteger(0,0).getStato(), Stato.MORTO);
         assertEquals(this.campo.getCellulaFromInteger(1,0).getStato(), Stato.MORTO);
@@ -59,9 +67,4 @@ package it.unicam.cs.pa.jlife105718;
         assertEquals(this.campo.getCellulaFromInteger(3,4).getStato(), Stato.MORTO);
         assertEquals(this.campo.getCellulaFromInteger(4,4).getStato(), Stato.MORTO);
     }
-
-    @Override
-    public void onPropertyEvent(Cellula source, String name, Stato state) {
-        System.out.println("IO CELLULA "+source.getId()+ " sono cambiata nello stato "+state.toString());
-    }*/
-//}
+}

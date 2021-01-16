@@ -18,8 +18,11 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.logging.Logger;
 
 public class JsonFileDeserialization implements FileDeserialization {
+
+    private static final Logger logger = Logger.getGlobal();
 
     private Reader getReaderFromPathName(String pathName){
         Reader readerToReturn = null;
@@ -40,6 +43,7 @@ public class JsonFileDeserialization implements FileDeserialization {
             JsonObject treeAsJsonObj = json.getAsJsonObject();
             String typeOfPosition = treeAsJsonObj.get("posizione").getAsString();
             PositionsEnum transition = Utility.switchOnPositionChoosed(typeOfPosition);
+            logger.info("Json deserialization of Position done.");
             JsonArray values = treeAsJsonObj.get("limite").getAsJsonArray();
             IField<T> fieldCreated = Utility.switchOnDimensionChoosed(String.valueOf(values.size()),
                     ()->factoryField.createField1D(transition,values.get(0).getAsInt()),
@@ -47,16 +51,19 @@ public class JsonFileDeserialization implements FileDeserialization {
                     ()->factoryField.createField3D(transition,values.get(0).getAsInt(),
                             values.get(1).getAsInt(),
                             values.get(2).getAsInt()));
+            logger.info("Json deserialization of Field done.");
             String rule = treeAsJsonObj.get("regola").getAsString();
             RulesEnum currentRulesEnum = Utility.switchOnRuleChoosed(rule);
+            logger.info("Json deserialization of Rule done.");
             JsonArray cellsInJson = treeAsJsonObj.get("colorare").getAsJsonArray();
             int[] cells = getListOfCellsToSetAlive(cellsInJson);
-
+            logger.info("Json deserialization of Cells to set alive done.");
             return new MyGameOfLifeController<>(fieldCreated,currentRulesEnum, cells);
         };
         gsonBuilder.registerTypeAdapter(IController.class, deserializer);
         Gson customGson = gsonBuilder.create();
         Type typeOfController = new TypeToken<IController<?>>() {}.getType();
+        logger.info("Json Deserialization done.");
         return customGson.fromJson(tree,typeOfController);
     }
 
@@ -72,6 +79,4 @@ public class JsonFileDeserialization implements FileDeserialization {
         }
         return cellsToReturn;
     }
-
-
 }
