@@ -447,12 +447,11 @@ public class GUIViewFirstSceneController  {
 
     /**
      * Mi da' un'istanza di un tipo di griglia prendendo il valore della stringa
-     * corrispondente al Radio Button selezionato nel Toggle Group riferito alla dimensione della griglia
+     * corrispondente alla dimensione della griglia dal toggleGroup delle dimensioni
      * della prima zona del border pane (quella di sinistra).
-     * @param position
-     * @param factoryField
-     * @param <T>
-     * @return
+     * @param position indica come voglio visualizzare le coordinate nella griglia
+     * @param factoryField viene utilizzata per creare uno dei tre tipi di griglia (1D, 2D o 3D)
+     * @return una griglia 1D, 2D o 3D a seconda di ciò che è stato cliccato nella scena
      */
     private <T extends IPosition> IField<T> getFieldFromManualInit(PositionsEnum position, IFactoryField factoryField){
     return Utility.switchOnDimensionChoosed(getStringFromToggle(dimensionChoosedToggleGroup),
@@ -464,24 +463,42 @@ public class GUIViewFirstSceneController  {
                     Integer.parseInt(thirdTextField.getText())));
 }
 
-private void changeLayoutAfterSuccessOnManualInit(){
+    /**
+     * In risposta a un successo nell'inserimento dei parametri con i quali si vuole creare una griglia, nella sezione manuale,
+     *  rende possibile l'interazione col bottone next, mentre nasconde il bottone di load della griglia in questa sezione
+     */
+    private void changeLayoutAfterSuccessOnManualInit(){
     nextButton.setDisable(false);
     loadRedLabel.setText("");
     loadButton.setVisible(false);
 }
 
-private void changeLayoutAfterFailure1OnManualInit(){
+    /**
+     * In risposta a un mancato inserimento dei paramtri con i quali si vuole creare una griglia nella sezione manuale,
+     * visualizza un messaggio di errore
+     */
+    private void changeLayoutAfterFailure1OnManualInit(){
     changeNodes(x->x.setVisible(true),loadRedLabel);
     changeNodes(x->((Label)x).setText("TextField vuoto/i"), loadRedLabel);
 
 }
 
-private void changeLayoutAfterFailure2OnManualInit(){
+    /**
+     * In risposta a un inserimento errato dei paramtri con i quali si vuole creare una griglia nella sezione manuale,
+     * visualizza un messaggio di errore
+     */
+    private void changeLayoutAfterFailure2OnManualInit(){
     changeNodes(x->x.setVisible(true),loadRedLabel);
     changeNodes(x->((Label)x).setText("Completa la scelta"), loadRedLabel);
 }
 
-@FXML void createGridFromInitialization(){
+    /**
+     * Viene eseguito sul click del mouse sul bottone di load della sezione di inserimento manuale dei parametri con cui creare la griglia.
+     * Il bottone next, che è quello che permette di passare alla scena successiva, viene reso interagibile solo se tutte e tre le ErrorRedLabel
+     * sono contemporaneamente vuote (quindi solo se non ci sono errori nei parametri inseriti). Questo metodo permette di creare il controller
+     * che verrà usato poi nella seconda scena, da inserimento manuale dei parametri.
+     */
+    @FXML void createGridFromInitialization(){
     IFactoryField factoryField =new MyFactoryField();
     PositionsEnum functionSelected;
     try {
@@ -506,21 +523,45 @@ private void changeLayoutAfterFailure2OnManualInit(){
     }
 }
 
-private String buildEndPath(ComboBox comboBox){
+    /**
+     * Crea la stringa finale del pathname che verrà usato per caricare il file .json corrispondente alla configurazione conosciuta scelta,
+     * che verrà deserializzato per andare a creare il controller. La stringa viene costruita prendendo la stringa contenuta nella casella a cascata
+     * nel momento in cui si clicca sul Radio Button affianco a questa, e concatenandola con l'estensione ".json".
+     * @param comboBox la casella a cascata affianco al Radio Button selezionato
+     * @return la stringa rappresentante la parte finale del pathname per il caricamento da file di preconfigurazioni della griglia
+     */
+    private String buildEndPath(ComboBox comboBox){
     return comboBox.getSelectionModel().getSelectedItem().toString().concat(".json");
 }
 
-@FXML public void changeToHandCursor(MouseEvent mouseEvent){
+    /**
+     * Fa cambiare il cursore del mouse da Default a una mano quando si passa sopra a uno dei pane (di sinistra, centrale o di destra,
+     * quando questi sono ancora tutti bloccati), sopra a un bottone al loro interno, quando sono sbloccati, o sopra a un bottone nel
+     * pane inferiore.
+     * @param mouseEvent mi permette di capire qual è il node da cui è scaturito l'evento
+     */
+    @FXML public void changeToHandCursor(MouseEvent mouseEvent){
     ((Node)mouseEvent.getSource()).getScene().setCursor(Cursor.HAND);
     logger.info("Cursor is a hand");
 }
 
-@FXML public void changeToDefaultCursor(MouseEvent mouseEvent){
+    /**
+     * Fa cambiare il cursore del mouse da una mano a Default quando si esce da uno dei pane (di sinistra, centrale o di destra,
+     * quando questi sono ancora tutti bloccati) , quando si esce da un bottone al loro interno, quando sono sbloccati, o quando si esce
+     * da un bottone nel pane inferiore.
+     * @param mouseEvent mi permette di capire qual è il node da cui è scaturito l'evento
+     */
+    @FXML public void changeToDefaultCursor(MouseEvent mouseEvent){
     ((Node)mouseEvent.getSource()).getScene().setCursor(Cursor.DEFAULT);
     logger.info("Cursor is set to default");
 }
 
-@FXML public void overThePane(MouseEvent mouseEvent){
+    /**
+     * Quando si passa col mouse sopra un pane e tutti i pane sono bloccati, quel pane si colora di rosa e il cursore del mouse cambia forma
+     * in mano
+     * @param mouseEvent mi permette di capire qual è il node da cui è scaturito l'evento
+     */
+    @FXML public void overThePane(MouseEvent mouseEvent){
      if(hasNotOneActivatedPane()){
        changeToHandCursor(mouseEvent);
        ((Node)mouseEvent.getSource()).setStyle("-fx-background-color: pink");
@@ -528,7 +569,12 @@ private String buildEndPath(ComboBox comboBox){
     }
 }
 
-@FXML public void exitThePane(MouseEvent mouseEvent){
+    /**
+     * Quando si esce col mouse da un pane e tutti i pane sono bloccati, quel pane cambia da rosa a grigio e il cursore del mouse cambia forma
+     * in Default
+     * @param mouseEvent mi permette di capire qual è il node da cui è scaturito l'evento
+     */
+    @FXML public void exitThePane(MouseEvent mouseEvent){
     if(hasNotOneActivatedPane()) {
         changeToDefaultCursor(mouseEvent);
         ((Node) mouseEvent.getSource()).setStyle("-fx-background-color: #f4f4f4");
@@ -537,7 +583,12 @@ private String buildEndPath(ComboBox comboBox){
     }
 }
 
-@FXML public void unlockThisPane(MouseEvent mouseEvent){
+    /**
+     * Viene eseguito quando si clicca su un pane quando tutti i pane sono bloccati. Permette di sbloccare tutti gli elementi all'interno
+     * del pane selezionato e di sbloccare il bottone di back nel caso si volesse riscegliere un altro modo per inizializzare la griglia
+     * @param mouseEvent
+     */
+    @FXML public void unlockThisPane(MouseEvent mouseEvent){
    if(hasNotOneActivatedPane()) {
         ((Pane) mouseEvent.getSource()).getChildren().forEach(x -> x.setDisable(false));
         changeToDefaultCursor(mouseEvent);
@@ -546,7 +597,12 @@ private String buildEndPath(ComboBox comboBox){
    }
 }
 
-@FXML public void goBackToNoPaneChoosed(){
+    /**
+     * Viene eseguito quando si clicca sopra il bottone di back. Ripristina la scena al suo layout iniziale, settando la variabile controller a null.
+     * Permette quindi di resettare tutto e ricominciare a configurare la griglia in un altro modo, o con lo stesso
+     * ma con diverse informazioni
+     */
+    @FXML public void goBackToNoPaneChoosed(){
     backButton.setDisable(true);
     resetToggles(dimensionChoosedToggleGroup,positionChoosedToggleGroup,differentKnownConfigurations,ruleChoosedToggleGroup);
     initialize();
@@ -554,11 +610,21 @@ private String buildEndPath(ComboBox comboBox){
     logger.info("All panes are disabled.");
 }
 
+/**
+ * serve per settare il controller a null. Viene eseguito quando si vuole ripristinare la scena allo stato iniziale
+ */
 private void reset() {
     controllerCreated = null;
     logger.info("System variables are resetted.");
 }
 
+    /**
+     * Viene eseguito quando si clicca sul bottone "Carica file" nella terza sezione (quella di destra) sul caricamento della griglia
+     * da file. Utilizza il mouseEvent per ricavare lo stage nel quale si è. Questo serve per visualizzare, tramite un
+     * File Chooser, il filesystem dell'utente secondo l'interfaccia grafica dell'SO in cui opera. Navigandolo e selezionando un file
+     * (con estensione .json, .txt, ecc...), se tutto va a buon fine, verrà creato un controller.
+     * @param mouseEvent
+     */
     @FXML public void createGridFromFile(MouseEvent mouseEvent) {
         loadFromFileErrorLabel.setText("");
         reset();
@@ -575,7 +641,12 @@ private void reset() {
         logger.info("Grid is correctly loaded from file and initialized. ");
     }
 
-    @FXML public void showDimensionLabelsAndTexts(MouseEvent mouseEvent) {
+    /**
+     * Quando viene cliccato su un Radio Button riferito alle dimensioni della griglia, nella sezione sinistra nella quale si crea
+     * la griglia manualmente, in modo responsive vengono visualizzate delle Label e dei TextField per l'inserimento della coordinata
+     * massima per ogni asse
+     */
+    @FXML public void showDimensionLabelsAndTexts() {
     Utility.switchOnDimensionChoosed(getStringFromToggle(dimensionChoosedToggleGroup),
             ()->{ changeNodes(x->x.setVisible(true),firstLabel,firstTextField);
             changeNodes(x->x.setVisible(false), secondLabel, secondTextField, thirdLabel, thirdTextField);
@@ -591,10 +662,21 @@ private void reset() {
     logger.info("Dimension buttons are shown.");
 }
 
+    /**
+     * Serve per prendere il valore in Stringa del Toggle selezionato all'interno di un Toggle Group
+     * @param toggleGroup serve per prendere il valore del Toggle selezionato all'interno di questo
+     */
     private String getStringFromToggle(ToggleGroup toggleGroup) {
     return ((RadioButton)toggleGroup.getSelectedToggle()).getText();
 }
 
+    /**
+     * Carica la nuova scena, passando il controllerCreated al GUIViewSecondSceneController. Inoltre chiama il metodo
+     * initGrid() del GUIViewSecondSceneController che crea e visualizza una griglia nella nuova scena secondo le informazioni
+     * contenute nel controllerCreated
+     * @param mouseEvent serve per ricavare lo stage da cui parte questo evento per poi poter settare in questo stage
+     * la nuova scena
+     */
    @FXML
    public void loadGrid(MouseEvent mouseEvent) {
        FXMLLoader loader = new FXMLLoader();
@@ -616,18 +698,34 @@ private void reset() {
        logger.info("Grid has been initialized correctly. Grid is shown in next scene.");
     }
 
+    /**
+     * Permette, in caso d'errore nell'inserimentento del valore della massima coordinata per la prima dimensione, di visualizzare
+     * un messaggio di errore sopra il TextField della massima coordinata.
+     */
     @FXML public void checkInputPosError1(){
     checkInputPosError(firstTextField,firstErrorRedLabel);
     }
 
+    /**
+     * Permette, in caso d'errore nell'inserimentento del valore della massima coordinata per la seconda dimensione, di visualizzare
+     * un messaggio di errore sopra il TextField della massima coordinata.
+     */
     @FXML public void checkInputPosError2(){
     checkInputPosError(secondTextField, secondErrorRedLabel);
     }
 
+    /**
+     * Permette, in caso d'errore nell'inserimentento del valore della massima coordinata per la terza dimensione, di visualizzare
+     * un messaggio di errore sopra il TextField della massima coordinata.
+     */
     @FXML public void checkInputPosError3(){
     checkInputPosError(thirdTextField, thirdErrorRedLabel);
     }
 
+    /**
+     * Metodo di utilità che serve per vedere se un dato valore passato, questo è valido o meno. Nel caso in cui non lo è
+     * la label sopra il textField da cui viene preso il valore viene mostrata con un messaggio di errore
+     */
     private void checkInputPosError(TextField textField, Label label){
         String valueString = textField.getText();
         int value = 0;
