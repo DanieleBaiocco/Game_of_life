@@ -32,7 +32,7 @@ public int[] getCellsToSetAlive() {
 @Override
 public String getRepresentation(int i, int... values) {
     T pos =campo.getPosizioneFromIntegers(values);
-    return (String) PositionFactory.getInstance().getPrinter(campo.getTransitionEnum()).toStringFormat(pos)[i];
+    return  PositionFactory.getInstance().getPrinter(campo.getTransitionEnum()).toStringFormat(pos).get(i);
 }
 
 

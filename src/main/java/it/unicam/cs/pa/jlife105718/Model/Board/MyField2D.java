@@ -30,7 +30,7 @@ public class MyField2D<T extends IPosition> extends MyField<T> implements IField
 
     public Set<ICell> getIntorno(ICell cellula) {
         T pos =getPosizioneFromCellula(cellula);
-        int[] result = pos.getCoordinateI();
+        int[] result = pos.returnToIntegerCoordinates();
         int firstCoordinate = result[0];
         int secondCoordinate = result[1];
         return getMappaPosizioneCellula().keySet()
@@ -43,7 +43,7 @@ public class MyField2D<T extends IPosition> extends MyField<T> implements IField
 
     private Predicate<? super T> isInTheIntorno( int first, int second){
     return po->{
-    int[] result = po.getCoordinateI();
+    int[] result = po.returnToIntegerCoordinates();
     int firstofx = result[0];
     int secondofx = result[1];
     boolean secondCondition = (secondofx==second-1 || secondofx==second || secondofx== second+1);

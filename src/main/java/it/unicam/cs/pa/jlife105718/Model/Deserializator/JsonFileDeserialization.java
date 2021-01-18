@@ -20,6 +20,14 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.logging.Logger;
 
+/**
+ * Deserializza il contenuto di un file scritto con estensione json in un IController. Il contenuto del .json deve seguire un protocollo:
+ * - con "regola" indico la regola che si vuole utilizzare
+ * - con "posizione" indico il tipo di coordinate che si vuole utilizzare
+ * - con "limite" specifico la dimensione della griglia (se l'array contiene due numeri allora la griglia sarà 2D) e
+ * il valore della coordinata massima per ogni asse della griglia
+ * - con "colorare" indico le coordinate delle celle che hanno lo stato a VIVO prima dell'avvio della simulazione
+ */
 public class JsonFileDeserialization implements FileDeserialization {
 
     private static final Logger logger = Logger.getGlobal();

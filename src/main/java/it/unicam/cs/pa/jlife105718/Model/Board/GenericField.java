@@ -120,7 +120,7 @@ public abstract class GenericField<T extends IPosition> implements IField<T> {
 @Override
     public int[] getIntegerFromCellula(ICell cellula){
         T pos = getPosizioneFromCellula(cellula);
-        return pos.getCoordinateI();
+        return pos.returnToIntegerCoordinates();
     }
 
     @Override
