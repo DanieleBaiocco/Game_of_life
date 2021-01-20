@@ -9,6 +9,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
+/**
+ * Mia implementazione di una cellula all'interno della griglia. Un'istanza di questa cellula tiene traccia dello stato
+ * (se è VIVA o MORTA in un dato istante) e permette l'aggiunta di ascoltatori su questa istanza. In caso di cambiamento
+ * dello stato di questa istanza ( che avviene in concomitanza con la chiamata del metodo changeState()), tutti gli ascoltatori
+ * precedentemente registratosi alla cellula vengono notificati del cambiamento e eseguono del codice di conseguenza (che
+ * sarebbe il corpo del metodo onPropertyEvent, la cui implementazione è diversa per ogni differente implementazione
+ * dell'interfaccia PropertyListener
+ */
 public class MyCell implements ICell {
     private static final Logger logger = Logger.getGlobal();
     private int id;
@@ -21,41 +29,72 @@ public class MyCell implements ICell {
         logger.finest("Cell with id: +"+id+" created");
     }
 
+    /**
+     * Modifica la lista degli ascoltatori registrati a questa cellula, aggiungendone una nuova
+     * @param listeners
+     */
     public void setListeners(List<PropertyListener> listeners) {
         this.listeners = listeners;
     }
 
+    /**
+     * Ritorna lo stato della cellula
+     */
     public Stato getStato() {
         return this.stato;
     }
 
+    /**
+     * Ritorna l'id associato a questa cellula
+     */
     public int getId(){
         return this.id;
     }
 
+    /**
+     * Imposta lo stato della cellula allo stato passato. Non avviene nessuna notifica agli ascoltatori
+     */
     public void setStato(Stato stato) {
         this.stato = stato;
     }
 
+    /**
+     * Cambia lo stato della cellula. Questo cambiamento viene reso noto a tutti gli ascoltatori, nei quali viene
+     * eseguito, per ognuno, il metodo onPropertyEvent
+     */
     public void changeStato(){
         if(stato == Stato.VIVO)
             setStato(Stato.MORTO);
         else setStato(Stato.VIVO);
         publishPropertyEvent("cellula.state",getStato());
     }
+
+    /**
+     * Mi dice se la cellula è viva o morta
+     */
     public boolean isAlive(){
         if(this.getStato()==Stato.VIVO)
             return true;
         else return false;
     }
+
+    /**
+     * Serve per aggiungere un ascoltatore alla lista degli ascoltatori registrati a questa cellula
+     */
     public void addPropertyListener (PropertyListener lis){
         listeners.add(lis);
     }
 
+    /**
+     * Manda in esecuzione il metodo onPropertyEvent per ogni ascoltatore iscritto a questa cellula
+     */
     private void publishPropertyEvent(String name, Stato state){
         this.listeners.forEach(prop->prop.onPropertyEvent(this,name,state));
     }
 
+    /**
+     * Override dell'equals basato sul confronto dell'id
+     */
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -64,11 +103,18 @@ public class MyCell implements ICell {
         return this.id == cellula.id;
     }
 
+    /**
+     * Essendo l'id un codice univoco, l'hashcode viene sovrascritto ritornando l'id della cellula sulla
+     * quale viene chiamato
+     */
     @Override
     public int hashCode() {
         return this.id;
     }
 
+    /**
+     * Setta un nuovo id alla cellula
+     */
     @Override
     public void setId(int id) {
         this.id = id;
