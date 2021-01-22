@@ -1,5 +1,6 @@
 package it.unicam.cs.pa.jlife105718.Model.PositionTest;
 
+import it.unicam.cs.pa.jlife105718.Model.Position.PositionsEnum;
 import it.unicam.cs.pa.jlife105718.Model.Position.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -26,7 +27,6 @@ public class PosizioneVirgolaMobileTest {
         for(int i=0; i<30; i++){
             listInteger.add(i);
         }
-        System.out.println(list.get(0).returnToIntegerCoordinates()[1]);
         assertEquals(list.get(0).returnToIntegerCoordinates()[1], listInteger.get(0));
         assertEquals(list.get(1).returnToIntegerCoordinates()[1], listInteger.get(1));
         assertEquals(list.get(25).returnToIntegerCoordinates()[1], listInteger.get(25));

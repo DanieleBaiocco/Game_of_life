@@ -49,6 +49,7 @@ public class MyCellTest {
         assertNotEquals(cellula2.getId(),cellula1.getId());
         MyCell tmpCell = cellula2;
         assertEquals(tmpCell.getId(), cellula2.getId());
+        assertEquals(tmpCell,cellula2);
     }
 }
 

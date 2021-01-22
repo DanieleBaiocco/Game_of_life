@@ -3,8 +3,6 @@ package it.unicam.cs.pa.jlife105718.Model.Board;
 import it.unicam.cs.pa.jlife105718.Model.Position.IPosition;
 import it.unicam.cs.pa.jlife105718.Model.Position.PositionsEnum;
 
-import java.lang.reflect.Field;
-
 /**
  * Interfaccia che implementa il pattern AbstractFactory. Chi implementa questa interfaccia deve fornire dei modi
  * per costruire una griglia a una dimensione, una a due dimensioni e una a tre dimensioni. Quando si invocano i metodi che richiedono l'uso di questa abstract factory ,

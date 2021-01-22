@@ -16,7 +16,6 @@ import java.util.logging.Logger;
  * Implementazione di un IController. Responsabile di seguire lo sviluppo della griglia in tutto il suo
  * percorso dall'inizio alla fine. Definisce infatti come calcolare la Next Generation e come cambiare lo stato di
  * una cellula. E' il punto di entrata allo strato del dominio
- * @param <T>
  */
 public class MyGameOfLifeController<T extends IPosition> implements IController<T>, PropertyListener {
 private final IField<T> campo;

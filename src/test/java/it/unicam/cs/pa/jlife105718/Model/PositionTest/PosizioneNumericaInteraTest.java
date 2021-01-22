@@ -1,5 +1,6 @@
 package it.unicam.cs.pa.jlife105718.Model.PositionTest;
 
+import it.unicam.cs.pa.jlife105718.Model.Position.PositionsEnum;
 import it.unicam.cs.pa.jlife105718.Model.Position.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

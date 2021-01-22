@@ -47,7 +47,7 @@ public class MyField2DTest {
     @Test
     void testGetPosizioneFromCellulaAlfa(){
         campoAlfa.addAEntry(3,0);
-        MyCell cellula3 = new MyCell(Stato.MORTO, 0);
+        MyCell cellula3 = new MyCell(Stato.MORTO, 100);
         int[] posAlph3 =campoAlfa.getIntegerFromCellula(cellula3);
         assertNotNull(posAlph3);
         assertEquals(posAlph3[0], 3);
@@ -108,6 +108,8 @@ public class MyField2DTest {
                  campoCopy.getCellulaFromInteger(0,2));
         assertEquals(campoAlfa.getCellulaFromInteger(0,0).getId(),campoCopy.getCellulaFromInteger(0,0).getId());
         HashMap<PosizioneAlfabetica, ICell> map = (HashMap<PosizioneAlfabetica, ICell>) campoCopy.getMappaPosizioneCellula();
-        map.values().forEach(x->System.out.println(x.getId()));
+        assertTrue(map.containsValue(new MyCell(Stato.VIVO,101)));
+        assertTrue(map.containsValue(new MyCell(Stato.VIVO,102)));
+        assertFalse(map.containsValue(new MyCell(Stato.VIVO,103)));
     }
 }

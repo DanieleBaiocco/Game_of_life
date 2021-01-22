@@ -3,9 +3,9 @@ package it.unicam.cs.pa.jlife105718.Model.Board;
 import it.unicam.cs.pa.jlife105718.Model.Cell.ICell;
 import it.unicam.cs.pa.jlife105718.Model.Cell.Stato;
 import it.unicam.cs.pa.jlife105718.Model.Position.IPosition;
-import it.unicam.cs.pa.jlife105718.Model.Position.PositionsEnum;
 import it.unicam.cs.pa.jlife105718.Model.Position.PositionFactory;
 import it.unicam.cs.pa.jlife105718.Model.MyIdGenerator;
+import it.unicam.cs.pa.jlife105718.Model.Position.PositionsEnum;
 
 import java.util.HashMap;
 import java.util.Map;
