@@ -4,6 +4,7 @@ import it.unicam.cs.pa.jlife105718.Controller.MyGameOfLifeController;
 import it.unicam.cs.pa.jlife105718.Model.Board.IField2D;
 import it.unicam.cs.pa.jlife105718.Model.Board.MyField2D;
 import it.unicam.cs.pa.jlife105718.Model.Cell.Stato;
+import it.unicam.cs.pa.jlife105718.Model.MyIdGenerator;
 import it.unicam.cs.pa.jlife105718.Model.Position.PositionsEnum;
 import it.unicam.cs.pa.jlife105718.Model.Position.PosizioneNumericaIntera;
 import it.unicam.cs.pa.jlife105718.Model.Rule.RulesEnum;
@@ -19,6 +20,7 @@ public class BasicRuleTest {
     private MyGameOfLifeController<?> controller;
     @BeforeEach
     void initController(){
+        MyIdGenerator.getInstance().resetCount();
         campo = new MyField2D<>(PositionsEnum.Interno,5,5);
         rule = RulesEnum.BasicRules;
         controller = new MyGameOfLifeController<>(campo,rule, null);
@@ -40,6 +42,7 @@ public class BasicRuleTest {
 
     @Test
     void testNextGen(){
+        MyIdGenerator.getInstance().resetCount();
         controller.nextGen();
         assertEquals(this.campo.getCellulaFromInteger(0,0).getStato(), Stato.MORTO);
         assertEquals(this.campo.getCellulaFromInteger(1,0).getStato(), Stato.MORTO);

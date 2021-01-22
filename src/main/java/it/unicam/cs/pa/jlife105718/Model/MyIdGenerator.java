@@ -31,4 +31,8 @@ public class MyIdGenerator {
         logger.finest("ID generated.");
         return ++count;
     }
+
+    public void resetCount(){
+        this.count = -1;
+    }
 }

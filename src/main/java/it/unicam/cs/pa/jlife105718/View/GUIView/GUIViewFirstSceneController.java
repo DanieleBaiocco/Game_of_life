@@ -588,7 +588,7 @@ public class GUIViewFirstSceneController  {
      * del pane selezionato e di sbloccare il bottone di back nel caso si volesse riscegliere un altro modo per inizializzare la griglia
      * @param mouseEvent
      */
-    @FXML public void unlockThisPane(MouseEvent mouseEvent){
+   @FXML public void unlockThisPane(MouseEvent mouseEvent){
    if(hasNotOneActivatedPane()) {
         ((Pane) mouseEvent.getSource()).getChildren().forEach(x -> x.setDisable(false));
         changeToDefaultCursor(mouseEvent);

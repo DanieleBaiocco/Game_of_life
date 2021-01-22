@@ -17,10 +17,11 @@ public class MyIdGeneratorTest {
 
     @BeforeEach
     void init(){
+        MyIdGenerator.getInstance().resetCount();
         cell1 = new MyCell(Stato.MORTO, MyIdGenerator.getInstance().getIdAndIncrement());
         cell2 = new MyCell(Stato.VIVO, MyIdGenerator.getInstance().getIdAndIncrement());
         cell3 = new MyCell(Stato.MORTO, MyIdGenerator.getInstance().getIdAndIncrement());
-        cell4 = new MyCell(Stato.MORTO, 306);
+        cell4 = new MyCell(Stato.MORTO, 2);
         cell5 = new MyCell(Stato.VIVO, MyIdGenerator.getInstance().getIdAndIncrement());
     }
 
@@ -28,9 +29,9 @@ public class MyIdGeneratorTest {
     void getIdAndIncrement(){
         assertNotEquals(cell1,cell2);
         assertEquals(cell3,cell4);
-        assertEquals(cell1.getId(),304);
-        assertEquals(cell2.getId(),305);
-        assertEquals(cell3.getId(),306);
-        assertEquals(cell5.getId(),307);
+        assertEquals(cell1.getId(),0);
+        assertEquals(cell2.getId(),1);
+        assertEquals(cell3.getId(),2);
+        assertEquals(cell5.getId(),3);
     }
 }

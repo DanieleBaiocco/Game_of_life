@@ -6,6 +6,7 @@ import it.unicam.cs.pa.jlife105718.Model.Board.IField;
 import it.unicam.cs.pa.jlife105718.Model.Cell.ICell;
 import it.unicam.cs.pa.jlife105718.Model.Deserializator.DeserializationFactory;
 import it.unicam.cs.pa.jlife105718.Model.Position.IPosition;
+import it.unicam.cs.pa.jlife105718.Model.PropertyListener;
 import it.unicam.cs.pa.jlife105718.Model.Rule.RulesEnum;
 
 import java.io.FileNotFoundException;
@@ -18,7 +19,7 @@ import java.io.FileNotFoundException;
  *  da file demandando la parte della deserializzazione e della creazione rispettivamente al FileDeserialization
  *  e all' IFactoryField
  */
-public interface IController<T extends IPosition> {
+public interface IController<T extends IPosition> extends PropertyListener {
     /**
      * Calcola la prossima generazione
      */

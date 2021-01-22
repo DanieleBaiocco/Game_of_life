@@ -65,11 +65,6 @@ public void nextGen() {
     @Override
     public void colorateDecolorateACellula(int ... posInInt) {
       campo.changeStateOfACellula(posInInt);
-      String str = "";
-      for(int value : posInInt){
-          str = str.concat(String.valueOf(value));
-      }
-      System.out.println(str);
     }
 
     /**

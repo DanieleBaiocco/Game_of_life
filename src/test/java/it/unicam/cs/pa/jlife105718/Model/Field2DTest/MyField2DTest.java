@@ -5,6 +5,7 @@ import it.unicam.cs.pa.jlife105718.Model.Board.MyField2D;
 import it.unicam.cs.pa.jlife105718.Model.Cell.ICell;
 import it.unicam.cs.pa.jlife105718.Model.Cell.MyCell;
 import it.unicam.cs.pa.jlife105718.Model.Cell.Stato;
+import it.unicam.cs.pa.jlife105718.Model.MyIdGenerator;
 import it.unicam.cs.pa.jlife105718.Model.Position.PositionsEnum;
 import it.unicam.cs.pa.jlife105718.Model.Position.PosizioneAlfabetica;
 import org.junit.jupiter.api.BeforeEach;
@@ -25,6 +26,7 @@ public class MyField2DTest {
 
     @Test
     void testAddAEntryAlfa(){
+        MyIdGenerator.getInstance().resetCount();
         for(int i=0; i<10; i++){
             for (int j=0; j<10; j++) {
                 campoAlfa.addAEntry(j,i);
@@ -46,8 +48,9 @@ public class MyField2DTest {
 
     @Test
     void testGetPosizioneFromCellulaAlfa(){
+        MyIdGenerator.getInstance().resetCount();
         campoAlfa.addAEntry(3,0);
-        MyCell cellula3 = new MyCell(Stato.MORTO, 100);
+        MyCell cellula3 = new MyCell(Stato.MORTO, 0);
         int[] posAlph3 =campoAlfa.getIntegerFromCellula(cellula3);
         assertNotNull(posAlph3);
         assertEquals(posAlph3[0], 3);
@@ -60,6 +63,7 @@ public class MyField2DTest {
 
     @Test
      void testGetIntorno(){
+        MyIdGenerator.getInstance().resetCount();
         for(int i=0; i<10; i++){
             for (int j=0; j<10; j++) {
                 campoAlfa.addAEntry(j,i);
@@ -84,6 +88,7 @@ public class MyField2DTest {
 
     @Test
     void testChangeStateOfACellula(){
+        MyIdGenerator.getInstance().resetCount();
         for(int i=0; i<10; i++){
             for (int j=0; j<10; j++) {
                 campoAlfa.addAEntry(j,i);
@@ -100,6 +105,7 @@ public class MyField2DTest {
 
     @Test
     void cloneTest() throws CloneNotSupportedException {
+        MyIdGenerator.getInstance().resetCount();
         campoAlfa.addAEntry(0,0);
         campoAlfa.addAEntry(0,1);
         MyField2D<PosizioneAlfabetica> campoCopy = (MyField2D<PosizioneAlfabetica>) campoAlfa.deepCopyClone();
@@ -108,8 +114,8 @@ public class MyField2DTest {
                  campoCopy.getCellulaFromInteger(0,2));
         assertEquals(campoAlfa.getCellulaFromInteger(0,0).getId(),campoCopy.getCellulaFromInteger(0,0).getId());
         HashMap<PosizioneAlfabetica, ICell> map = (HashMap<PosizioneAlfabetica, ICell>) campoCopy.getMappaPosizioneCellula();
-        assertTrue(map.containsValue(new MyCell(Stato.VIVO,101)));
-        assertTrue(map.containsValue(new MyCell(Stato.VIVO,102)));
-        assertFalse(map.containsValue(new MyCell(Stato.VIVO,103)));
+        assertTrue(map.containsValue(new MyCell(Stato.VIVO,0)));
+        assertTrue(map.containsValue(new MyCell(Stato.VIVO,1)));
+        assertFalse(map.containsValue(new MyCell(Stato.VIVO,2)));
     }
 }
